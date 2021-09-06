@@ -1,6 +1,6 @@
 package com.h5tchibook.user;
 
-import java.util.Date;
+import java.util.Date;	
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,4 +20,11 @@ public class UserController {
 		return "template/user_sign_layout";
 	}
 	
+	@RequestMapping("/feed")
+	public String mainFeed(Model model) {
+		
+		model.addAttribute("currentTime",date.getTime());
+		model.addAttribute("userView","user/user_feed_section");	
+		return "template/template_layout";
+	}
 }
