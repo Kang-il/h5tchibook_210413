@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="com.h5tchibook.user.dao.UserDAO">
+ 
+ 	<insert id="insertUser" parameterType="com.h5tchibook.user.model.User">
+ 		INSERT INTO
+ 			`user`
+ 			(
+ 			`loginId`
+ 			,`password`
+ 			,`name`
+ 			,`sex`
+ 			,`createdAt`
+ 			,`updatedAt`
+ 			)
+ 			VALUES
+ 			(
+ 			#{loginId}
+ 			,#{password}
+ 			,#{name}
+ 			,#{sex.sex}
+ 			,NOW()
+ 			,NOW()
+ 			)
+ 	</insert>
+ 	
+ 	<select id="selectUserByloginId" parameterType="String" resultType="com.h5tchibook.user.model.User">
+ 		SELECT
+ 			`id`
+ 			,`loginId`
+ 			,`password`
+ 			,`name`
+ 			,`sex`
+ 			,`profileImagePath`
+ 			,`coverImagePath`
+ 			,`introduce`
+ 			,`createdAt`
+ 			,`updatedAt`
+ 		FROM
+ 			`user`
+ 		WHERE loginId=#{loginId}
+ 	</select>
+ 	
+ 	<select id="selectUserByLoginIdAndPassword" parameterType="map" resultType="com.h5tchibook.user.model.User">
+ 		SELECT
+ 			`id`
+ 			,`password`
+ 			,`name`
+ 			,`sex`
+ 			,`profileImagePath`
+ 			,`coverImagePath`
+ 			,`introduce`
+ 			,`createdAt`
+ 			,`updatedAt`
+ 		FROM
+ 			`user`
+ 		WHERE 
+ 			loginId=#{loginId}
+ 		AND
+ 			password=#{password}
+ 	</select>
+ 	
+ </mapper>
