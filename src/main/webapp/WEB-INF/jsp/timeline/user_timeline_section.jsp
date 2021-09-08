@@ -33,6 +33,6 @@
 	</section>
 	
 	<section class="timeline-post-section">
-		<jsp:include page="../include/timeline_post.jsp"/>
+		<jsp:include page="../post/timeline_post_section.jsp"/>
 	</section>
 </section>

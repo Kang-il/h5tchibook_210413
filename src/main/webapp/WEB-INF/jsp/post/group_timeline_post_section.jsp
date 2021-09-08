@@ -2,6 +2,18 @@
     pageEncoding="UTF-8"%>
 
 	<section class="contents-group-timeline-section">
+		<div class="create-group-post-section ${section_display}">
+			<div class="create-group-post-box">
+				<img src="/static/images/dummy_profile.jpg" alt="프로필" class="profile-img"/>
+				<button type="button" class="create-group-post-modal-btn">무슨 생각을 하고 계신가요?</button>
+			</div>
+			<hr>
+			<div class="create-group-post-btn-box">
+				<button type="button" class="create-group-post-photo-btn">
+					<span class="material-icons">photo_library</span>사진
+				</button>
+			</div>
+		</div>
 		<div class="group-post-box">
 			<div class="group-post-profile-box">
 				<div class="group-profile-item">

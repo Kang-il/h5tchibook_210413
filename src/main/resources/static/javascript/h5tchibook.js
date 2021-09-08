@@ -196,6 +196,100 @@ $(document).ready(function(){
 		
 	});
 	
+	//---------------create-post
+		
+	$('.post-modal-close-btn').on('click',function(){
+		$('.create-post-modal-section').addClass('d-none');
+	});
+	$('.create-post-modal-btn').on('click',function(){
+		$('.create-post-modal-section').removeClass('d-none');
+	});
+	
+	$('#loadImageInput').on('change',function(e){
+		
+		let files = e.target.files;
+		let filesArr = Array.prototype.slice.call(files);
+
+		filesArr.forEach(function(f) {
+			if (!f.type.match("image.*")) {
+				alert("확장자는 이미지 확장자만 가능합니다.");
+				$("#loadImageInput").val('');
+				return;
+			}
+		
+
+		sel_file = f;
+		let reader = new FileReader();
+		reader.onload =function(e){
+			$('.create-post-img').attr('src',e.target.result);
+			$('.create-post-modal-section').removeClass('d-none');
+			$('.create-post-img').removeClass('d-none');
+		}
+			reader.readAsDataURL(f);
+		});
+	});
+	
+	$('.create-user-post-btn').on('click',function(){
+		let content=$('.create-text-form').val();
+		if(content==''){
+			alert('내용을 입력해 주세요');
+		}
+		
+		let disclosureStatus = $('#disclosureStatus option:selected').val();
+
+		if(disclosureStatus == ''){
+			alert('공개범위 설정 오류');
+		}
+		
+		let filePath=$('#loadImageInput').val();
+		
+		let file=null;
+		
+		if(filePath!=''){
+			file=$('#loadImageInput')[0].files[0];
+		}
+		
+		let formData =new FormData();
+		formData.append("content",content);
+		formData.append("disclosureStatus",disclosureStatus);
+		formData.append("file",file);
+		
+		$.ajax({
+			type:'POST'
+			,url:'/post/create_post'
+			,data:formData
+			,processData:false
+			,contentType:false
+			,enctype:'multipart/form-data'
+			,success:function(data){
+				if(data.loginCheck===true){
+					if(data.result===false){
+						if(data.valid_content == 'blank'){
+							alert('글 내용을 채워주세요');
+						}
+						if(data.valid_disclosureStatus=='blank'){
+							alert('포스트 공개여부를 설정하세요');
+						}
+						if(data.valid_wrong_extension =='file'){
+							alert('이미지 파일만 게시 가능합니다.');
+						}
+						if(data.valid_empty_extension == 'file'){
+							alert('잘못된 파일입니다.')
+						}
+					}else if(data.result===true){
+						alert('게시완료!');
+						location.reload();
+					}
+				}else{
+					location.href="/user/sign_in_view";
+				}
+			}
+			,error : function(e){
+				alert(e);
+			}
+		});
+		
+	});
 	
 	//-------------------group-view
 	$('.create-new-group').on('click',function(){

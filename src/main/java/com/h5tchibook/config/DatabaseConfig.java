@@ -11,6 +11,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
+import com.h5tchibook.post.model.ContentType;
+import com.h5tchibook.post.model.DisclosureStatus;
 import com.h5tchibook.user.model.Sex;
 
 @MapperScan(basePackages = "com.h5tchibook")
@@ -22,7 +24,11 @@ public class DatabaseConfig {
 		sessionFactory.setDataSource(dataSource);
 		
 		//myBatis 설정 시 SqlSessionFactoryBean 클래스에 TypeHandler 등록이 가능함
-		sessionFactory.setTypeHandlers(new TypeHandler[] {new Sex.TypeHandler()});
+		sessionFactory.setTypeHandlers(new TypeHandler[] { new Sex.TypeHandler()
+														  ,new ContentType.TypeHandler()
+														  ,new DisclosureStatus.TypeHandler()
+														 }
+		);
 		
 		Resource[] res=new PathMatchingResourcePatternResolver().getResources("classpath:mappers/*Mapper.xml");
 		sessionFactory.setMapperLocations(res);

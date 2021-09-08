@@ -32,6 +32,6 @@
 	</section>
 	
 	<section class="group-timeline-post-section">
-		<jsp:include page="../include/group_timeline_post.jsp"/>
+		<jsp:include page="../post/group_timeline_post_section.jsp"/>
 	</section>
 </section>

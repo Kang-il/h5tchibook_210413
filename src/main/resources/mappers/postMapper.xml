@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="com.h5tchibook.post.dao.UserPostDAO">
+ 	<insert id="insertUserPost" parameterType="com.h5tchibook.post.model.UserPost">
+ 		INSERT INTO
+ 			`post`
+ 			(	
+ 			`userId`
+ 			,`content`
+ 			,`contentType`
+ 			,`contentPath`
+ 			,`disclosureStatus`
+ 			,`createdAt`
+ 			,`updatedAt`
+ 			)
+ 		VALUES
+ 			(
+ 			#{userId}
+ 			,#{content}
+ 			,#{contentType}
+ 			,#{contentPath}
+ 			,#{disclosureStatus}
+ 			,NOW()
+ 			,NOW()
+ 			)
+ 	</insert>
+ </mapper>

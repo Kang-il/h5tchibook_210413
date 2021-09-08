@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
+    	<jsp:include page="../include/create_post_modal.jsp"></jsp:include>
 		<section class="contents-timeline-section">
 				<div class="create-post-section ">
 					<div class="create-post-box">
@@ -9,9 +9,9 @@
 					</div>
 					<hr>
 					<div class="create-post-btn-box">
-						<button type="button" class="create-post-photo-btn">
+						<label class="create-post-photo-btn" for="loadImageInput">
 							<span class="material-icons">photo_library</span>사진
-						</button>
+						</label>
 					</div>
 				</div>
 				<div class="post-box">
