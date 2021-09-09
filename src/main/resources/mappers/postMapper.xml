@@ -26,4 +26,48 @@
  			,NOW()
  			)
  	</insert>
+ 	
+ 	<select id="selectPostListByUserId" parameterType="int" resultType="com.h5tchibook.post.model.UserPost">
+ 		SELECT
+ 			`id`
+ 			,`userId`
+ 			,`content`
+ 			,`contentType`
+ 			,`contentPath`
+ 			,`disclosureStatus`
+ 			,`createdAt`
+ 			,`updatedAt`
+ 		FROM
+ 			`post`
+ 		WHERE 
+ 			`userId`=#{userId}
+ 		ORDER BY
+ 			`id`
+ 		DESC
+ 	</select>
+ 	
+ 	<select id="selectPostListOnlyPhotoByUserId" parameterType="map" resultType="com.h5tchibook.post.model.UserPost">
+ 		SELECT
+ 			`id`
+ 			,`userId`
+ 			,`content`
+ 			,`contentType`
+ 			,`contentPath`
+ 			,`disclosureStatus`
+ 			,`createdAt`
+ 			,`updatedAt`
+ 		FROM
+ 			`post`
+ 		WHERE 
+ 			`userId`=#{userId}
+ 		AND 
+ 			`contentType`='photo'
+ 		ORDER BY
+ 			`id` 
+ 		DESC
+ 		<if test="limit != null">
+ 		LIMIT #{limit}
+ 		</if>
+ 	</select>
+ 	
  </mapper>

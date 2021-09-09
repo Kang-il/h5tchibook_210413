@@ -20,7 +20,7 @@
  			#{loginId}
  			,#{password}
  			,#{name}
- 			,#{sex.sex}
+ 			,#{sex}
  			,NOW()
  			,NOW()
  			)
@@ -40,12 +40,14 @@
  			,`updatedAt`
  		FROM
  			`user`
- 		WHERE loginId=#{loginId}
+ 		WHERE 
+ 			`loginId`=#{loginId}
  	</select>
  	
  	<select id="selectUserByLoginIdAndPassword" parameterType="map" resultType="com.h5tchibook.user.model.User">
  		SELECT
  			`id`
+ 			,`loginId`
  			,`password`
  			,`name`
  			,`sex`
@@ -57,9 +59,27 @@
  		FROM
  			`user`
  		WHERE 
- 			loginId=#{loginId}
+ 			`loginId`=#{loginId}
  		AND
- 			password=#{password}
+ 			`password`=#{password}
+ 	</select>
+ 	
+ 	<select id="selectUserById" parameterType="int" resultType="com.h5tchibook.user.model.User">
+ 		SELECT
+ 			`id`
+ 			,`loginId`
+ 			,`password`
+ 			,`name`
+ 			,`sex`
+ 			,`profileImagePath`
+ 			,`coverImagePath`
+ 			,`introduce`
+ 			,`createdAt`
+ 			,`updatedAt`
+ 		FROM
+ 			`user`
+ 		WHERE 
+ 			`id`=#{id}
  	</select>
  	
  </mapper>

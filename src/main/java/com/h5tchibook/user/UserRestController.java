@@ -34,6 +34,9 @@ public class UserRestController {
 	
 	@Autowired
 	private UserBO userBO;
+	@Autowired
+	private ValidateHandler validateHandler;
+	
 	
 	@PostMapping("/sign_up_validation")
 	public Map<String,Object> signUpValidation(
@@ -44,7 +47,7 @@ public class UserRestController {
 
 		//1. 유효성 검사
 		if(errors.hasErrors()) {
-			Map<String,String> validatorResult=ValidateHandler.validateHandling(errors);
+			Map<String,String> validatorResult=validateHandler.validateHandling(errors);
 			for(String key : validatorResult.keySet()) {
 				result.put(key, validatorResult.get(key));
 			}

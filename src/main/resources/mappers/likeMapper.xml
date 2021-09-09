@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.h5tchibook.like.dao.LikeDAO">
+ 	<insert id="insertLike" parameterType="com.h5tchibook.like.dao.LikeDAO"  useGeneratedKeys="true" keyProperty="id">
+ 		INSERT INTO
+ 		 	`like`
+ 		 (
+	 		 `userId`
+	 		 ,`postId`
+	 		 ,`createdAt`
+ 		 )
+ 		 VALUES
+ 		 (
+ 		 	#{userId}
+ 		 	,#{postId}
+ 		 	,NOW()
+ 		 )
+ 	</insert>
+ 	
+ 	<delete id="deleteLikeByPostId" parameterType="int">
+ 		DELETE FROM 
+ 			`like`
+ 		WHERE 
+ 			`postId`=#{postId}
+ 	</delete>
+ 	
+ 	<delete id="deleteLikeByUserIdAndPostId" parameterType="map">
+ 		DELETE FROM
+ 			`like`
+ 		WHERE 
+ 			`userId`=#{userId}
+ 		AND 
+ 			`postId`=#{postId}
+ 	</delete>
+ 	
+ 	<select id="selectLikeListByPostId" parameterType="int" resultType="com.h5tchibook.like.model.Like">
+ 		SELECT
+ 			`id`
+ 			,`userId`
+ 			,`postId`
+ 			,`createdAt`
+ 		FROM
+ 			`like`
+ 		WHERE
+ 			`postId`= #{postId}
+ 	</select>
+ 
+ </mapper>

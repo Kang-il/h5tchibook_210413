@@ -1,33 +1,32 @@
 
 function signIn(loginId,password){
-		let formData = new FormData();
-		formData.append("loginId",loginId);
-		formData.append("password",password);
-		$.ajax({
-			type:'POST'
-			,data:formData
-			,url:'/user/sign_in'
-			,contentType:false
-			,processData:false
-			,success:function(data){
-				if(data.result===true){
-					location.href='/timeline/user_timeline_view';
-				}else{
+	let formData = new FormData();
+	formData.append("loginId",loginId);
+	formData.append("password",password);
+	$.ajax({
+		type:'POST'
+		,data:formData
+		,url:'/user/sign_in'
+		,contentType:false
+		,processData:false
+		,success:function(data){
+			if(data.result===true){
+				location.href='/timeline/user_timeline_view';
+			}else{
 					
-					if(loginId=='' || password==''){
-						$('.sign-in-blank-alert-box').removeClass('d-none');
-						return;
-					}
+				if(loginId=='' || password==''){
+					$('.sign-in-blank-alert-box').removeClass('d-none');
+					return;
+				}
 					
-					$('.sign-in-check-alert-box').removeClass('d-none');
-
-				}	
-			}
-			,error:function(e){
-				alert(e);
-			}
-		});
-	}
+				$('.sign-in-check-alert-box').removeClass('d-none');
+			}	
+		}
+		,error:function(e){
+			alert(e);
+		}
+	});
+}
 
 
 $(document).ready(function(){
@@ -39,7 +38,6 @@ $(document).ready(function(){
 	$('.close-sign-up-section').on('click',function(){
 		$('.sign-up-modal-section').addClass('d-none');
 	});
-
 
 //--------------------sign-up-view
 	//회원가입 란 빈칸이 모두 채워져 있을 경우에만 회원가입 버튼 활성화
@@ -156,7 +154,6 @@ $(document).ready(function(){
 		});
 		
 	});
-
 //-----------------------------sign-in-view
 	$('#userLoginId,#userLoginPassword').on('input',function(){
 		$('.sign-in-check-alert-box').addClass('d-none');
@@ -196,17 +193,19 @@ $(document).ready(function(){
 		
 	});
 	
-	//---------------create-post
+//---------------------------create-post
 		
 	$('.post-modal-close-btn').on('click',function(){
 		$('.create-post-modal-section').addClass('d-none');
+		$('body').removeClass('disabled-scroll');
 	});
 	$('.create-post-modal-btn').on('click',function(){
 		$('.create-post-modal-section').removeClass('d-none');
+		$('body').addClass('disabled-scroll');
 	});
 	
 	$('#loadImageInput').on('change',function(e){
-		
+	
 		let files = e.target.files;
 		let filesArr = Array.prototype.slice.call(files);
 
@@ -216,34 +215,34 @@ $(document).ready(function(){
 				$("#loadImageInput").val('');
 				return;
 			}
-		
-
-		sel_file = f;
-		let reader = new FileReader();
-		reader.onload =function(e){
-			$('.create-post-img').attr('src',e.target.result);
-			$('.create-post-modal-section').removeClass('d-none');
-			$('.create-post-img').removeClass('d-none');
-		}
-			reader.readAsDataURL(f);
+			sel_file = f;
+			let reader = new FileReader();
+			reader.onload =function(e){
+				$('.create-post-img').attr('src',e.target.result);
+				$('.create-post-modal-section').removeClass('d-none');
+				$('.create-post-img').removeClass('d-none');
+				$('.delete-img-btn').removeClass('d-none');
+				$('body').addClass('disabled-scroll');
+			}
+				reader.readAsDataURL(f);
 		});
 	});
-	
+
 	$('.create-user-post-btn').on('click',function(){
 		let content=$('.create-text-form').val();
+		let filePath=$('#loadImageInput').val();
+		let disclosureStatus = $('#disclosureStatus option:selected').val();
+		let file=null;
+		
 		if(content==''){
 			alert('내용을 입력해 주세요');
+			return;
 		}
 		
-		let disclosureStatus = $('#disclosureStatus option:selected').val();
-
 		if(disclosureStatus == ''){
 			alert('공개범위 설정 오류');
+			return;
 		}
-		
-		let filePath=$('#loadImageInput').val();
-		
-		let file=null;
 		
 		if(filePath!=''){
 			file=$('#loadImageInput')[0].files[0];
@@ -265,6 +264,7 @@ $(document).ready(function(){
 				if(data.loginCheck===true){
 					if(data.result===false){
 						if(data.valid_content == 'blank'){
+							//content값이 정상적으로 넘어가지 않은경우
 							alert('글 내용을 채워주세요');
 						}
 						if(data.valid_disclosureStatus=='blank'){
@@ -291,9 +291,62 @@ $(document).ready(function(){
 		
 	});
 	
+	$('.delete-img-btn').on('click',function(){
+		$('#loadImageInput').val('');
+		$('.create-post-img').attr('src','');
+		$('.create-post-img').addClass('d-none');
+		$(this).addClass('d-none');
+	});
+	
 	//-------------------group-view
 	$('.create-new-group').on('click',function(){
 		location.href="/group/create_group_view";
 	});
 	
+	//-----------gnb
+	$('.menu-profile-box').on('click',function(){
+		let loginId = $(this).data('user-login-id');
+		location.href="/post/feed/"+loginId;
+	});
+	
+	$('#logOut').on('click',function(){
+		location.href="/user/sign_out";
+	});
+	
+	$('.nav-menu-btn').on('click',function(){
+		$('.modal-window').trigger('click');
+		$('.nav-menu-modal').removeClass('d-none');
+		$('.modal-window').removeClass('d-none');
+	});
+	
+	$('.modal-window').on('click',function(e){
+		if(!$('.nav-menu-modal').has(e.target).length){
+			$('.nav-menu-modal').addClass('d-none');
+			$('.modal-window').addClass('d-none');
+		}
+	});
+	
+	$('.nav-profile-box').on('click',function(){
+		let loginId=$(this).data('user-login-id');
+		location.href='/post/feed/'+loginId;
+	});
+	
+	$('.nav-alert-btn').on('click',function(){
+		$('.modal-window').trigger('click');
+		$('.nav-alert-modal').removeClass('d-none');
+		$('.modal-window').removeClass('d-none');
+	});
+	
+	$('.modal-window').on('click',function(e){
+		if(!$('.nav-alert-modal').has(e.target).length){
+			$('.nav-alert-modal').addClass('d-none');
+			$('.modal-window').addClass('d-none');
+		}
+	});
+
+	//sign out
+	$('#logOut').on('click',function(){
+		location.href="/user/sign_out";
+	});
+
 });

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.h5tchibook.friend.dao.FriendDAO">
+ 
+ 	<insert id="insertFriend" parameterType="map">
+ 		INSERT INTO
+ 			`friend`
+ 		(
+ 			`userId`
+ 			,`friendId`
+ 			,`createdAt`
+ 			,`updatedAt`
+ 		)
+ 		VALUES
+ 		(
+ 			#{userId}
+ 			,#{friendId}
+ 			,NOW()
+ 			,NOW()
+ 		)
+ 	</insert>
+ 	
+ 	<delete id="deleteFriendByUserIdAndFriendId" parameterType="map">
+ 		DELETE FROM 
+ 			`friend`
+ 		WHERE
+ 			`userId`=#{userId}
+ 		AND
+ 			`friendId`=#{friendId}
+ 	</delete>
+ 	
+ 	<select id="selectFriendListByUserId" parameterType="map" resultType="com.h5tchibook.friend.model.Friend">
+ 		SELECT
+ 			`id`
+ 			,`userId`
+ 			,`friendId`
+ 			,`createdAt`
+ 			,`updatedAt`
+ 		FROM
+ 			`friend`
+ 		WHERE
+ 			`userId`=#{userId}
+ 	</select>
+ 	
+ 	<select id="selectFriendByUserIdAndFriendId" parameterType="map" resultType="com.h5tchibook.friend.model.Friend">
+ 		SELECT
+ 			`id`
+ 			,`userId`
+ 			,`friendId`
+ 			,`createdAt`
+ 			,`updatedAt`
+ 		FROM
+ 			`friend`
+ 		WHERE
+ 			`userId`=#{userId}
+ 		AND
+ 			`friendId`=#{friendId}
+ 	</select>
+ 	
+ </mapper>
