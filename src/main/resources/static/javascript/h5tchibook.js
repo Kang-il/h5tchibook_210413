@@ -28,6 +28,27 @@ function signIn(loginId,password){
 	});
 }
 
+function setLike(postId){
+	if(postId ==''|| postId === undefined || postId === null){
+		alert('잘못된 접근입니다.');
+		return;
+	}
+		
+	$.ajax({
+		type:'POST'
+		,url:"/like/set_like/"+postId
+		,success:function(data){
+			if(data.loginCheck===true){
+				if(data.result===true){
+					location.reload();
+				}
+			}else if(data.loginCheck===false){
+				location.href="/user/sign_in_view";
+			}
+		}
+		
+	});
+}
 
 $(document).ready(function(){
 //-------------------sign-up-modal
@@ -306,7 +327,7 @@ $(document).ready(function(){
 	//-----------gnb
 	$('.menu-profile-box').on('click',function(){
 		let loginId = $(this).data('user-login-id');
-		location.href="/post/feed/"+loginId;
+		location.href="/feed/"+loginId;
 	});
 	
 	$('#logOut').on('click',function(){
@@ -328,7 +349,7 @@ $(document).ready(function(){
 	
 	$('.nav-profile-box').on('click',function(){
 		let loginId=$(this).data('user-login-id');
-		location.href='/post/feed/'+loginId;
+		location.href='/feed/'+loginId;
 	});
 	
 	$('.nav-alert-btn').on('click',function(){
@@ -348,5 +369,17 @@ $(document).ready(function(){
 	$('#logOut').on('click',function(){
 		location.href="/user/sign_out";
 	});
+	
+//------------------user_timeline_section
+	$('.like-before-btn').on('click',function(){
+		let postId = $(this).data('post-id');
+		setLike(postId);
+		
+	});
+	$('.like-after-btn').on('click',function(){
+		let postId = $(this).data('post-id');
+		setLike(postId);
+	});
 
+	
 });

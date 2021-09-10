@@ -28,6 +28,10 @@ public class LikeBO {
 		likeDAO.deleteLikeByPostId(postId);
 	}
 	
+	public Like getLikeByUserIdAndPostId(int userId,int postId) {
+		return likeDAO.selectLikeByUserIdAndPostId(userId, postId);
+	}
+	
 	public List<Like> getLikeListByPostId(int postId){
 		List<Like> likeList=likeDAO.selectLikeListByPostId(postId);
 		

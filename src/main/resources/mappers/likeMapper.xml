@@ -34,6 +34,20 @@
  			`postId`=#{postId}
  	</delete>
  	
+ 	<select id="selectLikeByUserIdAndPostId" parameterType="map" resultType="com.h5tchibook.like.model.Like">
+ 		SELECT
+ 			`id`
+ 			,`userId`
+ 			,`postId`
+ 			,`createdAt`
+ 		FROM
+ 			`like`
+ 		WHERE
+ 			`userId` =#{userId}
+ 		AND
+ 			`postId`= #{postId}
+ 	</select>
+ 	
  	<select id="selectLikeListByPostId" parameterType="int" resultType="com.h5tchibook.like.model.Like">
  		SELECT
  			`id`

@@ -44,7 +44,7 @@
 									<img src="${post.userProfilePath}" alt="프로필"/>
 								</c:if>
 								
-								<a href="/post/feed/${post.userLoginId}">${post.userLoginId}</a>
+								<a href="/feed/${post.userLoginId}">${post.userLoginId}</a>
 								
 								<c:choose>
 									<c:when test="${post.disclosureStatus eq 'PUBLIC' }">
@@ -61,7 +61,9 @@
 							</div>
 							
 							<div>
-								<button type="button" class="profile-menu-btn material-icons">menu</button>
+								<c:if test="${user.id eq post.userId}">
+									<button type="button" class="profile-menu-btn material-icons">menu</button>
+								</c:if>
 							</div>
 							
 						</div>
@@ -97,18 +99,24 @@
 									
 									<c:if test="${likeCheck eq false }">
 										<div>
-											<button class="like-before-btn"><span class="material-icons-outlined">thumb_up</span> 좋아요</button>							
+											<button class="like-before-btn" data-post-id="${post.id}">
+												<span class="material-icons-outlined">thumb_up</span> 좋아요
+											</button>							
 										</div> 
 									</c:if>
 									
 									<c:if test="${likeCheck eq true }">
 										<div>
-											<button class="like-after-btn"><span class="material-icons">thumb_up</span> 좋아요</button>							
+											<button class="like-after-btn" data-post-id="${post.id}">
+												<span class="material-icons" >thumb_up</span> 좋아요
+											</button>							
 										</div> 
 									</c:if>
 									
 									<div>							
-										<button class="post-comment-btn"><span class="material-icons-outlined ">chat_bubble_outline</span> 댓글 달기</button>
+										<button class="post-comment-btn">
+											<span class="material-icons-outlined ">chat_bubble_outline</span> 댓글 달기
+										</button>
 									</div>
 									
 								</div>
@@ -129,7 +137,7 @@
 								<div class="post-comment-item">
 									<c:set var="comment" value="${post.commentList[0]}"/>
 									
-									<a href="/post/feed/${comment.userLoginId}">
+									<a href="/feed/${comment.userLoginId}">
 										<c:if test="${comment.userProfileImagePath eq null}">
 											<img src="/static/images/no_profile_image.png"/>
 										</c:if>
@@ -139,7 +147,7 @@
 									</a>
 									
 									<div class="post-comment">
-										<div><a href="/post/feed/${comment.userLoginId}">${comment.userLoginId}</a></div>
+										<div><a href="/feed/${comment.userLoginId}">${comment.userLoginId}</a></div>
 										<div>${comment.comment}</div>
 									</div>
 									
