@@ -42,7 +42,7 @@
 							<c:forEach var="friend" items="${friendList}">
 								<div class="friend-item-box">
 									
-									<a href="/post/feed/${friend.friendLoginId}">
+									<a href="/feed/${friend.friendLoginId}">
 										<c:if test="${friend.friendProfileImagePath eq null}">
 											<img class="friend-item" src="/static/images/no_profile_image.png"/>
 										</c:if>

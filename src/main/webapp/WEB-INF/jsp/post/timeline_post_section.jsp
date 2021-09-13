@@ -5,7 +5,6 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 		<section class="contents-timeline-section">
-		
 			<c:if test="${feedOwnerCheck eq true || feedOwnerCheck eq null}">
 			
 				<div class="create-post-section ">
@@ -114,8 +113,8 @@
 									</c:if>
 									
 									<div>							
-										<button class="post-comment-btn">
-											<span class="material-icons-outlined ">chat_bubble_outline</span> 댓글 달기
+										<button class="post-comment-btn" data-post-id="${post.id}">
+											<span class="material-icons-outlined">chat_bubble_outline</span> 댓글 달기
 										</button>
 									</div>
 									
@@ -130,32 +129,33 @@
 								
 								<c:if test="${fn:length(post.commentList) >= 2}">
 									<div>
-										<button type="button" class="more-comment">댓글 ${fn:length(post.commentList)-1}개 더보기</button>
+										<button type="button" class="more-comment" id="moreComment${post.id}" data-post-id="${post.id}" data-post-owner-id="${post.userId}">댓글 ${fn:length(post.commentList)-1}개 더보기</button>
 									</div>
 								</c:if>
 								
-								<div class="post-comment-item">
-									<c:set var="comment" value="${post.commentList[0]}"/>
-									
-									<a href="/feed/${comment.userLoginId}">
-										<c:if test="${comment.userProfileImagePath eq null}">
-											<img src="/static/images/no_profile_image.png"/>
+								<div class="post-item-box" id="postCommentItemBox${post.id}">
+									<div class="post-comment-item">
+										<c:set var="comment" value="${post.commentList[0]}"/>
+										
+										<a href="/feed/${comment.userLoginId}">
+											<c:if test="${comment.userProfileImagePath eq null}">
+												<img src="/static/images/no_profile_image.png"/>
+											</c:if>
+											<c:if test="${comment.userProfileImagePath ne null}">
+												<img src="${comment.userProfileImagePath}"/>
+											</c:if>
+										</a>
+										
+										<div class="post-comment">
+											<div><a href="/feed/${comment.userLoginId}">${comment.userLoginId}</a></div>
+											<div>${comment.comment}</div>
+										</div>
+										
+										<c:if test="${user.id eq comment.userId || user.id eq post.userId}">
+											<button type="button" class="material-icons-outlined comment-menu-btn" data-comment-id="${comment.id}">more_horiz</button>
 										</c:if>
-										<c:if test="${comment.userProfileImagePath ne null}">
-											<img src="${comment.userProfileImagePath}"/>
-										</c:if>
-									</a>
-									
-									<div class="post-comment">
-										<div><a href="/feed/${comment.userLoginId}">${comment.userLoginId}</a></div>
-										<div>${comment.comment}</div>
 									</div>
-									
-									<c:if test="${user.id eq comment.userId || user.id eq post.userId}">
-										<button type="button" class="material-icons-outlined comment-menu-btn">more_horiz</button>
-									</c:if>
 								</div>
-								
 							</c:if>
 							
 							<div class="create-comment-box">
@@ -168,7 +168,7 @@
 									<img src="${user.profileImagePath}" alt="프로필"/>
 								</c:if>
 								
-								<input type="text" class="comment-input form-control"/>
+								<input type="text" id="commentInput${post.id}" class="comment-input form-control"/>
 								
 								<button type="button" class="comment-create-btn" data-post-id="${post.id}">게시</button>
 							</div>

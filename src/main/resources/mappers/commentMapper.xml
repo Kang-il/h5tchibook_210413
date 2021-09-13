@@ -5,7 +5,7 @@
  
  	<insert id="insertComment" parameterType="com.h5tchibook.comment.model.Comment" useGeneratedKeys="true" keyProperty="id">
  		INSERT INTO
- 			`comment
+ 			`comment`
 	 	( 
 			`userId` 
 			,`postId` 
@@ -36,6 +36,20 @@
  		WHERE
  			`postId`=#{postId}
  	</delete>
+ 	
+ 	<select id="selectCommentById" parameterType="int" resultType="com.h5tchibook.comment.model.Comment">
+ 		SELECT
+ 			`id`
+ 			,`userId` 
+			,`postId` 
+			,`comment`
+			,`createdAt`
+			,`updatedAt`
+		FROM
+	 		`comment`
+	 	WHERE
+	 		`id`=#{id}
+ 	</select>
  	
  	<select id="selectCommentListByPostId" parameterType="int" resultType="com.h5tchibook.comment.model.Comment">
  		SELECT

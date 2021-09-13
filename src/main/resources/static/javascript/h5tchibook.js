@@ -50,6 +50,90 @@ function setLike(postId){
 	});
 }
 
+function createComment(postId,comment){
+	$.ajax({
+		type:'POST'
+		,url:'/comment/create_comment'
+		,data:{'postId':postId
+				,'comment':comment}
+		,success:function(data){
+			if(data.loginCheck==false){
+				location.href="/user/sign_in_view"
+			}else{
+				location.reload();
+			}
+		}
+		,error:function(e){
+			
+		}
+	});
+}
+
+function getCommentList(postId,userId){//포스트 유저 아이디
+		$.ajax({
+			type:'GET'
+			,url:'/comment/get_comment_list'
+			,data:{'postId':postId}
+			,success:function(data){
+				if(data.loginCheck===true){
+					if(data.resultCheck===true){
+						$('#postCommentItemBox'+postId).empty();
+						data.commentList.map((comment) => {
+							
+							let imageUrl= comment.userProfilePath == undefined ? '/static/images/no_profile_image.png':comment.userProfilePath;
+							let myId =data.userId;
+							let button = '';
+							if(myId == userId || myId==comment.userId){// 내가 포스트주인이거나 코멘트 주인일경우
+								button='<button type="button" class="material-icons-outlined comment-menu-btn" data-comment-id="'+comment.id+'">more_horiz</button>';
+							}
+
+							let html=
+							'<div class="post-comment-item">'
+								+'<a href="/feed/'+comment.userLoginId+'">'
+									+'<img src="'+imageUrl+'"/>'
+								+'</a>'
+								
+								+'<div class="post-comment">'
+									+'<div>'+'<a href="/feed/'+comment.userLoginId+'">'+comment.userLoginId+'</a>'+'</div>'
+									+'<div>'+comment.comment+'</div>'
+								+'</div>'
+								+button
+							+'</div>';
+							
+							
+							$('#postCommentItemBox'+postId).append(html).trigger("create");		
+						});
+					}
+				}else if(data.loginCheck===false){
+					location.href="/user/sign_in_view";
+				}
+			}
+			,error:function(e){
+				alert(e);
+			}
+		});
+	}
+function deleteComment(commentId){
+	$.ajax({
+		type:'POST'
+		,data:{'commentId':commentId}
+		,url:'/comment/delete_comment'
+		,success:function(data){
+			if(data.loginCheck === true){
+				if(data.deleteResult===true){
+					location.reload();
+				}else if(data.deleteResult===false){
+					alert('삭제 실패 관리자에게 문의하세요');
+				}
+			}else if(data.loginCheck === false){
+				location.href="/user/sign_in_view";
+			}				
+		}
+		,error:function(e){
+			alert(e);	
+		}
+	});
+}
 $(document).ready(function(){
 //-------------------sign-up-modal
 	$('.sign-up-form-btn').on('click',function(){
@@ -380,6 +464,50 @@ $(document).ready(function(){
 		let postId = $(this).data('post-id');
 		setLike(postId);
 	});
-
+	
+	$('.post-comment-btn').on('click',function(){
+		let postId=$(this).data('post-id');
+		$('#commentInput'+postId).focus();
+	});
+	$('.comment-create-btn').on('click',function(){
+		let postId=$(this).data('post-id');
+		let comment=$('#commentInput'+postId).val();
+		if(comment==''){
+			alert('내용을 입력해 주세요');
+			return;
+		}
+		createComment(postId,comment);
+	});
+	
+	$('.more-comment').on('click',function(){
+		let postId=$(this).data('post-id');
+		let postOwnerId=$(this).data('post-owner-id');
+		$('#moreComment'+postId).addClass('d-none');
+		getCommentList(postId,postOwnerId);
+	});
+	
+	$('.post-item-box').on('click','.comment-menu-btn',function(){
+		let commentId = $(this).data('comment-id');
+		let postId=$(this).data('post-id');
+		let postOwnerId=$(this).data('post-owner-id');
+		
+		$('body').addClass('disabled-scroll');
+		$('.delete-comment-modal-section').removeClass('d-none');
+		$('.delete-comment-btn').data('comment-id',commentId);
+		$('.delete-comment-btn').data('post-id',postId);
+		$('.delete-comment-btn').data('post-owner-id',postOwnerId);
+	});
+	
+	$('.delete-comment-btn').on('click',function(){
+		let commentId = $(this).data('comment-id');
+		$('.dele-coment-modal-section').addClass('d-none');
+		$('body').removeClass('disabled-scroll');
+		deleteComment(commentId);
+	});
+	
+	$('.cancel-delete-comment-modal').on('click',function(){
+		$('.delete-comment-modal-section').addClass('d-none');
+		$('body').removeClass('disabled-scroll');
+	});
 	
 });

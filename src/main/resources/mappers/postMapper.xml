@@ -3,7 +3,7 @@
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  
  <mapper namespace="com.h5tchibook.post.dao.UserPostDAO">
- 	<insert id="insertUserPost" parameterType="com.h5tchibook.post.model.UserPost">
+ 	<insert id="insertUserPost" parameterType="com.h5tchibook.post.model.Post">
  		INSERT INTO
  			`post`
  			(	
@@ -27,7 +27,23 @@
  			)
  	</insert>
  	
- 	<select id="selectPostListByUserId" parameterType="int" resultType="com.h5tchibook.post.model.UserPost">
+ 	<select id="selectPostById" parameterType="int" resultType="com.h5tchibook.post.model.Post">
+ 		SELECT
+ 			`id`
+ 			,`userId`
+ 			,`content`
+ 			,`contentType`
+ 			,`contentPath`
+ 			,`disclosureStatus`
+ 			,`createdAt`
+ 			,`updatedAt`
+ 		FROM
+ 			`post`
+ 		WHERE 
+ 			`id`=#{id}
+ 	</select>
+ 	
+ 	<select id="selectPostListByUserId" parameterType="int" resultType="com.h5tchibook.post.model.Post">
  		SELECT
  			`id`
  			,`userId`
@@ -46,7 +62,7 @@
  		DESC
  	</select>
  	
- 	<select id="selectPostListOnlyPhotoByUserId" parameterType="map" resultType="com.h5tchibook.post.model.UserPost">
+ 	<select id="selectPostListOnlyPhotoByUserId" parameterType="map" resultType="com.h5tchibook.post.model.Post">
  		SELECT
  			`id`
  			,`userId`

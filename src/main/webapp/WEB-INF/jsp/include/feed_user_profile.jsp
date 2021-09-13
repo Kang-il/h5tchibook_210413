@@ -57,19 +57,19 @@
 	
 		<div class="profile-nav-item">
 			<c:if test="${userView eq 'user/user_feed_post_section'}">
-				<a href="/post/feed/${feedOwner.loginId}" class="item-link-in-use">게시물</a>
+				<a href="/feed/${feedOwner.loginId}" class="item-link-in-use">게시물</a>
 				<a href="#" class="item-link">친구</a>
 				<a href="#" class="item-link">사진</a>
 			</c:if>
 			
 			<c:if test="${userView eq 'user/user_feed_friend_section'}">
-				<a href="/post/feed/${feedOwner.loginId}" class="item-link">게시물</a>
+				<a href="/feed/${feedOwner.loginId}" class="item-link">게시물</a>
 				<a href="#" class="item-link-in-use">친구</a>
 				<a href="#" class="item-link">사진</a>
 			</c:if>
 			
 			<c:if test="${userView eq 'user/user_feed_photo_section'}">
-				<a href="/post/feed/${feedOwner.loginId}" class="item-link">게시물</a>
+				<a href="/feed/${feedOwner.loginId}" class="item-link">게시물</a>
 				<a href="#" class="item-link">친구</a>
 				<a href="#" class="item-link-in-use">사진</a>1
 			</c:if>
