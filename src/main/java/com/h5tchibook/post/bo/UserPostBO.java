@@ -1,6 +1,7 @@
 package com.h5tchibook.post.bo;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -15,7 +16,8 @@ import com.h5tchibook.like.bo.LikeBO;
 import com.h5tchibook.post.dao.UserPostDAO;
 import com.h5tchibook.post.model.ContentType;
 import com.h5tchibook.post.model.DisclosureStatus;
-import com.h5tchibook.post.model.UserPost;
+import com.h5tchibook.post.model.Post;
+import com.h5tchibook.post.model.PostView;
 import com.h5tchibook.user.bo.UserBO;
 import com.h5tchibook.user.model.User;
 
@@ -62,19 +64,14 @@ public class UserPostBO {
 			contentType=ContentType.PHOTO;
 		}
 		
-//		UserPost userPost1 = UserPost.builder()
-//				.userId(userId)
-//				.content(content)
-//				.contentType(contentType)
-//				.contentPath(imageUrl)
-//				.disclosureStatus(disclosureType)
-//				.build();
-		UserPost userPost =new UserPost();
-		userPost.setUserId(userId);
-		userPost.setContent(content);
-		userPost.setContentType(contentType);
-		userPost.setContentPath(imageUrl);
-		userPost.setDisclosureStatus(disclosureType);
+	Post userPost = Post.builder()				
+			.userId(userId)				
+			.content(content)
+			.contentType(contentType)
+			.contentPath(imageUrl)
+			.disclosureStatus(disclosureType)				
+			.build();
+		
 		
 		return userPostDAO.insertUserPost(userPost);
 	}
@@ -92,23 +89,38 @@ public class UserPostBO {
 		return imageUrl;
 	}
 	
-	public List<UserPost> getPostListByUserId(int userId){
-		List<UserPost> postList=userPostDAO.selectPostListByUserId(userId);
-		User user = userBO.getUserById(userId);
-		for(UserPost userPost : postList) {
-			userPost.setUserLoginId(user.getLoginId());
-			userPost.setUserProfilePath(user.getProfileImagePath());
-			userPost.setCommentList(commentBO.getCommentListByPostId(userPost.getId()));
-			userPost.setLikeList(likeBO.getLikeListByPostId(userPost.getId()));
-		}
-		return postList;
+	public Post getPostById(int postId) {
+		return userPostDAO.selectPostById(postId);
 	}
 	
-	public List<UserPost> getPostListOnlyPublicByUserId(int userId){
+	public List<PostView> getPostListByUserId(int userId){
+		List<Post> postList=userPostDAO.selectPostListByUserId(userId);
+		List<PostView> postViewList=new ArrayList<PostView>();
+		User user = userBO.getUserById(userId);
+		for(Post userPost : postList) {
+			PostView postView=PostView.builder()
+					.id(userPost.getId())
+					.userId(userPost.getUserId())
+					.content(userPost.getContent())
+					.contentPath(userPost.getContentPath())
+					.disclosureStatus(userPost.getDisclosureStatus())
+					.createdAt(userPost.getCreatedAt())
+					.updatedAt(userPost.getUpdatedAt())
+					.userLoginId(user.getLoginId())
+					.userProfilePath(user.getProfileImagePath())
+					.commentList(commentBO.getCommentListByPostId(userPost.getId()))
+					.likeList(likeBO.getLikeListByPostId(userPost.getId()))
+					.build();
+			postViewList.add(postView);
+		}
+		return postViewList;
+	}
+	
+	public List<Post> getPostListOnlyPublicByUserId(int userId){
 		return null;
 	}
 	
-	public List<UserPost> getPostListOnlyPhotoByUserId(int userId, Integer limit){
+	public List<Post> getPostListOnlyPhotoByUserId(int userId, Integer limit){
 		return userPostDAO.selectPostListOnlyPhotoByUserId(userId,limit);
 	}
 	

@@ -1,20 +1,21 @@
 package com.h5tchibook.comment.model;
 
-
 import java.util.Date;
 
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter 
-@Setter
+
+@Data
 @Builder
-public class Comment {
+public class CommentView {
 	private int id;
 	private int userId;
 	private int postId;
 	private String comment;
 	private Date createdAt;
 	private Date updatedAt;
+	
+	private String userLoginId;
+	private String userProfileImagePath;
 }

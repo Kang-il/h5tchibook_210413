@@ -9,7 +9,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.h5tchibook.post.model.Post;
+import com.h5tchibook.post.model.ValidatePost;
 
 @Component
 public class ValidateHandler {
@@ -59,7 +59,7 @@ public class ValidateHandler {
 		return null;
 	}
 	
-	public boolean postValidation(Post post, MultipartFile file, Errors errors, Map<String,Object> result) {
+	public boolean postValidation(ValidatePost post, MultipartFile file, Errors errors, Map<String,Object> result) {
 		boolean validation=false;
 		
 		if(errors.hasErrors()) {

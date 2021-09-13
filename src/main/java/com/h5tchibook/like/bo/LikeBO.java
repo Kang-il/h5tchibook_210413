@@ -1,5 +1,6 @@
 package com.h5tchibook.like.bo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.h5tchibook.like.dao.LikeDAO;
 import com.h5tchibook.like.model.Like;
+import com.h5tchibook.like.model.LikeView;
 import com.h5tchibook.user.bo.UserBO;
 import com.h5tchibook.user.model.User;
 
@@ -32,16 +34,23 @@ public class LikeBO {
 		return likeDAO.selectLikeByUserIdAndPostId(userId, postId);
 	}
 	
-	public List<Like> getLikeListByPostId(int postId){
+	public List<LikeView> getLikeListByPostId(int postId){
 		List<Like> likeList=likeDAO.selectLikeListByPostId(postId);
-		
+		List<LikeView> likeViewList=new ArrayList<LikeView>();
 		for(Like like : likeList) {
 			User user=userBO.getUserById(like.getUserId());
+			LikeView likeView = LikeView.builder()
+					.id(like.getId())
+					.userId(like.getUserId())
+					.postId(like.getPostId())
+					.createdAt(like.getCreatedAt())
+					.userLoginId(user.getLoginId())
+					.userProfileImagePath(user.getProfileImagePath())
+					.build();
 			//like 객체의 부가적인 정보를 담아준다.
-			like.setUserLoginId(user.getLoginId());
-			like.setUserProfileImagePath(user.getProfileImagePath());
+			likeViewList.add(likeView);
 		}
 		
-		return likeList;
+		return likeViewList;
 	}
 }

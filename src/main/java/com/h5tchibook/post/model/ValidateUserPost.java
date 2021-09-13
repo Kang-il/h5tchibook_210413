@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ValidateUserPost implements Post{
+public class ValidateUserPost implements ValidatePost{
 	@NotBlank(message="blank")
 	private String content;
 	

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.h5tchibook.common.ValidateHandler;
-import com.h5tchibook.post.bo.PostBO;
+import com.h5tchibook.post.bo.UserPostBO;
 import com.h5tchibook.post.model.ValidateUserPost;
 import com.h5tchibook.user.model.User;
 
@@ -30,7 +30,7 @@ public class PostRestController {
 	Logger logger=LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
-	private PostBO postBO;
+	private UserPostBO userPostBO;
 	@Autowired
 	private ValidateHandler validateHandler;
 	
@@ -54,7 +54,7 @@ public class PostRestController {
 			//true 반환이 안될 경우 맵에 "result"키로 false 가 이미 담겨있음. 
 			if(validateHandler.postValidation(validateUserPost,file,errors,result) == true) {
 				//글 등록코드 작성
-				int row = postBO.createUserPost(user.getId()
+				int row = userPostBO.createUserPost(user.getId()
 												,user.getLoginId()
 												,validateUserPost.getContent()
 												,file
