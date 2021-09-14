@@ -11,13 +11,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.h5tchibook.comment.bo.CommentBO;
+import com.h5tchibook.comment.model.Comment;
 import com.h5tchibook.common.FileManagerService;
+import com.h5tchibook.friend.bo.FriendBO;
 import com.h5tchibook.like.bo.LikeBO;
 import com.h5tchibook.post.dao.UserPostDAO;
 import com.h5tchibook.post.model.ContentType;
 import com.h5tchibook.post.model.DisclosureStatus;
 import com.h5tchibook.post.model.Post;
 import com.h5tchibook.post.model.PostView;
+import com.h5tchibook.timeline.bo.UserTimeLineBO;
+import com.h5tchibook.timeline.model.UserTimeLine;
 import com.h5tchibook.user.bo.UserBO;
 import com.h5tchibook.user.model.User;
 
@@ -32,6 +36,10 @@ public class UserPostBO {
 	private CommentBO commentBO;
 	@Autowired
 	private LikeBO likeBO;
+	@Autowired
+	private UserTimeLineBO userTimeLineBO;
+	@Autowired
+	private FriendBO friendBO;
 	
 	@Autowired
 	private FileManagerService fileManagerService;
@@ -72,8 +80,14 @@ public class UserPostBO {
 			.disclosureStatus(disclosureType)				
 			.build();
 		
+		int row=userPostDAO.insertUserPost(userPost);
+		UserTimeLine userTimeLine=UserTimeLine.builder()
+											  .postId(userPost.getId())
+											  .userId(userId)
+											  .build();
 		
-		return userPostDAO.insertUserPost(userPost);
+		userTimeLineBO.createdUserTimeLine(userTimeLine);
+		return row;
 	}
 	
 	private String generateImageUrlByFile(String userLogInId, MultipartFile file) {
@@ -90,39 +104,89 @@ public class UserPostBO {
 	}
 	
 	public Post getPostById(int postId) {
+		
 		return userPostDAO.selectPostById(postId);
 	}
 	
-	public List<PostView> getPostListByUserId(int userId){
-		List<Post> postList=userPostDAO.selectPostListByUserId(userId);
+	public PostView getPostViewById(int postId) {
+		
+		Post userPost=userPostDAO.selectPostById(postId);
+		User user=userBO.getUserById(userPost.getUserId());
+
+		return setPostView(userPost, user);
+	}
+
+	public List<PostView> getPostListByUserId(int userId, DisclosureStatus disclosureStatus){
+		
+		List<Post> postList=userPostDAO.selectPostListByUserId(userId,disclosureStatus.getDisclosureStatus());
+		logger.debug(":::::::::::::::::::::::::::::::::::::::::"+disclosureStatus.getDisclosureStatus());
+		
+		
 		List<PostView> postViewList=new ArrayList<PostView>();
 		User user = userBO.getUserById(userId);
 		for(Post userPost : postList) {
-			PostView postView=PostView.builder()
-					.id(userPost.getId())
-					.userId(userPost.getUserId())
-					.content(userPost.getContent())
-					.contentPath(userPost.getContentPath())
-					.disclosureStatus(userPost.getDisclosureStatus())
-					.createdAt(userPost.getCreatedAt())
-					.updatedAt(userPost.getUpdatedAt())
-					.userLoginId(user.getLoginId())
-					.userProfilePath(user.getProfileImagePath())
-					.commentList(commentBO.getCommentListByPostId(userPost.getId()))
-					.likeList(likeBO.getLikeListByPostId(userPost.getId()))
-					.build();
+			
+			PostView postView=setPostView(userPost, user);
+			
 			postViewList.add(postView);
 		}
 		return postViewList;
 	}
 	
-	public List<Post> getPostListOnlyPublicByUserId(int userId){
-		return null;
+	public List<Post> getPostListOnlyPhotoByUserId(int userId, Integer limit, DisclosureStatus disclosureStatus){
+		
+		List<Post> photoList=userPostDAO.selectPostListOnlyPhotoByUserId(userId, limit, disclosureStatus.getDisclosureStatus());
+
+		return photoList;
 	}
 	
-	public List<Post> getPostListOnlyPhotoByUserId(int userId, Integer limit){
-		return userPostDAO.selectPostListOnlyPhotoByUserId(userId,limit);
+	public List<PostView> getPostListByUserIdAndTimeLineList(int userId){
+		//친구의 아이디 리스트를 받아옴
+		List<Integer> friendIdList=friendBO.getFriendIdListByUserid(userId);
+		//나의 아이디를 추가해서 나의 포스트를 포함한 포스트를 가져올 것이다.
+		friendIdList.add(userId);
+		//타임라인에서 글이 작성된 순서대로 가져옴
+		List<UserTimeLine> timeLineList=userTimeLineBO.getUserTimeLineListByUserIdList(friendIdList);
+		
+		List<Integer> postIdList=new ArrayList<Integer>();
+		
+		//포스트 아이디만 저장.
+		for(UserTimeLine timeLine:timeLineList) {
+			postIdList.add(timeLine.getPostId());
+		}
+		
+		//포스트 아이디 리스트로 포스트 리스트를 받아옴
+		List<Post> postList = userPostDAO.selectPostByPostIdList(postIdList);
+		List<PostView> postViewList=new ArrayList<PostView>();
+		
+		//포스트 앤티티 객체를 토대로 view에 뿌려줄 postView객체를 가공
+		for(Post userPost : postList) {
+			User user=userBO.getUserById(userPost.getUserId());
+			PostView postView=setPostView(userPost, user);
+			postViewList.add(postView);
+		}
+		
+		return postViewList;
+		
 	}
 	
+	//postView객체를 가공하는 메서드
+	private PostView setPostView(Post userPost, User user) {
+		PostView postView=PostView.builder()
+				  .id(userPost.getId())
+				  .userId(userPost.getUserId())
+				  .contentType(userPost.getContentType())
+				  .content(userPost.getContent())
+				  .contentPath(userPost.getContentPath())
+				  .disclosureStatus(userPost.getDisclosureStatus())
+				  .createdAt(userPost.getCreatedAt())
+				  .updatedAt(userPost.getUpdatedAt())
+				  .userLoginId(user.getLoginId())
+				  .userProfilePath(user.getProfileImagePath())
+				  .commentList(commentBO.getCommentListByPostId(userPost.getId()))
+				  .likeList(likeBO.getLikeListByPostId(userPost.getId()))
+				  .build();
+		return postView;
+	}
 	
 }

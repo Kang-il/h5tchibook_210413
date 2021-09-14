@@ -3,7 +3,7 @@
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  
  <mapper namespace="com.h5tchibook.post.dao.UserPostDAO">
- 	<insert id="insertUserPost" parameterType="com.h5tchibook.post.model.Post">
+ 	<insert id="insertUserPost" parameterType="com.h5tchibook.post.model.Post" useGeneratedKeys="true" keyProperty="id">
  		INSERT INTO
  			`post`
  			(	
@@ -43,7 +43,7 @@
  			`id`=#{id}
  	</select>
  	
- 	<select id="selectPostListByUserId" parameterType="int" resultType="com.h5tchibook.post.model.Post">
+ 	<select id="selectPostListByUserId" parameterType="map" resultType="com.h5tchibook.post.model.Post">
  		SELECT
  			`id`
  			,`userId`
@@ -57,6 +57,17 @@
  			`post`
  		WHERE 
  			`userId`=#{userId}
+ 		AND
+ 			`disclosureStatus` IN
+ 			<if test="disclosureStatus == 'public'">
+ 				('public')
+ 			</if>
+ 			<if test="disclosureStatus == 'friend'">
+ 				('public','friend')
+ 			</if>
+ 			<if test="disclosureStatus == 'private'">
+ 				('public','private','friend')
+ 			</if>
  		ORDER BY
  			`id`
  		DESC
@@ -78,6 +89,17 @@
  			`userId`=#{userId}
  		AND 
  			`contentType`='photo'
+ 		AND
+ 			`disclosureStatus` IN
+ 			<if test="disclosureStatus == 'public'">
+ 				('public')
+ 			</if>
+ 			<if test="disclosureStatus == 'friend'">
+ 				('public','friend')
+ 			</if>
+ 			<if test="disclosureStatus == 'private'">
+ 				('public','friend','private')
+ 			</if>
  		ORDER BY
  			`id` 
  		DESC
@@ -85,5 +107,30 @@
  		LIMIT #{limit}
  		</if>
  	</select>
+ 	
+ 	<select id="selectPostByPostIdList" parameterType="java.util.List" resultType="com.h5tchibook.post.model.Post">
+ 		SELECT
+ 			`id`
+ 			,`userId`
+ 			,`content`
+ 			,`contentType`
+ 			,`contentPath`
+ 			,`disclosureStatus`
+ 			,`createdAt`
+ 			,`updatedAt`
+ 		FROM
+ 			`post`
+ 		WHERE 
+ 			`id` IN
+ 			<foreach collection="postIdList" item="postId" open="(" close=")" separator=",">
+ 				#{postId}
+ 			</foreach>
+ 		AND
+ 			disclosureStatus IN ('public','friend')
+ 		ORDER BY
+ 		`id`
+ 		DESC
+ 	</select>
+ 	
  	
  </mapper>

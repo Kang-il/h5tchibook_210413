@@ -58,4 +58,13 @@
  			`friendId`=#{friendId}
  	</select>
  	
+ 	<select id="selectFriendIdListByUserId" parameterType="int" resultType="Integer">
+ 		SELECT
+ 			`friendId`
+ 		FROM
+ 			`friend`
+ 		WHERE
+ 			`userId`= #{userId}
+ 	</select>
+ 	
  </mapper>

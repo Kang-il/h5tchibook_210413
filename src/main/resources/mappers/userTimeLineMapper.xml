@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.h5tchibook.timeline.dao.UserTimeLineDAO">
+ 	<insert id="insertUserTimeLine" parameterType="com.h5tchibook.timeline.model.UserTimeLine">
+		INSERT INTO
+			`userTimeLine`
+			(
+			`postId`
+			,`userId`
+			,`createdAt`
+			) 		
+		VALUES
+			(
+			#{postId}
+			,#{userId}
+			,NOW()
+			)
+ 	</insert>
+ 	<select id="selectUserTimeLineListByUserIdList" parameterType="java.util.List" resultType="com.h5tchibook.timeline.model.UserTimeLine">
+ 		SELECT
+ 			`id`
+ 			,`postId`
+ 			,`userId`
+ 			,`createdAt`
+ 		FROM
+ 			`userTimeLine`
+ 		WHERE
+ 			`userId` IN
+ 			<foreach collection="userIdList" item="userId" open="(" close=")" separator=",">
+ 				#{userId}
+ 			</foreach>
+ 		ORDER BY `id`
+ 		DESC
+ 		LIMIT 50
+ 	</select>
+ </mapper>

@@ -3,15 +3,17 @@ package com.h5tchibook.friend.model;
 import java.util.Date;
 
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
-public class Friend {
+@Data
+@Builder
+public class FriendView {
 	private int id;
 	private int userId;
 	private int friendId;
 	private Date createdAt;
 	private Date updatedAt;
+	
+	private String friendLoginId;
+	private String friendProfileImagePath;
 }

@@ -21,7 +21,7 @@
 				<img src="${user.profileImagePath}" alt="프로필" />			
 			</c:if>
 			<div class="create-post-select-box">
-				<span>h5tchi</span>
+				<span>${user.loginId}</span>
 				<select id="disclosureStatus" class="form-control"> 
 					<option value="public" class="disclosure-option">전체공개</option>
 					<option value="friend"  class="disclosure-option">친구공개</option>
@@ -35,7 +35,7 @@
 				<button class="material-icons-outlined delete-img-btn d-none">close</button>
 				<img src="/static/images/dummy_profile.jpg" class="create-post-img d-none" alt="포스트"/>
 			</div>
-			<textarea class="form-control create-text-form" placeholder="h5tchi님, 무슨 생각을 하고 계신가요?" rows="6"></textarea>
+			<textarea class="form-control create-text-form" placeholder="${user.loginId}님, 무슨 생각을 하고 계신가요?" rows="6"></textarea>
 		</div>
 			
 		<div class="add-photo-box">
