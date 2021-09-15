@@ -5,6 +5,9 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
+
+<jsp:include page="../include/edit_profile_modal.jsp"/>
+
 <div class="user-profile-box">
 
 	<div class="user-profile-background">
@@ -20,13 +23,22 @@
 				<img src="/static/images/no_profile_image.png" alt="프로필"/>
 			</c:if>
 			<c:if test="${feedOwner.profileImagePath ne null}">
-				<img src="${feedOwner.profileImagePat}" alt="프로필"/>
+				<img src="${feedOwner.profileImagePath}" alt="프로필"/>
 			</c:if>	
 		</div>
 				
 		<c:if test="${feedOwnerCheck eq true}">
-			<button class="material-icons profile-img-edit-btn">photo_camera</button>
-			<button class=" profile-background-edit-btn"><span class="material-icons">photo_camera</span> 커버사진 편집</button>
+			<div>
+				<button class="material-icons profile-img-edit-btn">photo_camera</button>
+				<div class="profile-pic-modal d-none">
+					<div class="profile-pic-item">
+						<button type="button" class="show-edit-profile-modal-btn"><span class="material-icons-outlined">account_circle</span>사진 변경</button>
+					</div>
+				</div>
+			</div>
+			<div>
+				<button class=" profile-background-edit-btn"><span class="material-icons">photo_camera</span> 커버사진 편집</button>
+			</div>
 		</c:if>
 	</div>
 	

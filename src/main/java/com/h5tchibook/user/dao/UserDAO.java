@@ -12,4 +12,5 @@ public interface UserDAO {
 	public User selectUserByLoginIdAndPassword(@Param("loginId")String loginId
 											  ,@Param("password") String password);
 	public User selectUserById(@Param("id") int id);
+	public void updateUserProfileImagePath(@Param("id")int id, @Param("profileImagePath") String profileImagePath);
 }

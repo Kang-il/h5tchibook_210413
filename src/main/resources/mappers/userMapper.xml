@@ -26,6 +26,15 @@
  			)
  	</insert>
  	
+ 	<update id="updateUserProfileImagePath" parameterType="map">
+ 		UPDATE 
+ 			`user`
+ 		SET
+ 			`profileImagePath`=#{profileImagePath, jdbcType=VARCHAR}
+ 		WHERE
+ 			`id`=#{id}
+ 	</update>
+ 	
  	<select id="selectUserByloginId" parameterType="String" resultType="com.h5tchibook.user.model.User">
  		SELECT
  			`id`

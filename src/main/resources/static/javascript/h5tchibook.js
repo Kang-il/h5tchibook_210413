@@ -556,6 +556,7 @@ $(document).ready(function(){
 		if(!$('.nav-menu-modal').has(e.target).length){
 			$('.nav-menu-modal').addClass('d-none');
 			$('.modal-window').addClass('d-none');
+			$('.profile-pic-modal').addClass('d-none');
 		}
 	});
 	
@@ -763,6 +764,120 @@ $(document).ready(function(){
 	$('.cancel-response-friend-modal').on('click',function(){
 		$('.response-friend-modal-section').addClass('d-none');
 		$('body').removeClass('disabled-scroll');
+	});
+	
+//user-profile-section-----------------------
+
+	$('.profile-img-edit-btn').on('click',function(){
+		$('.profile-pic-modal').removeClass('d-none');
+		$('.modal-window').removeClass('d-none');
+	});
+	
+	$('.show-edit-profile-modal-btn').on('click',function(){
+		$('.edit-profile-pic-modal-section').removeClass('d-none');
+		$('body').addClass('disabled-scroll');
+		$('.modal-window').trigger('click');
+	});
+	
+	$('.edit-profile-item').on('click',function(){
+		$('.edit-profile-img-input').trigger('click');
+	});
+	
+	$('.edit-profile-img-input').on('input',function(e){
+		let files = e.target.files;
+		let filesArr = Array.prototype.slice.call(files);
+
+		filesArr.forEach(function(f) {
+			if (!f.type.match("image.*")) {
+				alert("확장자는 이미지 확장자만 가능합니다.");
+				$(".edit-profile-img-input").val($('.edit-profile-img').attr('src'));
+				$('.addapt-profile-img').attr('disabled',true);
+				return;
+			}
+			sel_file = f;
+			let reader = new FileReader();
+			reader.onload =function(e){
+				$('.edit-profile-img').attr('src',e.target.result);
+				
+				let profileImage=$('.profile-img-value-box').val();
+				let changeImg=$('.edit-profile-img').attr('src');
+
+				if(profileImage==changeImg){
+					$('.addapt-profile-img').attr('disabled',true);
+				}else{
+					$('.addapt-profile-img').attr('disabled',false);
+				}
+				
+			}
+				reader.readAsDataURL(f);
+		});
+	});
+	
+	$('.change-basic-img').on('click',function(){
+		$('.edit-profile-img').attr('src','/static/images/no_profile_image.png');
+		$('.edit-profile-img-input').val('');
+		let profileImage=$('.profile-img-value-box').val();
+		let changeImg=$('.edit-profile-img').attr('src');
+		if(profileImage==changeImg){
+			$('.addapt-profile-img').attr('disabled',true);
+		}else{
+			$('.addapt-profile-img').attr('disabled',false);
+		}
+	});
+	
+	$('.profile-modal-close-btn').on('click',function(){
+		$('.edit-profile-pic-modal-section').addClass('d-none');
+		$('body').removeClass('disabled-scroll');
+	});
+	
+	$('.addapt-profile-img').on('click',function(){
+		let filePath=$('.edit-profile-img-input').val();
+	
+		let file=null;
+		
+		let loginId=$(this).data('user-login-id');
+		
+		if(filePath!=''){
+			file=$('.edit-profile-img-input')[0].files[0];
+		}
+		
+		let formData=new FormData();
+		formData.append("file",file);
+		
+		$.ajax({
+			type:'POST'
+			,url:'/profile/update_profile_img'
+			,data:formData
+			,processData:false
+			,contentType:false
+			,enctype:'multipart/form-data'
+			,success:function(data){
+				if(data.loginCheck===true){
+					
+					
+					if(data.result===true){
+						location.reload();
+					}else{
+						
+						if(data.valid_wrong_extension===true){
+							alert('올바른 파일 확장자가 아닙니다.');
+						}
+						
+						if(data.valid_empty_extension===true){
+							alert('올바른 파일 형식이 아닙니다.');
+						}
+						
+						alert("프로필 변경 실패 관리자에게 문의하세요");
+					}
+				}else{
+					location.href="/user/sign_in_view";
+				}
+			}
+			,error:function(e){
+				alert(e);
+			}
+		});
+		
 	});
 
 });

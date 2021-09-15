@@ -11,7 +11,7 @@
 				<img src="/static/images/no_profile_image.png" alt="프로필" class="timeline-info-profile-img"/>
 			</c:if>
 			<c:if test="${user.profileImagePath ne null}">
-				<img src="${user.profileImageParh}" alt="프로필" class="timeline-info-profile-img"/>
+				<img src="${user.profileImagePath}" alt="프로필" class="timeline-info-profile-img"/>
 			</c:if>
 			<span>${user.loginId}</span>
 		</div>
