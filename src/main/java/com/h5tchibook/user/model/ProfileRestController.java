@@ -54,6 +54,12 @@ public class ProfileRestController {
 			}
 			
 			userBO.editUserProfileImage(user, file);// 값 변경
+			
+			//기존 session에 들어있는 user객체는 update 이전의 값이므로 
+			//변경된 User다시 DB에서 받아와 기존 세션의 user값과 교체시켜준다.
+			User updatedUser=userBO.getUserById(user.getId());
+			session.setAttribute("user", updatedUser);
+			
 			resultCheck=true;
 		}
 
