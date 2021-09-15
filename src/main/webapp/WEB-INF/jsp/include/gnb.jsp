@@ -15,14 +15,20 @@
 		</div>
 		
 		<div class="section-nav-box">
-			<c:if test="${useLink eq 'userTimeLine'}">
+			<c:if test="${userView eq 'timeline/user_timeline_section'}">
 				<a href="/timeline/user_timeline_view" class="material-icons nav-bar-link nav-bar-in-use">home</a>
 				<a href="/timeline/group_timeline_view" class="material-icons nav-bar-link">people_alt</a>
 			</c:if>
-			<c:if test="${useLink eq 'groupTimeLine'}">
+			<c:if test="${userView eq 'timeline/group_timeline_section'}">
 				<a href="/timeline/user_timeline_view"  class="material-icons nav-bar-link">home</a>
 				<a href="/timeline/group_timeline_view" class="material-icons nav-bar-link nav-bar-in-use">people_alt</a>
 			</c:if>
+			<c:if test="${userView ne 'timeline/user_timeline_section' && userView ne 'timeline/group_timeline_section'}">
+				<a href="/timeline/user_timeline_view"  class="material-icons nav-bar-link">home</a>
+				<a href="/timeline/group_timeline_view" class="material-icons nav-bar-link">people_alt</a>
+			</c:if>
+			
+			
 		</div>
 		
 		<%-- 연결  --%>

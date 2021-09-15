@@ -1,19 +1,27 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<section class="timeline-section">
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
+<section class="timeline-section">
 	<section class="timeline-info-section">
 		<div class="timeline-user-profile">
-			<img src="/static/images/dummy_profile.jpg" alt="프로필" class="timeline-info-profile-img"/>
-			<span>h5tchi</span>
+			<c:if test="${user.profileImagePath eq null}">
+				<img src="/static/images/no_profile_image.png" alt="프로필" class="timeline-info-profile-img"/>
+			</c:if>
+			<c:if test="${user.profileImagePath ne null}">
+				<img src="${user.profileImageParh}" alt="프로필" class="timeline-info-profile-img"/>
+			</c:if>
+			<span>${user.loginId}</span>
 		</div>
 		
-		<div class="timeline-info-menu">
+		<div class="timeline-info-menu" id="friendViewBtn">
 			<span class="material-icons-outlined">group</span>
 			<span>친구</span>
 		</div>
 		
-		<div class="timeline-info-menu">
+		<div class="timeline-info-menu" id="groupTimeLineBtn">
 			<span class="material-icons-outlined">groups</span>
 			<span>그룹</span>
 		</div>

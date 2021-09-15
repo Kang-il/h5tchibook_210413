@@ -15,7 +15,9 @@
 <script src="/static/javascript/h5tchibook.js?${currentTime}" type="text/javascript"></script>
 </head>
 
+<jsp:include page="../include/friend_modal.jsp"/>
 <jsp:include page="../include/delete_comment_modal.jsp"/>
+
 <body>
 	<jsp:include page="../include/create_post_modal.jsp"/>
 	<jsp:include page="../include/gnb.jsp"/>

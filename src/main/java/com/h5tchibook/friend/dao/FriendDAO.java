@@ -22,4 +22,5 @@ public interface FriendDAO {
 	public Friend selectFriendByUserIdAndFriendId(@Param("userId")int userId
 												 ,@Param("friendId")int friendId
 												 );
+	public List<Integer> selectFriendIdListByUserId(@Param("userId") int userId);
 }

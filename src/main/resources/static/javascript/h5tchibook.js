@@ -70,49 +70,48 @@ function createComment(postId,comment){
 }
 
 function getCommentList(postId,userId){//포스트 유저 아이디
-		$.ajax({
-			type:'GET'
-			,url:'/comment/get_comment_list'
-			,data:{'postId':postId}
-			,success:function(data){
-				if(data.loginCheck===true){
-					if(data.resultCheck===true){
-						$('#postCommentItemBox'+postId).empty();
-						data.commentList.map((comment) => {
-							
-							let imageUrl= comment.userProfilePath == undefined ? '/static/images/no_profile_image.png':comment.userProfilePath;
-							let myId =data.userId;
-							let button = '';
-							if(myId == userId || myId==comment.userId){// 내가 포스트주인이거나 코멘트 주인일경우
-								button='<button type="button" class="material-icons-outlined comment-menu-btn" data-comment-id="'+comment.id+'">more_horiz</button>';
-							}
-
-							let html=
-							'<div class="post-comment-item">'
-								+'<a href="/feed/'+comment.userLoginId+'">'
-									+'<img src="'+imageUrl+'"/>'
-								+'</a>'
-								
-								+'<div class="post-comment">'
-									+'<div>'+'<a href="/feed/'+comment.userLoginId+'">'+comment.userLoginId+'</a>'+'</div>'
-									+'<div>'+comment.comment+'</div>'
-								+'</div>'
-								+button
-							+'</div>';
-							
-							
-							$('#postCommentItemBox'+postId).append(html).trigger("create");		
-						});
-					}
-				}else if(data.loginCheck===false){
-					location.href="/user/sign_in_view";
+	$.ajax({
+		type:'GET'
+		,url:'/comment/get_comment_list'
+		,data:{'postId':postId}
+		,success:function(data){
+			if(data.loginCheck===true){
+				if(data.resultCheck===true){
+					$('#postCommentItemBox'+postId).empty();
+					data.commentList.map((comment) => {
+						
+						let imageUrl= comment.userProfilePath == undefined ? '/static/images/no_profile_image.png':comment.userProfilePath;
+						let myId =data.userId;
+						let button = '';
+						if(myId == userId || myId==comment.userId){// 내가 포스트주인이거나 코멘트 주인일경우
+							button='<button type="button" class="material-icons-outlined comment-menu-btn" data-comment-id="'+comment.id+'">more_horiz</button>';
+						}
+							let html='<div class="post-comment-item">'
+										+'<a href="/feed/'+comment.userLoginId+'">'
+											+'<img src="'+imageUrl+'"/>'
+										+'</a>'
+											
+										+'<div class="post-comment">'
+											+'<div>'+'<a href="/feed/'+comment.userLoginId+'">'+comment.userLoginId+'</a>'+'</div>'
+											+'<div>'+comment.comment+'</div>'
+										+'</div>'
+										+button
+									+'</div>';
+						
+						
+						$('#postCommentItemBox'+postId).append(html).trigger("create");		
+					});
 				}
+			}else if(data.loginCheck===false){
+				location.href="/user/sign_in_view";
 			}
-			,error:function(e){
-				alert(e);
-			}
-		});
-	}
+		}
+		,error:function(e){
+			alert(e);
+		}
+	});
+}
+	
 function deleteComment(commentId){
 	$.ajax({
 		type:'POST'
@@ -134,6 +133,135 @@ function deleteComment(commentId){
 		}
 	});
 }
+
+function deleteFriend(friendId){
+	$.ajax({
+		type:'POST'
+		,data:{'friendId':friendId}
+		,url:'/friend/delete_friend'
+		,success:function(data){
+			if(data.loginCheck===true){
+				if(data.result===true){
+					location.reload();
+				}
+			}else if(data.loginCheck === false){
+				location.href="/user/sign_in_view";
+			}
+		}
+		,error:function(e){
+			alert(e);
+		}
+	});
+}
+
+function requestFriend(friendId){
+	$.ajax({
+		type:'POST'
+		,data:{'friendId':friendId}
+		,url:'/friend/request_friend'
+		,success:function(data){
+			if(data.loginCheck===true){
+				if(data.existUser==true){
+					if(data.result===true){
+						location.reload();
+					}else{
+						alert("친구요청 실패 관리자에게 문의하세요");
+						return;
+					}
+				}else{
+					alert('유저가 존재하지 않습니다.');
+					return;
+				}
+			}else{
+				location.href="/user/sign_in_view";
+			}
+		}
+		,error:function(e){
+			alert(e);
+		}
+	});
+}
+
+function cancelFriendRequest(friendId){
+	$.ajax({
+		type:'POST'
+		,data:{'friendId':friendId}
+		,url:'/friend/cancel_friend_request'
+		,success:function(data){
+			if(data.loginCheck===true){
+				if(data.existUser===true){
+					if(data.result===true){
+						location.reload();
+					}else{
+						alert('친구요청 취소 실패 관리자에게 문의하세요');
+					}
+				}else{
+					alert('유저가 존재하지 않습니다.');
+				}
+			}else{
+				location.href='/user/sign_in_view';
+			}
+		}
+		,error:function(e){
+			alert(e);
+		}
+	});
+}
+
+function receiveFriend(friendId){
+	$.ajax({
+		type:'POST'
+		,data:{'friendId':friendId}
+		,url:'/friend/receive_friend'
+		,success:function(data){
+			if(data.loginCheck===true){
+				if(data.existUser===true){
+					if(data.result===true){
+						location.reload();
+					}else{
+						alert('친구수락 실패 관리자에게 문의하세요');
+					}
+				}else{
+					alert('유저가 존재하지 않습니다.');
+				}
+			}else{
+				return false;	
+			}
+					
+		}
+		,error:function(e){
+			alert(e);
+		}
+	});
+}
+	
+function refuseFriend(friendId) {
+	$.ajax({
+		type: 'POST'
+		, data: { 'friendId': friendId }
+		, url: '/friend/refuse_friend'
+		, success: function(data) {
+			if (data.loginCheck === true) {
+				if(data.existUser){
+					if (data.result === true) {
+						location.reload();
+					}else{
+						alert('친구요청 거절 실패 관리자에게 문의하세요');
+						return;
+					}
+				}
+			}else{
+				location.href="/user/sign_in_view";
+			}
+
+			return false;
+		}
+		, error: function(e) {
+			alert(e);
+		}
+	});
+}
+
 $(document).ready(function(){
 //-------------------sign-up-modal
 	$('.sign-up-form-btn').on('click',function(){
@@ -455,11 +583,16 @@ $(document).ready(function(){
 	});
 	
 //------------------user_timeline_section
+	$('#groupTimeLineBtn').on('click',function(){
+		location.href='/timeline/group_timeline_view';	
+	});
+	
 	$('.like-before-btn').on('click',function(){
 		let postId = $(this).data('post-id');
 		setLike(postId);
 		
 	});
+	
 	$('.like-after-btn').on('click',function(){
 		let postId = $(this).data('post-id');
 		setLike(postId);
@@ -469,6 +602,7 @@ $(document).ready(function(){
 		let postId=$(this).data('post-id');
 		$('#commentInput'+postId).focus();
 	});
+	
 	$('.comment-create-btn').on('click',function(){
 		let postId=$(this).data('post-id');
 		let comment=$('#commentInput'+postId).val();
@@ -510,4 +644,125 @@ $(document).ready(function(){
 		$('body').removeClass('disabled-scroll');
 	});
 	
+	//--------------user-feed-photo-section
+	$('.feed-photo-item').on('click',function(){
+		let postId=$(this).data('post-id');
+		location.href="/post/post_detail_view?postId="+postId;
+		
+	});
+
+	$('.friend-menu-btn').on('click',function(){
+		let friendId = $(this).data('friend-id');
+		$('.delete-friend-btn').data('friend-id',friendId);
+		$('.delete-friend-modal-section').removeClass('d-none');
+		$('body').addClass('disabled-scroll');
+	});
+	
+	$('.friend-btn').on('click',function(){
+		let friendId=$(this).data('feed-owner-id');
+		$('.delete-friend-btn').data('friend-id',friendId);
+		$('.delete-friend-modal-section').removeClass('d-none');
+		$('body').addClass('disabled-scroll');
+	});
+	
+	$('.cancel-delete-friend-modal').on('click',function(){
+		$('.delete-friend-modal-section').addClass('d-none');
+		$('body').removeClass('disabled-scroll');
+	});
+	
+	$('.delete-friend-btn').on('click',function(){
+		let friendId = $(this).data('friend-id');
+		if(friendId=='' || friendId == undefined){
+			alert('잘못된 접근');
+			return;
+		}
+		deleteFriend(friendId);
+	});
+	
+	$('.delete-friend-modal-section').on('click',function(e){
+		if(!$('.delete-friend-btn').has(e.target).length){
+			$('.delete-friend-modal-section').addClass('d-none');
+			$('body').removeClass('disabled-scroll');
+		}
+	});
+	
+	$('.progress-friend-btn').on('click',function(){
+		// 요청 취소할 것인지 물어봐야됨.
+		let feedOwnerId=$(this).data('feed-owner-id');
+		if(feedOwnerId == '' || feedOwnerId == undefined){
+			alert('잘못된 접근');
+			return;
+		}
+		
+		$('.request-friend-modal-section').removeClass('d-none');
+		$('body').addClass('disabled-scroll');
+		$('.request-cancel-friend-btn').data('feed-owner-id',feedOwnerId);
+	});
+	
+	$('.request-cancel-friend-btn').on('click',function(){
+		let feedOwnerId=$(this).data('feed-owner-id');
+		cancelFriendRequest(feedOwnerId);
+	});
+	
+	$('.request-friend-modal-section').on('click',function(e){
+		if(!$('.request-friend-modal-box').has(e.target).length){
+			$('.request-friend-modal-section').addClass('d-none');
+			$('body').removeClass('disabled-scroll');
+		}
+	});
+	
+	$('.cancel-request-friend-modal').on('click',function(){
+		$('.request-friend-modal-section').addClass('d-none');
+		$('body').removeClass('disabled-scroll');
+	});
+	
+	$('.response-friend-btn').on('click',function(){
+		//수락 거절 묻기
+		let feedOwnerId=$(this).data('feed-owner-id');
+		if(feedOwnerId == '' || feedOwnerId == undefined){
+			alert('잘못된 접근');
+			return;
+		}
+
+		$('.response-friend-modal-section').removeClass('d-none');
+		$('.response-friend-action-btn').data('feed-owner-id',feedOwnerId);
+		$('.refuse-friend-action-btn').data('feed-owner-id',feedOwnerId);
+		$('body').addClass('disabled-scroll');
+	});
+	
+	$('.response-friend-action-btn').on('click',function(){
+		let friendId=$(this).data('feed-owner-id');
+		receiveFriend(friendId);
+
+	});
+	
+	$('.refuse-friend-action-btn').on('click',function(){
+		let friendId=$(this).data('feed-owner-id');	
+		refuseFriend(friendId);
+	});
+	
+	$('.request-friend-btn').on('click',function(){
+		//친구요청 취소
+		let feedOwnerId=$(this).data('feed-owner-id');
+		
+		if(feedOwnerId == '' || feedOwnerId == undefined){
+			alert('잘못된 접근');
+			return;
+		}
+		
+		requestFriend(feedOwnerId);
+	});
+	
+	$('.response-friend-modal-section').on('click',function(e){
+		if(!$('.response-friend-modal-box').has(e.target).length){
+			$('.response-friend-modal-section').addClass('d-none');
+			$('body').removeClass('disabled-scroll');
+		}
+	});
+	
+	$('.cancel-response-friend-modal').on('click',function(){
+		$('.response-friend-modal-section').addClass('d-none');
+		$('body').removeClass('disabled-scroll');
+	});
+
 });

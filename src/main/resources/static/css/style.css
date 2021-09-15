@@ -664,9 +664,9 @@ header{
 }
 
 .profile-nav-box .request-friend-btn{
-
 	height:30px;
 	border:none;
+	width:140px;
 	outline:none;
 	font-weight:700;
 	background-color:#1877f2;
@@ -674,8 +674,11 @@ header{
 	border-radius:10px;
 	display:flex;
 	align-items:center;
-	justify-content:center;
+	justify-content:space-between;
+	padding-left:20px;
+	padding-right:20px;
 	cursor:pointer;
+	
 }
 
 .profile-nav-box .progress-friend-btn{
@@ -2126,4 +2129,204 @@ footer .footer-item{
 	color:#34b21b;
 	font-size:28px;
 	margin-right:5px;
+}
+
+.user-photo-section{
+	width:940px;
+	margin:auto;
+	margin-top:20px;
+	background-color: white;
+	border:1px solid #dbdbdb;
+	border-radius: 15px;
+	padding:20px;
+}
+
+.user-photo-section .feed-title{
+	font-weight:700;
+}
+
+.user-photo-section .feed-photo-row{
+	display: flex;
+}
+
+.user-photo-section .feed-photo-item{
+	padding:8px;	
+	cursor:pointer;
+}
+
+.user-photo-section .feed-photo-item img{
+	width:164px;
+	height:164px;
+	border-radius:10px;
+}
+
+.user-friend-section{
+	width:940px;
+	margin:auto;
+	margin-top:20px;
+	background-color: white;
+	border:1px solid #dbdbdb;
+	border-radius: 15px;
+	padding:20px;
+}
+
+.user-friend-section .feed-title{
+	font-weight:700;
+}
+
+.user-friend-section .feed-friend-row{
+	display: flex;
+}
+
+.user-friend-section .feed-friend-item{	
+	border:1px solid #dbdbdb;
+	border-radius:10px;
+	cursor:pointer;
+	margin:10px;
+}
+
+.user-friend-section .feed-friend-item img{
+	width:164px;
+	height:164px;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	border-bottom:1px solid #dbdbdb;
+}
+
+.user-friend-section .friend-login-id{
+	color:black;
+	font-weight:700;
+	display: flex;
+	align-items: center;
+	padding:10px;
+
+}
+
+.user-friend-section .friend-info-box{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	
+}
+
+.user-friend-section .friend-menu-btn{
+	font-size:15px;
+	padding:10px;
+}
+
+.delete-friend-modal-section{
+	width:100%; 
+	height:100%;
+	background:rgba(0,0,0,0.5);
+	position:fixed ;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	margin:0 auto;
+	left:0;
+	right:0;
+	z-index:3;
+}
+
+.delete-friend-modal-section .delete-friend-modal-box{
+	width:330px;
+	border-radius:10px;
+	background-color:white;
+	position:fixed;
+	z-index:2;
+
+}
+
+.delete-friend-modal-box div{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.delete-friend-modal-box button{
+	outline: none;
+	border: none;
+	font-size:16px;
+	padding:15px;
+	width:100%;
+	background-color:rgba(0,0,0,0);
+	cursor: pointer;
+}
+
+.request-friend-modal-section{
+	width:100%; 
+	height:100%;
+	background:rgba(0,0,0,0.5);
+	position:fixed ;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	margin:0 auto;
+	left:0;
+	right:0;
+	z-index:3;
+}
+
+.request-friend-modal-section .request-friend-modal-box{
+	width:330px;
+	border-radius:10px;
+	background-color:white;
+	position:fixed;
+	z-index:2;
+
+}
+
+.request-friend-modal-box div{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.request-friend-modal-box button{
+	outline: none;
+	border: none;
+	font-size:16px;
+	padding:15px;
+	width:100%;
+	background-color:rgba(0,0,0,0);
+	cursor: pointer;
+}
+
+.response-friend-modal-section{
+	width:100%; 
+	height:100%;
+	background:rgba(0,0,0,0.5);
+	position:fixed ;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	margin:0 auto;
+	left:0;
+	right:0;
+	z-index:3;
+}
+
+.response-friend-modal-section .response-friend-modal-box{
+	width:330px;
+	border-radius:10px;
+	background-color:white;
+	position:fixed;
+	z-index:2;
+
+}
+
+.response-friend-modal-box div{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.response-friend-modal-box button{
+	outline: none;
+	border: none;
+	font-size:16px;
+	padding:15px;
+	width:100%;
+	background-color:rgba(0,0,0,0);
+	cursor: pointer;
 }

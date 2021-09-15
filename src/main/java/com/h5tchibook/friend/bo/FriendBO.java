@@ -30,6 +30,10 @@ public class FriendBO {
 		friendDAO.deleteFriendByUserIdAndFriendId(friendId, userId);
 	}
 	
+	public void deleteFriendRequest(int userId, int friendId) {
+		friendDAO.deleteFriendByUserIdAndFriendId(userId, friendId);
+	}
+	
 	public List<FriendView> selectFriendListByUserId(int userId , Integer limit){
 		List<Friend> friendList=friendDAO.selectFriendListByUserId(userId);
 		List<FriendView> friendViewList=new ArrayList<FriendView>();
