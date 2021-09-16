@@ -5,7 +5,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 
- <jsp:include page="../include/delete_friend_modal.jsp"/>
+ <jsp:include page="../include/friend_modal.jsp"/>
 
 <section class="user-feed-section">
 	<jsp:include page="../include/feed_user_profile.jsp"/>

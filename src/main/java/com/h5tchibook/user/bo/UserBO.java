@@ -56,4 +56,27 @@ public class UserBO {
 		userDAO.updateUserProfileImagePath(user.getId(),imageUrl);
 
 	}
+	
+	public void editUserCoverImage(User user, MultipartFile file) {
+		String imageUrl=null;
+		
+		if(user.getCoverImagePath()!=null) {
+			try {
+				fileManagerService.deleteFile(user.getCoverImagePath());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		if(file != null) {
+			try {
+				imageUrl=fileManagerService.saveFile(user.getLoginId(), file);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		userDAO.updateUserCoverImagePath(user.getId(), imageUrl);
+	}
 }

@@ -2462,3 +2462,49 @@ footer .footer-item{
 	margin-right:15px;
 	cursor:pointer;
 }
+
+.edit-profile-background-section{
+	height:60px;
+	width:100%;
+	position: fixed;
+	top:50px;
+	z-index:5;
+	background-color: rgba(0,0,0,0.5) ;
+	display: flex;
+	justify-content: space-between;
+	align-items:center;
+}
+
+.edit-profile-background-section button{
+	border:none;
+	outline:none;
+	border-radius:10px;
+	height:35px;
+	margin:5px;
+}
+
+.edit-profile-background-section .change-background-img-btn-box{
+	display: flex;
+	align-items: center;
+	margin-right:20px;
+}
+
+.edit-profile-background-section .basic-background-img-btn-box{
+	margin-left:20px;
+}
+
+.edit-profile-background-section .basic-background-img-btn-box button{
+	padding-left:20px;
+	padding-right:20px;
+}
+
+.change-background-img-btn-box span{
+	color:white;
+	padding:20px;
+	cursor:pointer;
+}
+
+.change-background-img-btn-box .change-background-action-btn{
+	color:white;
+	background-color:#18abfe;
+}

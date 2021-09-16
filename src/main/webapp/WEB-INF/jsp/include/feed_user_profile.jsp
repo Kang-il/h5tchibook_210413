@@ -7,15 +7,15 @@
 
 
 <jsp:include page="../include/edit_profile_modal.jsp"/>
-
 <div class="user-profile-box">
-
 	<div class="user-profile-background">
 		<c:if test="${feedOwner.coverImagePath eq null}">
-			<img src="/static/images/no_background_image.jpg" class="profile-background"/>				
+			<img src="/static/images/no_background_image.jpg" class="profile-background"/>
+			<input type="hidden" value="/static/images/no_background_image.jpg" class="original-background-img"/>				
 		</c:if>
 		<c:if test="${feedOwner.coverImagePath ne null}">
-			<img src="${feedOwner.coverImagePath}" class="profile-background"/>				
+			<img src="${feedOwner.coverImagePath}" class="profile-background" class="original-background-img"/>
+			<input type="hidden" value="${feedOwner.coverImagePath}"/>					
 		</c:if>
 		
 		<div class="img-box">
@@ -38,6 +38,7 @@
 			</div>
 			<div>
 				<button class=" profile-background-edit-btn"><span class="material-icons">photo_camera</span> 커버사진 편집</button>
+				<input type="file" class="change-background-img-input d-none"/>
 			</div>
 		</c:if>
 	</div>
@@ -50,16 +51,15 @@
 				<button class="add-introduce-btn">소개 추가</button>
 			</c:if>
 			<c:if test="${feedOwner.introduce ne null}">
-				<button class="add-introduce-btn">${feedOwner.introduce}</button>
+				<button class="add-introduce-btn" data-user-introduce="${feedOwner.introduce}">${feedOwner.introduce}</button>
 			</c:if>
 		</c:if>
-		
 		<c:if test="${feedOwnerCheck eq false}">
 			<c:if test="${feedOwner.introduce eq null}">
 				<span class="user-introduce">소개가 없습니다.</span>
 			</c:if>
 			<c:if test="${feedOwner.introduce ne null}">
-				<button class="user-introduce">${feedOwner.introduce}</button>
+				<button class="user-introduce" >${feedOwner.introduce}</button>
 			</c:if>
 		</c:if>
 	<hr>

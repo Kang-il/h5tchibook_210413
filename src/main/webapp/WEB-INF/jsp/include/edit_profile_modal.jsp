@@ -33,3 +33,27 @@
 	    	<input type="file" class="edit-profile-img-input d-none"/>
     </div>
 </div>
+
+<div class="edit-profile-pic-modal-section">
+	<div class="edit-profile-pic-modal-box">
+		<div class="title-box">
+		    <div class="modal-title">소개글 수정</div>
+		    <div class="material-icons-outlined profile-modal-close-btn">close</div>
+	    </div>
+		    <hr class="m-0">
+		    <div>
+		    	<textarea class="introduce-text-area"></textarea>
+		    </div>
+	</div>
+</div>
+
+<div class="edit-profile-background-section d-none">
+	<div class="basic-background-img-btn-box">
+		<button type="button" class="basic-background-img-btn btn">기본이미지로 변경</button>
+	</div>
+	<div class="change-background-img-btn-box">
+		<button type="button" class="change-background-btn btn">이미지 변경</button>
+		<button type="button" class="change-background-action-btn btn" disabled="disabled">이미지 적용</button>
+		<span class="material-icons-outlined change-background-close-btn">close</span>
+	</div>
+</div>

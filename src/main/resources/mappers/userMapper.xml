@@ -35,6 +35,15 @@
  			`id`=#{id}
  	</update>
  	
+ 	<update id="updateUserCoverImagePath" parameterType="map">
+ 		UPDATE 
+ 			`user`
+ 		SET
+ 			`coverImagePath`=#{coverImagePath, jdbcType=VARCHAR}
+ 		WHERE
+ 			`id`=#{id}
+ 	</update>
+ 	
  	<select id="selectUserByloginId" parameterType="String" resultType="com.h5tchibook.user.model.User">
  		SELECT
  			`id`

@@ -13,4 +13,5 @@ public interface UserDAO {
 											  ,@Param("password") String password);
 	public User selectUserById(@Param("id") int id);
 	public void updateUserProfileImagePath(@Param("id")int id, @Param("profileImagePath") String profileImagePath);
+	public void updateUserCoverImagePath(@Param("id") int id , @Param("coverImagePath")String coverImagePath);
 }

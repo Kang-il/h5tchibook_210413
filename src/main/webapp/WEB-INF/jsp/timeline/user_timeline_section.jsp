@@ -6,7 +6,7 @@
 
 <section class="timeline-section">
 	<section class="timeline-info-section">
-		<div class="timeline-user-profile">
+		<div class="timeline-user-profile" data-user-login-id="${user.loginId}">
 			<c:if test="${user.profileImagePath eq null}">
 				<img src="/static/images/no_profile_image.png" alt="프로필" class="timeline-info-profile-img"/>
 			</c:if>

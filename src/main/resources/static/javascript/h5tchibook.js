@@ -80,7 +80,7 @@ function getCommentList(postId,userId){//포스트 유저 아이디
 					$('#postCommentItemBox'+postId).empty();
 					data.commentList.map((comment) => {
 						
-						let imageUrl= comment.userProfilePath == undefined ? '/static/images/no_profile_image.png':comment.userProfilePath;
+						let imageUrl= comment.userProfileImagePath == null ? '/static/images/no_profile_image.png':comment.userProfileImagePath;
 						let myId =data.userId;
 						let button = '';
 						if(myId == userId || myId==comment.userId){// 내가 포스트주인이거나 코멘트 주인일경우
@@ -584,6 +584,12 @@ $(document).ready(function(){
 	});
 	
 //------------------user_timeline_section
+
+	$('.timeline-user-profile').on('click',function(){
+		let userLoginId=$(this).data('user-login-id');	
+		location.href='/feed/'+userLoginId;
+	});
+	
 	$('#groupTimeLineBtn').on('click',function(){
 		location.href='/timeline/group_timeline_view';	
 	});
@@ -835,8 +841,6 @@ $(document).ready(function(){
 	
 		let file=null;
 		
-		let loginId=$(this).data('user-login-id');
-		
 		if(filePath!=''){
 			file=$('.edit-profile-img-input')[0].files[0];
 		}
@@ -877,6 +881,122 @@ $(document).ready(function(){
 				alert(e);
 			}
 		});
+		
+	});
+	
+	$('.profile-background-edit-btn').on('click',function(){
+		$('.edit-profile-background-section').removeClass('d-none');
+	});
+	
+	$('.change-background-btn').on('click',function(){
+		$('.change-background-img-input').trigger('click');
+	});
+	
+	$('.change-background-img-input').on('change',function(){
+		$('.edit-profile-background-section').removeClass('d-none');
+	});
+	
+	$('.basic-background-img-btn').on('click',function(){
+		const BASIC_IMAGE_PATH="/static/images/no_background_image.jpg";
+		$('.profile-background').attr('src',BASIC_IMAGE_PATH);
+		let originalBackgroundImg=$('.original-background-img').val();
+		
+		if(originalBackgroundImg==BASIC_IMAGE_PATH){
+			$('.change-background-action-btn').attr('disabled',true);
+		}else{
+			$('.change-background-action-btn').attr('disabled',false);
+		}
+		
+		$('.change-background-img-input').val('');
+	});
+	
+	$('.change-background-close-btn').on('click',function(){
+		$('.edit-profile-background-section').addClass('d-none');
+		$('.change-background-img-input').val('');
+		let originalBackgroundImg=$('.original-background-img').val();
+		$('.profile-background').attr('src',originalBackgroundImg);
+	});
+	
+	
+	
+	$('.change-background-img-input').on('input',function(e){
+		let files = e.target.files;
+		let filesArr = Array.prototype.slice.call(files);
+
+		filesArr.forEach( f => {
+			if (!f.type.match("image.*")) {
+				alert("확장자는 이미지 확장자만 가능합니다.");
+				$(".profile-background").attr('src',$('.original-background-img').val());
+				$('.change-background-action-btn').attr('disabled',true);
+				return;
+			}
+			
+			sel_file = f;
+			let reader = new FileReader();
+			reader.onload =function(e){
+				$('.profile-background').attr('src',e.target.result);
+				
+				let originalBackgroundImg=$('.original-background-img').val();
+				let changeImg=$('.profile-background').attr('src');
+
+				if(originalBackgroundImg==changeImg){
+					$('.change-background-action-btn').attr('disabled',true);
+				}else{
+					$('.change-background-action-btn').attr('disabled',false);
+				}
+				
+			}
+				reader.readAsDataURL(f);
+		});
+	});
+	
+	$('.change-background-action-btn').on('click',function(){
+		let filePath=$('.change-background-img-input').val();
+
+		let file=null;
+		
+		if(filePath!=''){
+			file=$('.change-background-img-input')[0].files[0];
+
+		}
+		
+		let formData=new FormData();
+		formData.append("file",file);
+		
+		$.ajax({
+			type:'POST'
+			,url:'/profile/set_background_img'
+			,data:formData
+			,processData:false
+			,contentType:false
+			,enctype:"multipart/form-data"
+			,success:function(data){
+				if(data.loginCheck===true){
+					
+					
+					if(data.result===true){
+						location.reload();
+					}else{
+						
+						if(data.valid_wrong_extension===true){
+							alert('올바른 파일 확장자가 아닙니다.');
+						}
+						
+						if(data.valid_empty_extension===true){
+							alert('올바른 파일 형식이 아닙니다.');
+						}
+						
+						alert("프로필 변경 실패 관리자에게 문의하세요");
+					}
+				}else{
+					location.href="/user/sign_in_view";
+				}
+			}
+			,error:function(e){
+				alert(e);
+			}
+		});
+		
 		
 	});
 
