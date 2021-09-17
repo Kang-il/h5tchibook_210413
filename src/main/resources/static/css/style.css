@@ -2508,3 +2508,72 @@ footer .footer-item{
 	color:white;
 	background-color:#18abfe;
 }
+
+.edit-profile-introduce-modal-section{
+	width:100%; 
+	height:100%;
+	background:rgba(0,0,0,0.5);
+	position:fixed ;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	margin:0 auto;
+	left:0;
+	right:0;
+	z-index:3;
+}
+
+.edit-profile-introduce-modal-section .title-box{
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+}
+
+.edit-profile-introduce-modal-section .modal-title{
+	display:flex;
+	justify-content:center;
+	margin-bottom:10px;
+	width:332px;
+}
+
+.edit-profile-introduce-modal-section .edit-profile-introduce-modal-box{
+	width:400px;
+	border-radius:10px;
+	background-color:white;
+	position:fixed;
+	z-index:2;
+
+}
+
+.edit-profile-introduce-modal-section .introduce-modal-close-btn{
+	margin-right:15px;
+	cursor:pointer;
+}
+
+.edit-profile-introduce-modal-section .introduce-textarea-box{
+	display:flex;
+	justify-content:center;
+	padding:20px;
+}
+
+.edit-profile-introduce-modal-section textarea{
+	outline: none;
+	border:1px solid #dbdbdb;
+	border-radius: 10px;
+	resize:none;
+}
+
+
+.edit-profile-introduce-modal-section .introduce-btn-box{
+	width:inherit;
+	padding-left:20px;
+	padding-right:20px;
+	padding-bottom:20px;
+}
+
+.edit-profile-introduce-modal-section .introduce-submit-btn{
+	width:100%;
+	background-color:#18abfe;
+	color:white;
+	cursor:pointer;
+}

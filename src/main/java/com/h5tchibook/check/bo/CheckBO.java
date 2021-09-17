@@ -33,7 +33,9 @@ public class CheckBO {
 
 		boolean existUser = existUser(feedOwner);
 		boolean loginCheck = loginCheck(user);
-
+		
+		result.put("loginCheck", loginCheck);
+		
 		if (!existUser) {
 			result.put("existUser", existUser);
 			// 피드 오너가 존재하지 않다면 바로 리턴해주기
@@ -60,7 +62,6 @@ public class CheckBO {
 
 		}
 
-		result.put("loginCheck", loginCheck);
 		result.put("existUser", existUser);
 		result.put("friendCheck", friendCheck);
 		result.put("requestFriendCheck", requestFriendCheck);
@@ -112,6 +113,21 @@ public class CheckBO {
 		result.put("requestFriendCheck", requestFriendCheck);
 		result.put("receiveFriendCheck", receiveFriendCheck);
 
+		return result;
+	}
+	
+	public Map<String,Boolean> updateUserProfileInfoCheckElements(User user, String feedOwnerLoginId){
+		Map<String,Boolean> result=new HashMap<String,Boolean>();
+		User feedOwner=userBO.getUserByLoginId(feedOwnerLoginId);
+		
+		boolean loginCheck=loginCheck(user);
+		boolean feedOwnerCheck =feedOwnerCheck(user , feedOwner);
+		boolean existUser=existUser(user);
+		
+		result.put("loginCheck", loginCheck);
+		result.put("feedOwnerCheck",feedOwnerCheck);
+		result.put("existUser", existUser);
+		
 		return result;
 	}
 

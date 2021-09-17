@@ -34,15 +34,18 @@
     </div>
 </div>
 
-<div class="edit-profile-pic-modal-section">
-	<div class="edit-profile-pic-modal-box">
+<div class="edit-profile-introduce-modal-section d-none">
+	<div class="edit-profile-introduce-modal-box">
 		<div class="title-box">
 		    <div class="modal-title">소개글 수정</div>
-		    <div class="material-icons-outlined profile-modal-close-btn">close</div>
+		    <div class="material-icons-outlined introduce-modal-close-btn">close</div>
 	    </div>
 		    <hr class="m-0">
-		    <div>
-		    	<textarea class="introduce-text-area"></textarea>
+		    <div class="introduce-textarea-box">
+		    	<textarea class="introduce-text-area" cols="50" rows="10"></textarea>
+		    </div>
+		    <div class="introduce-btn-box">
+			    <button type="button" class="introduce-submit-btn btn" disabled="disabled">수정하기</button>
 		    </div>
 	</div>
 </div>

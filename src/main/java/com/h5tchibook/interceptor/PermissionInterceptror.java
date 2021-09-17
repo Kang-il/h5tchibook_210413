@@ -42,6 +42,11 @@ public class PermissionInterceptror implements HandlerInterceptor{
 			return false;
 		}
 		
+		if(user==null && uri.startsWith("/feed")) {
+			response.sendRedirect("/user/sign_in_view");
+			return false;
+		}
+
 		
 		return true;
 

@@ -44,6 +44,15 @@
  			`id`=#{id}
  	</update>
  	
+ 	<update id="updateUserIntroduce" parameterType="map">
+ 		UPDATE
+ 			`user`
+ 		SET
+ 			`introduce`=#{introduce ,jdbcType=VARCHAR}
+ 		WHERE
+ 			`id`=#{id}
+ 	</update>
+
  	<select id="selectUserByloginId" parameterType="String" resultType="com.h5tchibook.user.model.User">
  		SELECT
  			`id`
@@ -99,5 +108,5 @@
  		WHERE 
  			`id`=#{id}
  	</select>
- 	
+
  </mapper>

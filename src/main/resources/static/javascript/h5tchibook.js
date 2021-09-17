@@ -838,7 +838,7 @@ $(document).ready(function(){
 	
 	$('.addapt-profile-img').on('click',function(){
 		let filePath=$('.edit-profile-img-input').val();
-	
+		let feedOwnerLoginId=$('.show-edit-profile-modal-btn').data('feed-owner-login-id');
 		let file=null;
 		
 		if(filePath!=''){
@@ -850,31 +850,33 @@ $(document).ready(function(){
 		
 		$.ajax({
 			type:'POST'
-			,url:'/profile/update_profile_img'
+			,url:'/profile/update_profile_img/'+feedOwnerLoginId
 			,data:formData
 			,processData:false
 			,contentType:false
 			,enctype:'multipart/form-data'
 			,success:function(data){
-				if(data.loginCheck===true){
-					
-					
-					if(data.result===true){
-						location.reload();
+				if(data.existUser===true){
+					if(data.loginCheck===true){
+						if(data.result===true){
+							location.reload();
+						}else{
+							
+							if(data.valid_wrong_extension===true){
+								alert('올바른 파일 확장자가 아닙니다.');
+							}
+							
+							if(data.valid_empty_extension===true){
+								alert('올바른 파일 형식이 아닙니다.');
+							}
+							
+							alert("프로필 변경 실패 관리자에게 문의하세요");
+						}
 					}else{
-						
-						if(data.valid_wrong_extension===true){
-							alert('올바른 파일 확장자가 아닙니다.');
-						}
-						
-						if(data.valid_empty_extension===true){
-							alert('올바른 파일 형식이 아닙니다.');
-						}
-						
-						alert("프로필 변경 실패 관리자에게 문의하세요");
+						location.href="/user/sign_in_view";
 					}
 				}else{
-					location.href="/user/sign_in_view";
+					location.href="/feed/"+feedOwnerLoginId;
 				}
 			}
 			,error:function(e){
@@ -952,7 +954,7 @@ $(document).ready(function(){
 	
 	$('.change-background-action-btn').on('click',function(){
 		let filePath=$('.change-background-img-input').val();
-
+		let feedOwnerLoginId=$('.profile-background-edit-btn').data('feed-owner-login-id');
 		let file=null;
 		
 		if(filePath!=''){
@@ -965,31 +967,34 @@ $(document).ready(function(){
 		
 		$.ajax({
 			type:'POST'
-			,url:'/profile/set_background_img'
+			,url:'/profile/set_background_img/'+feedOwnerLoginId
 			,data:formData
 			,processData:false
 			,contentType:false
 			,enctype:"multipart/form-data"
 			,success:function(data){
-				if(data.loginCheck===true){
-					
-					
-					if(data.result===true){
-						location.reload();
+				if(data.existUser===true){
+					if(data.loginCheck===true){
+						if(data.result===true){
+							location.reload();
+						}else{
+							
+							if(data.valid_wrong_extension===true){
+								alert('올바른 파일 확장자가 아닙니다.');
+							}
+							
+							if(data.valid_empty_extension===true){
+								alert('올바른 파일 형식이 아닙니다.');
+							}
+							
+							alert("프로필 변경 실패 관리자에게 문의하세요");
+						}
 					}else{
-						
-						if(data.valid_wrong_extension===true){
-							alert('올바른 파일 확장자가 아닙니다.');
-						}
-						
-						if(data.valid_empty_extension===true){
-							alert('올바른 파일 형식이 아닙니다.');
-						}
-						
-						alert("프로필 변경 실패 관리자에게 문의하세요");
+						location.href="/user/sign_in_view";
 					}
 				}else{
-					location.href="/user/sign_in_view";
+					alert('잘못된 접근');
+					location.href="/feed/"+feedOwnerLoginId;
 				}
 			}
 			,error:function(e){
@@ -1000,4 +1005,63 @@ $(document).ready(function(){
 		
 	});
 
+	$('.introduce-modal-close-btn').on('click',function(){
+		$('.edit-profile-introduce-modal-section').addClass('d-none');
+		$('body').removeClass('disabled-scroll');
+	});
+	
+	$('.add-introduce-btn').on('click',function(){
+		$('.edit-profile-introduce-modal-section').removeClass('d-none');
+		$('body').addClass('disabled-scroll');
+		let userIntroduce=$(this).data('user-introduce');
+		$('.introduce-text-area').val(userIntroduce);
+	});
+	
+	$('.introduce-text-area').on('input',function(){
+		let userIntroduce=$('.add-introduce-btn').data('user-introduce');
+		let revisedIntroduce=$(this).val().trim();
+		
+		if(userIntroduce == revisedIntroduce){
+			$('.introduce-submit-btn').attr('disabled',true);
+		}else{
+			$('.introduce-submit-btn').attr('disabled',false);
+		}
+	});
+	
+	$('.introduce-submit-btn').on('click',function(){
+		let revisedIntroduce=$('.introduce-text-area').val().trim();
+		let feedOwnerLoginId=$('.add-introduce-btn').data('feed-owner-login-id');
+		let formData =new FormData();
+		//revisedIntroduce 가 공백이 아닐경우에만 formData 에 append해주기
+		if(revisedIntroduce !=''){
+			formData.append('introduce',revisedIntroduce);
+		}
+
+		$.ajax({
+			type:'POST'
+			,data:formData
+			,url:'/profile/set_introduce/'+feedOwnerLoginId
+			,contentType:false
+			,processData:false
+			,success:function(data){
+				if(data.existUser===true){
+					if(data.loginCheck===true && data.feedOwnerCheck===true){
+						if(data.result===true){						
+							location.reload();
+						}else{
+							alert("소개 업데이트 실패 관리자에게 문의하세요.");
+						}
+					}else{
+						location.href="/user/sign_in_view";
+					}
+				}else{
+					alert("잘못된 접근");
+					location.href="/feed/"+feedOwnerLoginId;
+				}
+			}
+			,error:function(e){
+				alert(e);
+			}
+		});
+	});
 });

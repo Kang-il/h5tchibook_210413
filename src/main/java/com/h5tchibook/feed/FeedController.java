@@ -42,13 +42,14 @@ public class FeedController {
 	
 	@RequestMapping("/{feedUserLoginId}")
 	public String userFeed(
-			@PathVariable("feedUserLoginId") String feedUserLoginId
+			@PathVariable(value="feedUserLoginId",required=false) String feedUserLoginId
 			,@RequestParam(value="category",required = false) String category
 			,HttpServletRequest request
 			,Model model) {
 		
 		Date date =new Date();
 		HttpSession session= request.getSession();
+		
 		
 		//세션에 있는 내 정보를 가져온다
 		User user=(User) session.getAttribute("user");
@@ -58,24 +59,27 @@ public class FeedController {
 		//내 정보와 피드 주인의 정보를 통한 여러 체크리스트를 작성하는 메서드.
 		Map<String,Boolean> checkMap=checkBO.feedCheckElements(user, feedOwner);
 		
-		DisclosureStatus disclosureStatus=null;
-		//본인 피드 라면
-		if(checkMap.get("feedOwnerCheck")) {
-			disclosureStatus=DisclosureStatus.PRIVATE;
-		}else {
-			//친구의 피드라면
-			if(checkMap.get("friendCheck")) {
-				disclosureStatus=DisclosureStatus.FRIEND;
-			}else {
-				//본인의 피드도 아니고 친구의 피드도 아니라면
-				disclosureStatus=DisclosureStatus.PUBLIC;
-			}
-			
-		}
+
+		
 		
 		if(checkMap.get("loginCheck")) {
 			//1. 로그인 되어있는경우
+	
 			if(checkMap.get("existUser")) {
+				
+				DisclosureStatus disclosureStatus=null;
+				//본인 피드 라면
+				if(checkMap.get("feedOwnerCheck")) {
+					disclosureStatus=DisclosureStatus.PRIVATE;
+				}else {
+					//친구의 피드라면
+					if(checkMap.get("friendCheck")) {
+						disclosureStatus=DisclosureStatus.FRIEND;
+					}else {
+						//본인의 피드도 아니고 친구의 피드도 아니라면
+						disclosureStatus=DisclosureStatus.PUBLIC;
+					}
+				}
 				
 				if(category==null) { //category가 null이라면 타임라인 피드
 					//피드오너로 들어온 아이디로 해당 유저가 존재할 경우

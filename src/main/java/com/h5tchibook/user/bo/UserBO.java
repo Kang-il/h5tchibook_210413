@@ -79,4 +79,8 @@ public class UserBO {
 		
 		userDAO.updateUserCoverImagePath(user.getId(), imageUrl);
 	}
+	
+	public void editUserIntroduce(int id,String introduce) {
+		userDAO.updateUserIntroduce(id,introduce);
+	}
 }

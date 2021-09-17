@@ -8,6 +8,8 @@ import com.h5tchibook.user.model.User;
 @Repository
 public interface UserDAO {
 	public int insertUser(User user);
+	public void updateUserIntroduce(@Param("id") int id
+									,@Param("introduce") String introduce);
 	public User selectUserByloginId(@Param("loginId") String loginId);
 	public User selectUserByLoginIdAndPassword(@Param("loginId")String loginId
 											  ,@Param("password") String password);

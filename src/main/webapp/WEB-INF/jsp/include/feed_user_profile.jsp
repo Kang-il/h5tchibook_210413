@@ -32,12 +32,12 @@
 				<button class="material-icons profile-img-edit-btn">photo_camera</button>
 				<div class="profile-pic-modal d-none">
 					<div class="profile-pic-item">
-						<button type="button" class="show-edit-profile-modal-btn"><span class="material-icons-outlined">account_circle</span>사진 변경</button>
+						<button type="button" class="show-edit-profile-modal-btn" data-feed-owner-login-id="${feedOwner.loginId}"><span class="material-icons-outlined">account_circle</span>사진 변경</button>
 					</div>
 				</div>
 			</div>
 			<div>
-				<button class=" profile-background-edit-btn"><span class="material-icons">photo_camera</span> 커버사진 편집</button>
+				<button class="profile-background-edit-btn" data-feed-owner-login-id="${feedOwner.loginId}"><span class="material-icons">photo_camera</span> 커버사진 편집</button>
 				<input type="file" class="change-background-img-input d-none"/>
 			</div>
 		</c:if>
@@ -48,10 +48,10 @@
 				
 		<c:if test="${feedOwnerCheck eq true}">
 			<c:if test="${feedOwner.introduce eq null}">
-				<button class="add-introduce-btn">소개 추가</button>
+				<button class="add-introduce-btn" data-user-introduce="" data-feed-owner-login-id="${feedOwner.loginId}">소개 추가</button>
 			</c:if>
 			<c:if test="${feedOwner.introduce ne null}">
-				<button class="add-introduce-btn" data-user-introduce="${feedOwner.introduce}">${feedOwner.introduce}</button>
+				<button class="add-introduce-btn" data-user-introduce="${feedOwner.introduce}" data-feed-owner-login-id="${feedOwner.loginId}">${feedOwner.introduce}</button>
 			</c:if>
 		</c:if>
 		<c:if test="${feedOwnerCheck eq false}">
