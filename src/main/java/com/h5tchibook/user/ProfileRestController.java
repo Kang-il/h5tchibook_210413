@@ -1,5 +1,6 @@
 package com.h5tchibook.user;
 	
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.h5tchibook.check.bo.CheckBO;
+import com.h5tchibook.common.EncryptUtils;
 import com.h5tchibook.common.ValidateHandler;
 import com.h5tchibook.user.bo.UserBO;
 import com.h5tchibook.user.model.User;
@@ -125,5 +127,32 @@ public class ProfileRestController {
 		return result;
 	}
 	
+	@PostMapping("/check_password")
+	public Map<String,Boolean> checkPassword(@RequestParam("password") String password
+											,HttpServletRequest request){
+		HttpSession session=request.getSession();
+		User user=(User)session.getAttribute("user");
+		Map<String,Boolean> result=new HashMap<String,Boolean>();
+		
+		boolean loginCheck=false;
+		boolean resultCheck=false;
+		
+		if(user!=null) {
+			loginCheck=true;
+			String encryptedPassword=EncryptUtils.mb5(password);
+			User checkUser=userBO.getUserByLoginIdAndPassword(user.getLoginId(), encryptedPassword);
+			
+			if(checkUser!=null) {
+				resultCheck=true;
+				session.setAttribute("checkPassword", true);
+			}else {
+				session.setAttribute("checkPassword", false);
+			}
+		}
+
+		result.put("loginCheck", loginCheck);
+		result.put("result", resultCheck);
+		return result;
+	}
 	
 }
