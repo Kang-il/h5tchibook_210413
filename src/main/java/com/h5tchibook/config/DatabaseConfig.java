@@ -1,6 +1,6 @@
 package com.h5tchibook.config;
 
-import javax.sql.DataSource;
+import javax.sql.DataSource;	
 
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.type.TypeHandler;
@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
+import com.h5tchibook.alert.model.AlertType;
 import com.h5tchibook.post.model.ContentType;
 import com.h5tchibook.post.model.DisclosureStatus;
 import com.h5tchibook.user.model.Sex;
@@ -27,6 +28,7 @@ public class DatabaseConfig {
 		sessionFactory.setTypeHandlers(new TypeHandler[] { new Sex.TypeHandler()
 														  ,new ContentType.TypeHandler()
 														  ,new DisclosureStatus.TypeHandler()
+														  ,new AlertType.TypeHandler()
 														 }
 		);
 		

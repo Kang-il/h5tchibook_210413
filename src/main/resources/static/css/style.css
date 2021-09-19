@@ -2577,3 +2577,96 @@ footer .footer-item{
 	color:white;
 	cursor:pointer;
 }
+
+.user-check-password-section{
+	width:100%;
+	height:947px;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+}
+
+.user-check-password-section .user-check-password-box{
+	width:400px;
+	border:1px solid #dbdbdb;
+	background-color:white;
+	border-radius:10px;
+	padding-left:10px;
+	padding-right:10px;
+}
+
+.user-check-password-section img{
+	width:200px;
+	height:200px;
+	border-radius:100%;
+}
+
+.user-check-password-section .box-title{
+	padding-top:15px;
+	padding-bottom:15px;
+	font-size:20px;
+	font-weight:700;
+	display:flex;
+	justify-content:center;
+}
+
+.user-check-password-section .user-profile-img-box{
+	display:flex;
+	justify-content:center;
+	margin-top:40px;
+}
+
+.user-check-password-section .user-profile-img-item{
+	width:210px;
+	height:210px;
+	border:1px solid #dbdbdb;
+	border-radius:100%;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+}
+
+.user-check-password-section .password-input-box{
+	margin-top:20px;
+}
+
+.user-check-password-section .password-input-box input{
+	height:45px;
+	border-radius: 10px;
+}
+
+.user-check-password-section .input-title{
+	width:inherit;
+	padding:10px;
+	padding-top:0;
+	font-weight:700;
+}
+.user-check-password-section .profile-password-submit-btn{
+	width:100%;
+	height:45px;
+	color:white;
+	background-color:#18abfe;
+	margin-top:10px;
+	margin-bottom:25px;
+	border-radius:10px;
+}
+
+.user-check-password-section .password-alert-box{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.user-check-password-section .password-alert-box span{
+	margin-top:10px;
+}
+
+
+
+
+
+
+
+
+
+

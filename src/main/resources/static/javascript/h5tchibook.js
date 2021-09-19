@@ -1064,4 +1064,92 @@ $(document).ready(function(){
 			}
 		});
 	});
+	
+	$('.edit-profile-btn').on('click',function(){
+		let feedOwnerLoginId=$(this).data('feed-owner-login-id');
+		location.href='/profile/check_password_view/'+feedOwnerLoginId;
+	});
+	
+	//profile-check_profile_view =-==========================================
+	
+	$('.profile-password-submit-btn').on('click',function(){
+		let password=$('#editProfilePassword').val();
+		let loginId=$(this).data('user-login-id');
+		
+		if(password==''){
+			$('.blank-password-alert').removeClass('d-none');
+		}
+		
+		if(loginId!=undefined || loginId != ''){
+			checkPassword(loginId,password)
+		}
+		
+	});
+	
+	$('#editProfilePassword').on('input',function(){
+		$('.blank-password-alert').addClass('d-none');
+		$('.wrong-password-alert').addClass('d-none');
+		let password=$(this).val();
+		if(password==''){
+			$('.profile-password-submit-btn').attr('disabled',true);
+		}else{
+			$('.profile-password-submit-btn').attr('disabled',false);
+		}
+	});
+	
+	$('#editProfilePassword').on('keypress',function(key){
+		if(key.keyCode==13){
+			if($('.profile-password-submit-btn').attr('disabled') === undefined || $(this).val()!=''){
+				let password=$(this).val().trim();
+				let loginId=$('.profile-password-submit-btn').data('user-login-id');
+				
+				if(loginId!=undefined || loginId != ''){
+					checkPassword(loginId,password)
+				}
+				
+			}
+		}
+	});
+	
+	function checkPassword(loginId,password){
+		$.ajax({
+			type:'POST'
+			,data:{'password':password}
+			,url:'/profile/check_password'
+			,success:function(data){
+				if(data.loginCheck===true){
+					if(data.result===true){
+						location.href='/profile/edit_user_info_view/'+loginId
+					}else{
+						$('.wrong-password-alert').removeClass('d-none');
+					}
+				}else{
+					location.href='/user/sign_in_view';
+				}
+			}
+			,error:function(e){
+				alert(e);
+			}
+		});
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 });
