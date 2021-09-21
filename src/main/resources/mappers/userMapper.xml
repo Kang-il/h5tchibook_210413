@@ -30,7 +30,8 @@
  		UPDATE 
  			`user`
  		SET
- 			`profileImagePath`=#{profileImagePath, jdbcType=VARCHAR}
+ 			`updatedAt`=NOW()
+ 			,`profileImagePath`=#{profileImagePath, jdbcType=VARCHAR}
  		WHERE
  			`id`=#{id}
  	</update>
@@ -39,7 +40,8 @@
  		UPDATE 
  			`user`
  		SET
- 			`coverImagePath`=#{coverImagePath, jdbcType=VARCHAR}
+ 			`updatedAt`=NOW()
+ 			,`coverImagePath`=#{coverImagePath, jdbcType=VARCHAR}
  		WHERE
  			`id`=#{id}
  	</update>
@@ -48,11 +50,30 @@
  		UPDATE
  			`user`
  		SET
- 			`introduce`=#{introduce ,jdbcType=VARCHAR}
+ 			`updatedAt`=NOW()
+ 			,`introduce`=#{introduce ,jdbcType=VARCHAR}
  		WHERE
  			`id`=#{id}
  	</update>
-
+	
+	<update id="updateUserInfo" parameterType="com.h5tchibook.user.model.User">
+		UPDATE
+			`user`
+		SET
+			`updatedAt`=NOW()
+		<if test="loginId!=null">
+			,`loginId`=#{loginId}
+		</if>
+		<if test="password!=null">
+			,`password`=#{password}
+		</if>
+		<if test="sex!=null">
+			,`sex`=#{sex}
+		</if>
+		WHERE
+			`id`=#{id}
+	</update>
+	
  	<select id="selectUserByloginId" parameterType="String" resultType="com.h5tchibook.user.model.User">
  		SELECT
  			`id`

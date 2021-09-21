@@ -2,10 +2,15 @@ package com.h5tchibook.check.bo;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.h5tchibook.common.EncryptUtils;
 import com.h5tchibook.friend.bo.FriendBO;
 import com.h5tchibook.friend.model.Friend;
 import com.h5tchibook.user.bo.UserBO;
@@ -18,7 +23,12 @@ public class CheckBO {
 	private FriendBO friendBO;
 	@Autowired
 	private UserBO userBO;
+	
+	private final String PASSWORD_REGEX="(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,20}";
 
+	
+	Logger logger=LoggerFactory.getLogger(this.getClass());
+	
 	public Map<String, Boolean> feedCheckElements(User user, User feedOwner) {
 		Map<String, Boolean> result = new HashMap<>();
 
@@ -130,7 +140,90 @@ public class CheckBO {
 		
 		return result;
 	}
-
+	
+	public Map<String,Boolean> validateEditUserInfoCheckElements(User user,User editedUser){
+		Map<String,Boolean> result=new HashMap<String,Boolean>();
+		//로그인 되어있는지 체크
+		boolean loginCheck=loginCheck(user);
+		//현재 로그인 아이디와 이전 로그인아이디와 동일한지 여부 체크
+		boolean previousLoginIdCheck=previousLoginIdCheck(user.getLoginId(),editedUser.getLoginId());
+		//로그인 아이디가 바뀌었다면 아이디 길이 조건 체크
+		boolean loginIdLengthCheck=false;
+		//아이디의 중복확인 체크
+		boolean duplicateLoginIdCheck=false;
+		//이전 비밀번호와 동일여부 체크
+		boolean previousPasswordCheck=false;
+		//패스워드가 조건에 부함한지 체크
+		boolean passwordRegexCheck=false;
+		
+		//기존 아이디와 동일하지 않다면
+		if(!previousLoginIdCheck) {
+			//바꾸고자 하는 아이디의 길이 체크
+			loginIdLengthCheck=loginIdLengthCheck(editedUser.getLoginId());
+			//바꾸고자하는 아이디길이가 조건에 부합한다면
+			if(loginIdLengthCheck) {
+				//바꾸려는 아이디 중복체크
+				duplicateLoginIdCheck=duplicateUserLoginIdCheck(editedUser.getLoginId());
+			}
+		}
+		
+		//입력받은 비밀번호가 있다면
+		if(editedUser.getPassword()!=null) {
+			//입력받은 비밀번호를 해싱하여 본래 비밀번호와 비교한다.
+			String encryptedPassword=EncryptUtils.mb5(editedUser.getPassword());
+			
+			previousPasswordCheck=previousPasswordCheck(user.getPassword(),encryptedPassword);
+			
+			if(!previousPasswordCheck) {
+				passwordRegexCheck=Pattern.matches(PASSWORD_REGEX, editedUser.getPassword());
+				logger.debug("::::::::::::::::passwordRegexCheck"+passwordRegexCheck);
+			}
+		}
+		
+		result.put("loginCheck", loginCheck);
+		result.put("previousLoginIdCheck", previousLoginIdCheck);
+		result.put("loginIdLengthCheck", loginIdLengthCheck);
+		result.put("duplicateLoginIdCheck", duplicateLoginIdCheck);
+		result.put("previousPasswordCheck", previousPasswordCheck);
+		result.put("passwordRegexCheck", passwordRegexCheck);
+		
+		return result;
+	}
+	
+	private boolean previousPasswordCheck(String password , String changedPassword) {
+		boolean previousPasswordCheck=false;
+		if(password.equals(changedPassword)) {
+			previousPasswordCheck=true;
+		}
+		return previousPasswordCheck;
+	}
+	
+	private boolean duplicateUserLoginIdCheck(String loginId) {
+		boolean duplicateUserLoginIdCheck=false;
+		User user=userBO.getUserByLoginId(loginId);
+		if(user==null) {
+			duplicateUserLoginIdCheck=true;
+		}
+		return duplicateUserLoginIdCheck;
+	}
+	
+	private boolean previousLoginIdCheck(String loginId, String changedLoginId) {
+		boolean previousLoginIdCheck=false;
+		if(loginId.equals(changedLoginId)) {
+			previousLoginIdCheck=true;
+		}
+		return previousLoginIdCheck;
+	}
+	
+	private boolean loginIdLengthCheck(String loginId) {
+		boolean userLoginIdLengthCheck=false;
+		logger.debug("::::loginIdLength"+loginId.length());
+		if(loginId.length()>=4 && loginId.length()<=15) {
+			userLoginIdLengthCheck=true;
+		}
+		return userLoginIdLengthCheck;
+	}
+	
 	private boolean loginCheck(User user) {
 		boolean loginCheck = false;
 		if (user != null) {

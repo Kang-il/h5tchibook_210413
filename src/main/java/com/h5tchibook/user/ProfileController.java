@@ -41,7 +41,7 @@ public class ProfileController {
 		return "template/template_layout";
 	}
 	
-	@RequestMapping("/edit_user_info_view/{userLoginId}")
+	@RequestMapping("/edit/user_info_view/{userLoginId}")
 	public String editUserInfoView(Model model
 								   ,HttpServletRequest request
 								   ,@PathVariable("userLoginId") String userLoginId) {

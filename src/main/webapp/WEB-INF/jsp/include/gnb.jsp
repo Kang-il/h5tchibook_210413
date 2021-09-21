@@ -95,7 +95,7 @@
 			<div class="menu-item-box">
 				<div class="menu-item" id="editUserInfo">
 					<div class="material-icons menu-item-setting">settings</div>
-					<div class="menu-item-description">개인정보 수정</div>
+					<div class="menu-item-description" data-user-login-id="${user.loginId}">개인정보 수정</div>
 				</div>
 				
 				<div class="menu-item" id="logOut">

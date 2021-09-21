@@ -88,7 +88,7 @@
 		</div>
 				
 		<c:if test="${feedOwnerCheck eq true}">
-			<button type="button" class="edit-profile-btn" data-feed-owner-login-id="${feedOwner.loginId}"><span class="material-icons">edit</span>프로필 편집</button>				
+			<button type="button" class="edit-profile-btn" data-feed-owner-login-id="${feedOwner.loginId}"><span class="material-icons">edit</span>개인정보 수정</button>				
 		</c:if>
 				
 		<c:if test="${feedOwnerCheck eq false}">

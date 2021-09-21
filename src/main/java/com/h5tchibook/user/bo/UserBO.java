@@ -83,4 +83,8 @@ public class UserBO {
 	public void editUserIntroduce(int id,String introduce) {
 		userDAO.updateUserIntroduce(id,introduce);
 	}
+	
+	public void editUserInfo(User user) {
+		userDAO.updateUserInfo(user);
+	}
 }

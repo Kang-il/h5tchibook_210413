@@ -262,6 +262,28 @@ function refuseFriend(friendId) {
 	});
 }
 
+function checkPassword(loginId,password){
+	$.ajax({
+		type:'POST'
+		,data:{'password':password}
+		,url:'/profile/check_password'
+		,success:function(data){
+			if(data.loginCheck===true){
+				if(data.result===true){
+					location.href='/profile/edit/user_info_view/'+loginId
+				}else{
+					$('.wrong-password-alert').removeClass('d-none');
+				}
+			}else{
+				location.href='/user/sign_in_view';
+			}
+		}
+		,error:function(e){
+			alert(e);
+		}
+	});
+}
+	
 $(document).ready(function(){
 //-------------------sign-up-modal
 	$('.sign-up-form-btn').on('click',function(){
@@ -578,6 +600,11 @@ $(document).ready(function(){
 		}
 	});
 
+	$('.menu-item-description').on('click',function(){
+		let loginId=$(this).data('user-login-id');
+		location.href='/profile/check_password_view/'+loginId;
+	});
+	
 	//sign out
 	$('#logOut').on('click',function(){
 		location.href="/user/sign_out";
@@ -1111,28 +1138,100 @@ $(document).ready(function(){
 		}
 	});
 	
-	function checkPassword(loginId,password){
+	$('.edit-user-info-btn').on('click',function(){
+		let userLoginId= $('#editLoginId').val();;
+		let password= $('#editPassword').val();;
+		let sex = $('input[name=editSex]:checked').val();
+		let formData=new FormData();
+		
+		if(userLoginId==''){
+			$('.blank_login_id').removeClass('d-none');
+		}
+		
+		if(sex==undefined || sex ==''){
+			alert('성별을 입력해 주세요');
+			return;
+		}
+		
+		if(password!=''){
+			formData.append('password',password);
+		}
+		
+		if(userLoginId!=''){
+			formData.append('loginId',userLoginId);
+		}
+		
+		formData.append('sex',sex);
+		
 		$.ajax({
 			type:'POST'
-			,data:{'password':password}
-			,url:'/profile/check_password'
+			,data:formData
+			,contentType:false
+			,processData:false
+			,url:'/profile/edit/validate_edit_user_info'
 			,success:function(data){
 				if(data.loginCheck===true){
 					if(data.result===true){
-						location.href='/profile/edit_user_info_view/'+loginId
+						// 결과 부합한다면 수정 할 것
+						$.ajax({
+							type:'POST'
+							,data:formData
+							,url:'/profile/edit/set_user_profile'
+							,contentType:false
+							,processData:false
+							,success:function(data){
+								if(data.loginCheck===true){
+									if(data.result===true){
+										alert("개인정보 수정 성공! 다시 로그인 해주세요");
+										location.href="/user/sign_out";
+										
+									}
+								}else{
+									location.href="/user/sign_in_view";
+								}
+							}
+							,error:function(e){
+								alert(e);
+							}
+						});
 					}else{
-						$('.wrong-password-alert').removeClass('d-none');
+						//1.이전 아이디가 동일하지 않다면
+						if(data.previousLoginId===false){
+							if(data.loginIdLengthCheck===false){
+								//아이디 길이조건이 부합하지 않다면
+								$('.too-short-login-id').removeClass('d-none');
+								return;								
+							}
+							
+							if(data.duplicateLoginIdCheck===false){
+								//아이디 중복확인 결과를 통과하지 못했다면
+								$('.duplicate-login-id').removeClass('d-none');
+								return;
+							}
+						}
+						
+						if(data.previousPasswordCheck===true){
+							//이전 비밀번호와 동일하다면.
+							$('.previous-password').removeClass('d-none');
+							return;
+						}
+						
+						if(data.passwordRegexCheck===false){
+							//비밀번호가 정규식 조건에 부합하지 않는다면.
+							$('.no-validate-password-condition').removeClass('d-none');
+							return;							
+						}
 					}
 				}else{
-					location.href='/user/sign_in_view';
+					location.href="/user/sign_in_view";
 				}
 			}
 			,error:function(e){
 				alert(e);
 			}
 		});
-	}
-	
+	});
+
 	
 	
 	
