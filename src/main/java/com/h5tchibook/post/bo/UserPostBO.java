@@ -156,18 +156,22 @@ public class UserPostBO {
 		}
 		
 		//포스트 아이디 리스트로 포스트 리스트를 받아옴
-		List<Post> postList = userPostDAO.selectPostByPostIdList(postIdList);
-		List<PostView> postViewList=new ArrayList<PostView>();
-		
-		//포스트 앤티티 객체를 토대로 view에 뿌려줄 postView객체를 가공
-		for(Post userPost : postList) {
-			User user=userBO.getUserById(userPost.getUserId());
-			PostView postView=setPostView(userPost, user);
-			postViewList.add(postView);
+		//포스트 리스트 사이즈가 0이면(타임라인에 노출할 포스트가 없다.) 아래 코드는 실행 할 필요없이 null을 반환하도록 한다.
+		if(postIdList.size()!=0) {
+			List<Post> postList = userPostDAO.selectPostByPostIdList(postIdList);
+			List<PostView> postViewList=new ArrayList<PostView>();
+			
+			//포스트 앤티티 객체를 토대로 view에 뿌려줄 postView객체를 가공
+			for(Post userPost : postList) {
+				User user=userBO.getUserById(userPost.getUserId());
+				PostView postView=setPostView(userPost, user);
+				postViewList.add(postView);
+			}
+			//포스트가 있다면 해당 포스트들을 가져오고 PostView 객체로 가공하여 반환한다.
+			return postViewList;
 		}
 		
-		return postViewList;
-		
+		return null;
 	}
 	
 	//postView객체를 가공하는 메서드
