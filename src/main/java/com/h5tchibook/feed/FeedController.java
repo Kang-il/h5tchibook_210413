@@ -17,8 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.h5tchibook.check.bo.CheckBO;
 import com.h5tchibook.friend.bo.FriendBO;
-import com.h5tchibook.friend.model.Friend;
 import com.h5tchibook.friend.model.FriendView;
+import com.h5tchibook.group.bo.GroupBO;
+import com.h5tchibook.group.model.Group;
 import com.h5tchibook.post.bo.UserPostBO;
 import com.h5tchibook.post.model.DisclosureStatus;
 import com.h5tchibook.post.model.Post;
@@ -38,6 +39,8 @@ public class FeedController {
 	private FriendBO friendBO;
 	@Autowired
 	private CheckBO checkBO;
+	@Autowired
+	private GroupBO groupBO;
 	
 	
 	@RequestMapping("/{feedUserLoginId}")
@@ -137,5 +140,35 @@ public class FeedController {
 		
 		return "template/template_layout"; 
 	}
-
+	@RequestMapping("/group/{groupName}")
+	public String groupFeedView(Model model
+								,@PathVariable("groupName") String groupName
+								,HttpServletRequest request) {
+		Date date= new Date();
+		HttpSession session=request.getSession();
+		User user=(User)session.getAttribute("user");
+		Group group = groupBO.getGroupByGroupName(groupName);
+		//loginCheck
+		//existGroupCheck
+		//groupOwnerCheck
+		Map<String,Boolean> checkMap=checkBO.groupFeedCheckElements(user, group);
+		
+		if(checkMap.get("loginCheck")) {
+			//입력한 그룹이 존재하지 않는다면.
+			if(!checkMap.get("existGroupCheck")) {
+				return "redirect:/timeline/group_timeline_view";
+			}
+			
+			for(String key : checkMap.keySet()) {
+				model.addAttribute(key,checkMap.get(key));
+			}
+			
+		}else {
+			return "redirect:/user/sign_in_view";
+		}
+		
+		model.addAttribute("userView","group/group_feed_section");
+		model.addAttribute("currentTime",date.getTime());
+		return "template/template_layout";
+	}
 }

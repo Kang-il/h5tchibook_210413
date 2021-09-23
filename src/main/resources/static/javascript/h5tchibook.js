@@ -1231,10 +1231,47 @@ $(document).ready(function(){
 			}
 		});
 	});
-
+//-------------------------create group section
+	$('.create-group-btn').on('click',function(){
+		let groupName=$('.group-name-input').val().trim();
+		
+		$.ajax({
+			type:'POST'
+			,url:'/group/create_group'
+			,data:{'groupName':groupName}
+			,success:function(data){
+				if(data.loginCheck===true){
+					if(data.existGroupCheck===false){
+						$('.duplicate-group-name-alert').removeClass('d-none');
+						return;						
+					}
+					
+					if(data.result===true){
+						alert('그룹 생성완료!');
+						location.href="/timeline/group_timeline_view";
+					}else{
+						alert('그룹생성 실패! 관리자에게 문의하세요');
+						return;
+					}
+				}else{
+					location.href="/user/sign_in_view";
+				}
+			}
+			,error:function(e){
+				alert(e);
+			}
+		});
+	});
 	
-	
-	
+	$('.group-name-input').on('input',function(){
+		$('.duplicate-group-name-alert').addClass('d-none');
+		let groupName=$(this).val().trim();
+		if( groupName.length!=0 ){
+			$('.create-group-btn').attr('disabled',false);
+		}else{
+			$('.create-group-btn').attr('disabled',true);
+		}
+	});
 	
 	
 	

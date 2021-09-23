@@ -180,42 +180,12 @@ public class ProfileRestController {
 							.sex(sexType)
 							.build();
 		
-		Map<String,Boolean> result=checkBO.validateEditUserInfoCheckElements(user, editedUser);
-		boolean resultCheck=false;
+		Map<String,Boolean> result=null;
 		
-		if(checkPassword ==true) {
-			if(result.get("loginCheck")) {
-				//이전의 아이디와 입력받은 아이디가 동일하거나
-				//동일하지않다면 아이디 길이가 조건에 맞고 중복체크값이 true인 경우
-				boolean loginIdCheck=false;
-				
-				//기존 로그인 아이디와 같거나 다르다면 로그인아이디의 길이와 중복확인 조건을 모두 만족해야 한다.
-				if(result.get("previousLoginIdCheck")) {
-					loginIdCheck=true;
-				}else {
-					if(result.get("loginIdLengthCheck")&&result.get("duplicateLoginIdCheck")) {
-						loginIdCheck=true;
-					}
-				}
-				
-				boolean passwordCheck=false;
-				//애초에 비밀번호는 동일값을 받지 않아야 하므로
-				//기존 비밀번호와 동일한 값을 받은경우엔 validate조건에 맞지 않는다
-				//기존 비밀번호와 동일하지 않고 받은 패스워드가 있다면 정규식을 만족해야한다 또는 넘어온 비밀번호가 없어야함
-				if((!result.get("previousPasswordCheck")&&result.get("passwordRegexCheck")) || password==null) {
-					passwordCheck=true;
-				}
-				
-				//비밀번호와 패스워드가 모든 조건을 만족한다면 결과 true
-				if(loginIdCheck==true && passwordCheck==true) {
-					resultCheck=true;
-				}
-				
-			}
+		if(checkPassword==true) {
+			result=checkBO.validateEditUserInfoCheckElements(user, editedUser);
 		}
 		
-		result.put("result",resultCheck);
-
 		return result;
 	}
 	
@@ -234,7 +204,10 @@ public class ProfileRestController {
 		//checkPassword가 true 이고 user가 null이 아니어야 한다.
 		if(user!=null && checkPassword==true) {
 			loginCheck=true;
-			User editUser=User.builder().id(user.getId()).build();
+			User editUser=User.builder()
+							  .id(user.getId())
+							  .build();
+			
 			if(!loginId.equals(user.getLoginId())) {
 				editUser.setLoginId(loginId);
 			}
@@ -252,7 +225,7 @@ public class ProfileRestController {
 				}
 				
 			}
-			logger.debug("::::::::::::::"+editUser);
+
 			userBO.editUserInfo(editUser);
 			resultCheck=true;
 		}

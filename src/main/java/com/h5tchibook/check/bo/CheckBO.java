@@ -1,8 +1,7 @@
 package com.h5tchibook.check.bo;
 
-import java.util.HashMap;
+import java.util.HashMap;	
 import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
@@ -13,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.h5tchibook.common.EncryptUtils;
 import com.h5tchibook.friend.bo.FriendBO;
 import com.h5tchibook.friend.model.Friend;
+import com.h5tchibook.group.model.Group;
 import com.h5tchibook.user.bo.UserBO;
 import com.h5tchibook.user.model.User;
 
@@ -23,7 +23,7 @@ public class CheckBO {
 	private FriendBO friendBO;
 	@Autowired
 	private UserBO userBO;
-	
+
 	private final String PASSWORD_REGEX="(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,20}";
 
 	
@@ -155,6 +155,13 @@ public class CheckBO {
 		boolean previousPasswordCheck=false;
 		//패스워드가 조건에 부함한지 체크
 		boolean passwordRegexCheck=false;
+		//이전의 아이디와 입력받은 아이디가 동일하거나
+		//동일하지않다면 아이디 길이가 조건에 맞고 중복체크값이 true인 경우
+		boolean loginIdCheck=false;
+		
+		boolean passwordCheck=false;
+		
+		boolean resultCheck=false;
 		
 		//기존 아이디와 동일하지 않다면
 		if(!previousLoginIdCheck) {
@@ -180,15 +187,79 @@ public class CheckBO {
 			}
 		}
 		
+		//기존 로그인 아이디와 같거나 다르다면 로그인아이디의 길이와 중복확인 조건을 모두 만족해야 한다.
+		if(previousLoginIdCheck) {
+			loginIdCheck=true;
+		}else {
+			if(loginIdLengthCheck&&duplicateLoginIdCheck) {
+				loginIdCheck=true;
+			}
+		}
+		
+		//애초에 비밀번호는 동일값을 받지 않아야 하므로
+		//기존 비밀번호와 동일한 값을 받은경우엔 validate조건에 맞지 않는다
+		//기존 비밀번호와 동일하지 않고 받은 패스워드가 있다면 정규식을 만족해야한다 또는 넘어온 비밀번호가 없어야함
+		if((!previousPasswordCheck && passwordRegexCheck) || editedUser.getPassword()==null) {
+			passwordCheck=true;
+		}
+		//비밀번호와 패스워드가 모든 조건을 만족한다면 결과 true
+		if(loginIdCheck&&passwordCheck) {
+			resultCheck=true;
+		}
+		
 		result.put("loginCheck", loginCheck);
 		result.put("previousLoginIdCheck", previousLoginIdCheck);
 		result.put("loginIdLengthCheck", loginIdLengthCheck);
 		result.put("duplicateLoginIdCheck", duplicateLoginIdCheck);
 		result.put("previousPasswordCheck", previousPasswordCheck);
 		result.put("passwordRegexCheck", passwordRegexCheck);
+		result.put("result",resultCheck);
 		
 		return result;
 	}
+	
+	public Map<String,Boolean> groupFeedCheckElements(User user, Group group){
+		Map<String,Boolean> result=new HashMap<>();
+		boolean loginCheck=loginCheck(user);
+		boolean existGroupCheck=false;
+		boolean groupOwnerCheck=false;
+		
+		if(loginCheck) {
+			existGroupCheck=group==null?  false : true;
+			
+			if(existGroupCheck) {
+				groupOwnerCheck=groupOwner(user.getId(),group.getId());
+			}
+			
+		}
+		
+		result.put("loginCheck",loginCheck);
+		result.put("existGroupCheck", existGroupCheck);
+		result.put("groupOwnerCheck",groupOwnerCheck);
+		
+		return result;
+	}
+	
+	public Map<String,Boolean> createGroupCheckElements(User user , Group group) {
+		Map<String,Boolean> result=new HashMap<String,Boolean>();	
+		boolean existGroupCheck= group==null ? false : true;
+		boolean loginCheck = user==null? false:true;
+		result.put("existGroupCheck", existGroupCheck);
+		result.put("loginCheck", loginCheck);
+		return result;
+	}
+	
+	
+	private boolean groupOwner(int id, int groupManagerId) {
+		boolean groupOwnerCheck=false;
+		
+		if(id==groupManagerId) {
+			groupOwnerCheck=true;
+		}
+		
+		return groupOwnerCheck;
+	}
+	
 	
 	private boolean previousPasswordCheck(String password , String changedPassword) {
 		boolean previousPasswordCheck=false;
@@ -224,7 +295,7 @@ public class CheckBO {
 		return userLoginIdLengthCheck;
 	}
 	
-	private boolean loginCheck(User user) {
+	public boolean loginCheck(User user) {
 		boolean loginCheck = false;
 		if (user != null) {
 			loginCheck = true;

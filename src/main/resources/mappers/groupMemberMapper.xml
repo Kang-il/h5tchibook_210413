@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="com.h5tchibook.group.dao.GroupMemberDAO">
+ 	<insert id="insertGroupMember">
+ 		INSERT INTO 
+ 			`groupMember`
+ 		(
+ 			`groupId`
+ 			,`groupMemberId`
+ 			,`createdAt`
+		)
+		VALUES
+		(
+			#{groupId}
+			,#{groupMemberId}
+			,NOW()
+		) 		
+ 	</insert>
+ 	
+ 	<select id="selectGroupMemberListByGroupMemberId" parameterType="int" resultType="com.h5tchibook.group.model.GroupMember">
+ 		SELECT
+ 			`id`
+ 			,`groupId`
+ 			,`groupMemberId`
+ 			,`createdAt`
+ 		FROM
+ 			`groupMember`
+ 		WHERE
+ 			`groupMemberId`=#{groupMemberId}
+ 	</select>
+ </mapper>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.h5tchibook.group.dao.GroupDAO">
+ 
+ 	<insert id="insertGroup" parameterType="com.h5tchibook.group.model.Group" useGeneratedKeys="true" keyProperty="id">
+ 		INSERT INTO
+ 			`group`
+ 		(
+ 		`groupManagerId`
+ 		,`groupName`
+ 		,`createdAt`
+ 		,`updatedAt`
+ 		)
+ 		VALUES
+ 		(
+ 			#{groupManagerId}
+ 			,#{groupName}
+ 			,NOW()
+ 			,NOW()
+ 		)
+ 	</insert>
+ 	
+ 	<select id="selectGroupByGroupName" parameterType="String" resultType="com.h5tchibook.group.model.Group">
+ 		SELECT 
+ 			`id`
+ 			,`groupManagerId`
+ 			,`groupCoverImagePath`
+ 			,`groupName`
+ 			,`createdAt`
+ 			,`updatedAt`
+ 		FROM
+ 			`group`
+ 		WHERE
+ 			`groupName`=#{groupName}
+ 	</select>
+ 	
+ 	<select id="selectGroupListByIdList" parameterType="java.util.List" resultType="com.h5tchibook.group.model.Group">
+ 		SELECT 
+ 			`id`
+ 			,`groupManagerId`
+ 			,`groupCoverImagePath`
+ 			,`groupName`
+ 			,`createdAt`
+ 			,`updatedAt`
+ 		FROM
+ 			`group`
+ 		WHERE
+ 			`id` IN
+ 			<foreach collection="idList" item="id" open="(" close=")" separator=",">
+ 				${id}
+ 			</foreach>
+ 	</select>
+ 	
+ </mapper>
