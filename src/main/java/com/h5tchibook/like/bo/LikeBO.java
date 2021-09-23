@@ -1,7 +1,9 @@
 package com.h5tchibook.like.bo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,19 +21,44 @@ public class LikeBO {
 	@Autowired
 	private UserBO userBO;
 	
-	public void createLike(Like like) {
-		likeDAO.insertLike(like);
-	}
-	
-	public void deleteLikeByUserIdAndPostId(int userId, int PostId) {
-		likeDAO.deleteLikeByUserIdAndPostId(userId, PostId);
-	}
 	public void deleteLikeByPostId(int postId) {
 		likeDAO.deleteLikeByPostId(postId);
 	}
 	
-	public Like getLikeByUserIdAndPostId(int userId,int postId) {
-		return likeDAO.selectLikeByUserIdAndPostId(userId, postId);
+	public Map<String,Boolean> setLike(User user,int postId){
+		
+		Map<String, Boolean> result=new HashMap<String,Boolean>();
+		boolean loginCheck=false;
+		boolean resultCheck=false;
+		
+		int row=0;
+		
+		if(user!=null) {
+			
+			loginCheck=true;
+			
+			Like like=likeDAO.selectLikeByUserIdAndPostId(user.getId(), postId);
+			
+			if(like!=null) {
+				row=likeDAO.deleteLikeByUserIdAndPostId(user.getId(), postId);
+			}else {
+				
+				like=Like.builder()
+						.userId(user.getId())
+						.postId(postId)
+						.build();
+				row = likeDAO.insertLike(like);
+			}
+			
+			if(row!=0) {
+				resultCheck=true;
+			}
+		}
+		
+		
+		result.put("loginCheck",loginCheck);
+		result.put("result",resultCheck);
+		return result;
 	}
 	
 	public List<LikeView> getLikeListByPostId(int postId){
