@@ -94,9 +94,11 @@ public class GroupPostBO {
 			 
 			 //중복이 제거된 유저아이디 셋을 리스트에 담아줌
 			 List<Integer> groupMemberIdList=new ArrayList<Integer>();
+			 
 			 for(Integer groupMemberId : memberIdSet) {
 				 groupMemberIdList.add(groupMemberId);
 			 }
+			 
 			 List<GroupLikeView> groupLikeViewList=null;
 			 List<GroupCommentView> groupCommentViewList=null;
 			 List<User> userList=null;

@@ -49,24 +49,44 @@
 				</c:if>
 				
 				<div>
-					<button class="group-post-like-btn">
-						<span class="material-icons">thumb_up</span>
-						<c:set var="likeSize" value="${fn:length(post.likeList)}"/>
-						
-						<c:if test="${likeSize eq 1 }">
-							${post.likeList[0].userLoginId}
-						</c:if>
-						
-						<c:if test="${likeSize > 1 }">
-							${post.likeList[0].userLoginId} 님 외 ${likeSize-1}명
-						</c:if>
-						
-					</button>
+					<c:if test="${fn:length(post.likeList) ne 0 }">
+						<button class="group-post-like-btn">
+							<span class="material-icons">thumb_up</span>
+							<c:set var="likeSize" value="${fn:length(post.likeList)}"/>
+							
+							<c:if test="${likeSize eq 1 }">
+								${post.likeList[0].userLoginId}
+							</c:if>
+							
+							<c:if test="${likeSize > 1 }">
+								${post.likeList[0].userLoginId} 님 외 ${likeSize-1}명
+							</c:if>
+						</button>
+					</c:if>
 					<hr>
 						<div class="group-post-btn-box">
-							<div>
-								<button class="group-like-before-btn"><span class="material-icons-outlined ">thumb_up</span> 좋아요</button>							
-							</div> 
+							
+							<c:set var="likeCheck" value="false"/>
+							<c:forEach var="like" items="${post.likeList}">
+								<c:if test="${like.memberId eq user.id}">
+									<c:set var="likeCheck" value="true"/>
+								</c:if>
+							</c:forEach>
+							
+							<c:if test="${likeCheck eq false}">
+								<div>
+									<button class="group-like-before-btn" data-post-id="${post.id}" data-group-id="${post.groupId}">
+										<span class="material-icons-outlined ">thumb_up</span> 좋아요
+									</button>							
+								</div> 
+							</c:if>
+							<c:if test="${likeCheck eq true}">
+								<div>
+									<button class="group-like-after-btn" data-post-id="${post.id}" data-group-id="${post.groupId}">
+										<span class="material-icons-outlined">thumb_up</span> 좋아요
+									</button>							
+								</div>
+							</c:if>
 							<div>							
 								<button class="group-post-comment-btn" data-post-id="${post.id}"><span class="material-icons-outlined">chat_bubble_outline</span> 댓글 달기</button>
 							</div>

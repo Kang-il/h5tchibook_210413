@@ -1368,6 +1368,16 @@ header{
 	cursor:pointer;
 }
 
+.group-post-box .group-like-after-btn{
+	display:flex;
+	align-items:center;
+	background-color:rgba(0,0,0,0);
+	border:none;
+	outline:none;
+	cursor:pointer;
+	color:#007bff;
+}
+
 .group-post-box .group-like-before-btn:focus , .group-post-comment-btn:focus{
 	outline:none;
 	border:none;	

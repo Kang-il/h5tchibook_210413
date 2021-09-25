@@ -283,7 +283,31 @@ function checkPassword(loginId,password){
 		}
 	});
 }
+
+function setGroupLike(groupId,postId){
+	$.ajax({
+		type:'POST'
+		,data:{'groupId':groupId}
+		,url:'/group/like/set_like/'+postId
+		,success:function(data){
+			if(data.loginCheck==true){
+				if(data.result){
+					location.reload();
+				}else{
+					alert('좋아요 실패 관리자에게 문의하세요.');
+				}
+			}else{
+				location.href='/user/sign_in_view';
+			}
+		}
+		,error:function(e){
+			alert(e);
+		}
+	});
+}
 	
+
+
 $(document).ready(function(){
 //-------------------sign-up-modal
 	$('.sign-up-form-btn').on('click',function(){
@@ -1583,4 +1607,20 @@ $(document).ready(function(){
 			}
 		});
 	});
+	
+	
+	// groupLike Action
+	$('.group-like-before-btn').on('click',function(){
+		let groupId=$(this).data('group-id');
+		let postId=$(this).data('post-id');
+		setGroupLike(groupId,postId);
+	});
+	
+	$('.group-like-after-btn').on('click',function(){
+		let groupId=$(this).data('group-id');
+		let postId=$(this).data('post-id');
+		setGroupLike(groupId,postId);
+	});
+	
+	
 });

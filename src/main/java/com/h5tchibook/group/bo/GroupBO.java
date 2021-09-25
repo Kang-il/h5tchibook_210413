@@ -62,7 +62,10 @@ public class GroupBO {
 			for(GroupMember groupMember : groupMemberList) {
 				groupIdList.add(groupMember.getGroupId());
 			}
-			List<Group> groupList=groupDAO.selectGroupListByIdList(groupIdList);
+			List<Group> groupList=null;
+			if(groupIdList.size()!=0) {
+				groupList=groupDAO.selectGroupListByIdList(groupIdList);
+			}
 			return groupList;
 		}
 		

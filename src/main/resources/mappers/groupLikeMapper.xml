@@ -3,6 +3,39 @@
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  
  <mapper namespace="com.h5tchibook.like.dao.GroupLikeDAO">
+ 	<insert id="insertGroupLike" parameterType="com.h5tchibook.like.model.GroupLike">
+ 		INSERT INTO
+ 			`groupLike`
+ 		(
+ 			`groupId`
+ 			,`postId`
+ 			,`memberId`
+ 		)
+ 		VALUES
+ 		(
+ 			#{groupId}
+ 			,#{postId}
+ 			,#{memberId}
+ 		)
+ 	</insert>
+ 	
+ 	<delete id="deleteGroupLikeByPostIdAndMemberId" parameterType="map">
+ 		DELETE FROM
+ 			`groupLike`
+ 		WHERE
+ 			`postId`=#{postId}
+ 		AND
+ 			`memberId`=#{memberId}
+ 	
+ 	</delete>
+ 	
+ 	<delete id="deleteGroupLikeByPostId" parameterType="int">
+ 		DELETE FROM
+ 			`groupLike`
+ 		WHERE
+ 			`postId`=#{postId}
+ 	</delete>
+ 
  	<select id="selectGroupLikeListByPostIdList" parameterType="java.util.List" resultType="com.h5tchibook.like.model.GroupLike">
  		SELECT 
  			`id`
@@ -18,4 +51,21 @@
  				${postId}
  			</foreach>
  	</select>
+ 	
+ 	<select id="selectGroupLikeByPostIdAndMemberId" parameterType="map" resultType="com.h5tchibook.like.model.GroupLike">
+ 		SELECT 
+ 			`id`
+ 			,`groupId`
+ 			,`postId`
+ 			,`memberId`
+ 			,`createdAt`
+ 		FROM
+ 			`groupLike`
+ 		WHERE
+ 			`postId` =#{postId}
+ 		AND 
+ 			`memberId`=#{memberId}
+ 	</select>
+ 	
+ 	
  </mapper>
