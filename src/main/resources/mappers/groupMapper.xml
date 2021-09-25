@@ -25,8 +25,9 @@
  		SELECT 
  			`id`
  			,`groupManagerId`
- 			,`groupCoverImagePath`
  			,`groupName`
+ 			,`groupProfileImagePath`
+ 			,`groupCoverImagePath`
  			,`createdAt`
  			,`updatedAt`
  		FROM
@@ -35,12 +36,28 @@
  			`groupName`=#{groupName}
  	</select>
  	
+ 	<select id="selectGroupById" parameterType="int" resultType="com.h5tchibook.group.model.Group">
+ 		SELECT 
+ 			`id`
+ 			,`groupManagerId`
+ 			,`groupName`
+ 			,`groupProfileImagePath`
+ 			,`groupCoverImagePath`
+ 			,`createdAt`
+ 			,`updatedAt`
+ 		FROM
+ 			`group`
+ 		WHERE
+ 			`id`=#{id}
+ 	</select>
+ 	
  	<select id="selectGroupListByIdList" parameterType="java.util.List" resultType="com.h5tchibook.group.model.Group">
  		SELECT 
  			`id`
  			,`groupManagerId`
- 			,`groupCoverImagePath`
  			,`groupName`
+ 			,`groupProfileImagePath`
+ 			,`groupCoverImagePath`
  			,`createdAt`
  			,`updatedAt`
  		FROM
@@ -50,6 +67,21 @@
  			<foreach collection="idList" item="id" open="(" close=")" separator=",">
  				${id}
  			</foreach>
+ 	</select>
+ 	
+ 	<select id="selectGroupListByGroupmanagerId" parameterType="int" resultType="com.h5tchibook.group.model.Group">
+ 			SELECT 
+ 			`id`
+ 			,`groupManagerId`
+ 			,`groupName`
+ 			,`groupProfileImagePath`
+ 			,`groupCoverImagePath`
+ 			,`createdAt`
+ 			,`updatedAt`
+ 		FROM
+ 			`group`
+ 		WHERE
+ 			`groupManagerId`=#{groupManagerId}
  	</select>
  	
  </mapper>

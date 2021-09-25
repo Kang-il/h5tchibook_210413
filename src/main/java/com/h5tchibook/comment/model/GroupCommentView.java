@@ -1,13 +1,13 @@
 package com.h5tchibook.comment.model;
 
-import java.util.Date;		
+import java.util.Date;
 
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class GroupComment {
+public class GroupCommentView {
 	private int id;
 	private int groupId;
 	private int memberId;
@@ -15,4 +15,7 @@ public class GroupComment {
 	private String comment;
 	private Date createdAt;
 	private Date updatedAt;
+	
+	private String userLoginId;
+	private String userProfileImagePath;
 }

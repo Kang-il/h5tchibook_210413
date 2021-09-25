@@ -9,10 +9,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.h5tchibook.comment.model.GroupComment;
 import com.h5tchibook.common.EncryptUtils;
 import com.h5tchibook.friend.bo.FriendBO;
 import com.h5tchibook.friend.model.Friend;
 import com.h5tchibook.group.model.Group;
+import com.h5tchibook.group.model.GroupJoinRequest;
+import com.h5tchibook.post.model.GroupPost;
 import com.h5tchibook.user.bo.UserBO;
 import com.h5tchibook.user.model.User;
 
@@ -242,13 +245,109 @@ public class CheckBO {
 	
 	public Map<String,Boolean> createGroupCheckElements(User user , Group group) {
 		Map<String,Boolean> result=new HashMap<String,Boolean>();	
-		boolean existGroupCheck= group==null ? false : true;
-		boolean loginCheck = user==null? false:true;
+		boolean existGroupCheck= group==null ? true : false ;
+		boolean loginCheck = user==null? false : true ;
 		result.put("existGroupCheck", existGroupCheck);
 		result.put("loginCheck", loginCheck);
 		return result;
 	}
 	
+	public Map<String,Boolean> createCommentCheckElements(User user,GroupComment comment){
+		Map<String,Boolean> result=new HashMap<String,Boolean>();
+		
+		boolean loginCheck=loginCheck(user);
+		boolean commentBlankCheck=commentBlankCheck(comment);
+		boolean postIdCheck=comment.getPostId()==0? false : true;
+		boolean groupIdCheck=comment.getGroupId()==0? false : true;
+		
+		result.put("loginCheck",loginCheck);
+		result.put("commentBlankCheck", commentBlankCheck);
+		result.put("postIdCheck", postIdCheck);
+		result.put("groupIdCheck", groupIdCheck);
+		
+		return result;
+	}
+	
+	public Map<String,Boolean> deleteGroupCommentCheckElements(User user, GroupComment groupComment, GroupPost groupPost, Group group){
+		Map<String,Boolean> result=new HashMap<String,Boolean>();
+		boolean loginCheck=loginCheck(user);
+		boolean groupOwnerCheck=groupOwnerCheck(user,group);
+		boolean postOwnerCheck=groupPostOwnerCheck(user,groupPost);
+		boolean commentOwnerCheck=groupCommentOwnerCheck(user,groupComment);
+		
+		result.put("loginCheck", loginCheck);
+		result.put("groupOwnerCheck", groupOwnerCheck);
+		result.put("postOwnerCheck", postOwnerCheck);
+		result.put("commentOwnerCheck", commentOwnerCheck);
+		
+		return result;
+	}
+	
+	public Map<String,Boolean> createGroupJoinRequestCheckElements(User user,Group group,GroupJoinRequest groupJoinRequest){
+		boolean loginCheck=loginCheck(user);
+		boolean existGroupCheck=existGroupCheck(group);
+		boolean existGroupJoinRequestCheck=existGroupJoinRequest(groupJoinRequest);
+		
+		Map<String,Boolean> result=new HashMap<String,Boolean>();
+		
+		result.put("logincheck", loginCheck);
+		result.put("existGroupCheck",existGroupCheck);
+		result.put("existGroupJoinRequestCheck", existGroupJoinRequestCheck);
+		return result;
+	}
+	
+	private boolean existGroupJoinRequest(GroupJoinRequest groupJoinRequest) {
+		boolean existGroupJoinRequest=true;
+		if(groupJoinRequest!=null) {
+			existGroupJoinRequest=false;
+		}
+		return existGroupJoinRequest;
+	}
+	
+	private boolean existGroupCheck(Group group) {
+		boolean existGroupCheck=false;
+		
+		if(group!=null) {
+			existGroupCheck=true;
+		}
+		
+		return existGroupCheck;
+	}
+	
+	private boolean groupCommentOwnerCheck(User user,GroupComment comment) {
+		boolean commentOwnerCheck=false;
+		if(user.getId()==comment.getMemberId()) {
+			commentOwnerCheck=true;
+		}
+		return commentOwnerCheck;
+	}
+	
+	private boolean groupPostOwnerCheck(User user, GroupPost post) {
+		boolean postOwnerCheck=false;
+		if(user.getId()== post.getGroupMemberId()) {
+			postOwnerCheck=true;
+		}
+		return postOwnerCheck;
+	}
+	
+	private boolean groupOwnerCheck(User user , Group group) {
+		boolean groupOwnerCheck=false;
+		if(user.getId()==group.getGroupManagerId()) {
+			groupOwnerCheck=true;
+		}
+		return groupOwnerCheck;
+	}
+	
+	private boolean commentBlankCheck(GroupComment groupComment) {
+		boolean commentBlankCheck=false;
+		
+		String comment=groupComment.getComment();
+		if(!comment.equals("") && comment!=null) {
+			commentBlankCheck=true;
+		}
+		
+		return commentBlankCheck;
+	}
 	
 	private boolean groupOwner(int id, int groupManagerId) {
 		boolean groupOwnerCheck=false;
@@ -295,7 +394,7 @@ public class CheckBO {
 		return userLoginIdLengthCheck;
 	}
 	
-	public boolean loginCheck(User user) {
+	private boolean loginCheck(User user) {
 		boolean loginCheck = false;
 		if (user != null) {
 			loginCheck = true;

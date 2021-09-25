@@ -8,6 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
 public class CommentAlert implements AlertTimeLine{
 	
 	//alert Table 정보

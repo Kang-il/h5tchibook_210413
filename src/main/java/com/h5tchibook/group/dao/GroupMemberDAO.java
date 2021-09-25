@@ -10,5 +10,7 @@ import com.h5tchibook.group.model.GroupMember;
 @Repository
 public interface GroupMemberDAO {
 	public void insertGroupMember(GroupMember groupMember);
+	public int selectGroupMemberCountByGroupId(@Param("groupId")int groupId);
 	public List<GroupMember> selectGroupMemberListByGroupMemberId(@Param("groupMemberId") int groupMemberId);
+	public List<GroupMember> selectGroupMemberListByGroupId(@Param("groupId") int groupId, @Param("limit")Integer limit);
 }

@@ -1,6 +1,7 @@
 package com.h5tchibook.user.bo;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,13 @@ public class UserBO {
 	
 	public User getUserById(int id) {
 		return userDAO.selectUserById(id);
+	}
+	
+	public List<User> getUserListByIdList(List<Integer> idList){
+		if(idList.size()==0) {
+			return null;
+		}
+		return userDAO.selectUserListByIdList(idList);
 	}
 	
 	public void editUserProfileImage(User user, MultipartFile file) {

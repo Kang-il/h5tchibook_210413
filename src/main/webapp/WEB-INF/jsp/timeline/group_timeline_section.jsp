@@ -14,7 +14,7 @@
 		
 		<div class="group-timeline-info-menu">
 			<span class="material-icons-outlined">burst_mode</span>
-			<span>내 피드</span>
+			<span>내 타임라인</span>
 		</div>
 		
 		<div class="create-new-group">
@@ -26,12 +26,16 @@
 		<h5 class="my-shortcuts-title">가입한 그룹</h5>
 		<div class="group-timeline-group-box"> 
 			<c:forEach var="group" items="${groupList}">
-			
+				<div class="group-timeline-group-item" data-group-name="${group.groupName}">
+					<c:if test="${group.groupProfileImagePath eq null }">
+						<img src="/static/images/no_profile_image.png" alt="그룹 이미지" class="group-timeline-group-profile-img"/>
+					</c:if>
+					<c:if test="${group.groupProfileImagePath ne null}">
+						<img src="${group.groupProfileImagePath}" alt="그룹 이미지" class="group-timeline-group-profile-img"/>
+					</c:if>
+					<span>${group.groupName}</span>
+				</div>
 			</c:forEach>
-			<div class="group-timeline-group-item">
-				<img src="/static/images/dummy_profile.jpg" alt="그룹 이미지" class="group-timeline-group-profile-img"/>
-				<span>h5tchi's group</span>
-			</div>
 		</div>
 		<footer>
 			<jsp:include page="../include/footer.jsp"/>

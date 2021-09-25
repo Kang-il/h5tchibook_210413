@@ -170,7 +170,7 @@
 								
 								<input type="text" id="commentInput${post.id}" class="comment-input form-control"/>
 								
-								<button type="button" class="comment-create-btn" data-post-id="${post.id}">게시</button>
+								<button type="button" class="comment-create-btn" data-post-id="${post.id}" data-group-id="${group.id}">게시</button>
 							</div>
 						</div>
 					</div>

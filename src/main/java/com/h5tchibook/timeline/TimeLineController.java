@@ -61,6 +61,7 @@ public class TimeLineController {
 			List<Group> groupList=groupBO.getGroupListByMemberId(user.getId());
 			model.addAttribute("groupList",groupList);
 		}
+		
 		model.addAttribute("currentTime",date.getTime());
 		model.addAttribute("userView", "timeline/group_timeline_section");
 		return "template/template_layout";

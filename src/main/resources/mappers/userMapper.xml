@@ -129,5 +129,25 @@
  		WHERE 
  			`id`=#{id}
  	</select>
-
+ 	
+ 	<select id="selectUserListByIdList" parameterType="java.util.List" resultType="com.h5tchibook.user.model.User">
+ 		SELECT
+ 			`id`
+ 			,`loginId`
+ 			,`password`
+ 			,`name`
+ 			,`sex`
+ 			,`profileImagePath`
+ 			,`coverImagePath`
+ 			,`introduce`
+ 			,`createdAt`
+ 			,`updatedAt`
+ 		FROM
+ 			`user`
+ 		WHERE 
+ 			`id` IN
+ 			<foreach collection="idList"  open="(" close=")" item="id" separator=",">
+ 				#{id}
+ 			</foreach>
+ 	</select>
  </mapper>

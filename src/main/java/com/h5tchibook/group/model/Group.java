@@ -11,6 +11,9 @@ public class Group {
 	private int id;
 	private int groupManagerId;
 	private String groupName;
+	private String groupProfileImagePath;
+	private String groupCoverImagePath;
 	private Date createdAt;
 	private Date updatedAt;
+
 }

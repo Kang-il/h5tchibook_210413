@@ -1,9 +1,9 @@
 package com.h5tchibook.group.bo;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,6 +51,10 @@ public class GroupBO {
 		return groupDAO.selectGroupByGroupName(groupName);
 	}
 	
+	public Group getGroupById(int id) {
+		return groupDAO.selectGroupById(id);
+	}
+	
 	public List<Group> getGroupListByMemberId(int memberId){
 		List<GroupMember> groupMemberList=groupMemberBO.getGroupMemberListByGroupMemberId(memberId);
 		List<Integer> groupIdList=new ArrayList<Integer>();
@@ -64,5 +68,20 @@ public class GroupBO {
 		
 		
 		return null;
+	}
+	
+	public List<Group> getGroupListByGroupManagerId(int groupManagerId){
+		return groupDAO.selectGroupListByGroupmanagerId(groupManagerId);
+	}
+	
+	public List<Integer>getGroupIdListkByGroupManagerId(int groupManagerId){
+		List<Group> groupList=groupDAO.selectGroupListByGroupmanagerId(groupManagerId);
+		List<Integer> groupIdStack=new Stack<Integer>();
+		
+		for(Group group:groupList) {
+			groupIdStack.add(group.getId());
+		}
+		
+		return groupIdStack;
 	}
 }

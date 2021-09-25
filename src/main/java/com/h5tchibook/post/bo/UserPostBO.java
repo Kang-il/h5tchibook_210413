@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.h5tchibook.comment.bo.CommentBO;
-import com.h5tchibook.comment.model.Comment;
 import com.h5tchibook.common.FileManagerService;
 import com.h5tchibook.friend.bo.FriendBO;
 import com.h5tchibook.like.bo.LikeBO;

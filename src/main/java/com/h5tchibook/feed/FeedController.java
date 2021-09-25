@@ -8,6 +8,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,9 +21,16 @@ import com.h5tchibook.check.bo.CheckBO;
 import com.h5tchibook.friend.bo.FriendBO;
 import com.h5tchibook.friend.model.FriendView;
 import com.h5tchibook.group.bo.GroupBO;
+import com.h5tchibook.group.bo.GroupJoinRequestBO;
+import com.h5tchibook.group.bo.GroupMemberBO;
 import com.h5tchibook.group.model.Group;
+import com.h5tchibook.group.model.GroupJoinRequest;
+import com.h5tchibook.group.model.GroupMemberView;
+import com.h5tchibook.post.bo.GroupPostBO;
 import com.h5tchibook.post.bo.UserPostBO;
 import com.h5tchibook.post.model.DisclosureStatus;
+import com.h5tchibook.post.model.GroupPost;
+import com.h5tchibook.post.model.GroupPostView;
 import com.h5tchibook.post.model.Post;
 import com.h5tchibook.post.model.PostView;
 import com.h5tchibook.user.bo.UserBO;
@@ -41,7 +50,15 @@ public class FeedController {
 	private CheckBO checkBO;
 	@Autowired
 	private GroupBO groupBO;
+	@Autowired
+	private GroupMemberBO groupMemberBO;
+	@Autowired
+	private GroupPostBO groupPostBO;
+	@Autowired
+	private GroupJoinRequestBO groupJoinRequestBO;
 	
+	
+	private Logger logger=LoggerFactory.getLogger(this.getClass());
 	
 	@RequestMapping("/{feedUserLoginId}")
 	public String userFeed(
@@ -158,15 +175,29 @@ public class FeedController {
 			if(!checkMap.get("existGroupCheck")) {
 				return "redirect:/timeline/group_timeline_view";
 			}
-			
+
 			for(String key : checkMap.keySet()) {
 				model.addAttribute(key,checkMap.get(key));
 			}
 			
+			List<GroupMemberView> groupMemberList=groupMemberBO.getGroupMemberViewListByGroupId(group.getId(),9);
+			int groupMemberCount=groupMemberBO.getGroupMemberCountByGroupId(group.getId());
+			List<GroupPost> groupPhotoList=groupPostBO.getGroupPostListOnlyPhtoTypeByGroupId(group.getId());
+			List<GroupPostView> groupPostList=groupPostBO.getGroupPostViewListByGroupId(group.getId());
+			//그룹 멤버 리스트와 그룹 멤버 카운트를 넘겨준다.
+			//1.내가 이 그룹에 가입신청을 했는지
+			GroupJoinRequest groupJoinRequest= groupJoinRequestBO.getGroupJoinRequestByUserIdAndGroupId(user.getId(), group.getId());
+			
+			model.addAttribute("groupJoinRequest",groupJoinRequest);
+			model.addAttribute("groupMemberList",groupMemberList);
+			model.addAttribute("groupMemberCount",groupMemberCount);
+			model.addAttribute("groupPhotoList",groupPhotoList);
+			model.addAttribute("groupPostList",groupPostList);
 		}else {
 			return "redirect:/user/sign_in_view";
 		}
-		
+		logger.debug("::::::::::::::::::::"+group.getGroupCoverImagePath());
+		model.addAttribute("group",group);
 		model.addAttribute("userView","group/group_feed_section");
 		model.addAttribute("currentTime",date.getTime());
 		return "template/template_layout";

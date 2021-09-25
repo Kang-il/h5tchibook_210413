@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="com.h5tchibook.group.dao.GroupJoinRequestDAO">
+ 	<insert id="createGroupJoinRequest" parameterType="com.h5tchibook.group.model.GroupJoinRequest">
+ 		INSERT INTO
+ 			`groupJoinRequest`
+ 		(
+ 			`groupId`
+ 			,`userId`
+ 			,`createdAt`
+ 		)
+ 		VALUES
+ 		(
+ 			#{groupId}
+ 			,#{userId}
+ 			,NOW()
+ 		)
+ 	</insert>
+ 	
+ 	<select id="selectGroupJoinRequestByUserIdAndGroupId" parameterType="map" resultType="com.h5tchibook.group.model.GroupJoinRequest">
+ 		SELECT
+ 			`id`
+ 			,`groupId`
+ 			,`userId`
+ 			,`createdAt`
+ 		FROM 
+ 			`groupJoinRequest`
+ 		WHERE
+ 			`userId`=#{userId}
+ 		AND
+ 			`groupId`=#{groupId}
+ 	</select>
+ 	
+ </mapper>

@@ -1425,6 +1425,9 @@ header{
 	background-color:rgba(0,0,0,0);
 	cursor:pointer;
 }
+.group-post-comment-box{
+	margin-top:10px;
+}
 
 .group-post-box .group-create-comment-box{
 	padding:20px;
@@ -2757,6 +2760,188 @@ footer .footer-item{
 }
 
 
+
+.create-group-post-modal-section{
+	width:100%; 
+	height:100%;
+	background:rgba(0,0,0,0.5);
+	position:fixed ;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	margin:0 auto;
+	left:0;
+	right:0;
+	z-index:3;
+}
+
+.create-group-post-modal-section .create-group-post-modal-box{
+ 	width:430px;
+ 	height:460px;
+ 	overflow-y:scroll;
+	border-radius:10px;
+	background-color:white;
+	position:fixed;
+	z-index:2;
+	padding:20px;
+}
+
+.create-group-post-modal-box .modal-title-box{
+	display:flex;
+	justify-content:space-between;
+}
+
+.create-group-post-modal-box .modal-title-box h4{
+	font-weight:700;
+}
+
+.create-group-post-modal-box .group-post-modal-close-btn{
+ 	border-radius:100%;
+ 	border:none;
+ 	outline:none;
+ 	font-size:25px;
+ 	width:30px;
+ 	height:30px;
+ 	font-weight:700;
+ 	display:flex;
+ 	justify-content:center;
+ 	align-items:center;
+ 	cursor:pointer;
+}
+ 
+.create-group-post-modal-box .create-group-post-profile-box{
+ 	padding:10px;
+ 	display:flex;
+ 	align-items:center;
+}
+ 
+.create-group-post-modal-box .create-group-post-select-box{
+ 	margin-left:10px;
+}
+ 
+.create-group-post-modal-box .create-group-post-select-box span{
+ 	font-weight:700;
+}
+ 
+
+.create-group-post-modal-box .create-group-post-profile-box span{
+	display:block;
+}
+
+.create-group-post-modal-box .create-group-post-profile-box img{
+ 	width:60px;
+ 	height:60px;
+ 	border-radius:100%;
+}
+
+.create-group-post-modal-box .delete-group-img-btn{
+	display:flex;
+	align-items:center;
+	justify-content:center;
+	border-radius:100%;
+	width:20px;
+	height:20px;
+	font-size:15px;
+	border:none;
+	outline:none;
+	cursor:pointer;
+	position:absolute;
+	right:30px;
+	top:160px;
+}
+
+.create-group-post-modal-box .delete-group-img-btn:hover{
+	background-color:#797979;
+}
+
+.create-group-post-modal-box .create-group-post-img{
+	width:390px;
+}
+
+.create-group-post-modal-box .create-group-text-form{
+	padding-top:10px;
+	margin-bottom:10px;
+	resize:none;
+	border:none;
+	outline:none;
+}
+
+.create-group-post-modal-box .create-group-post-btn{
+	width:100%;
+	font-weight:700;
+	color:white;
+	background-color:#1877f2;
+}
+
+.create-group-post-modal-box .add-group-photo-box{
+	width:100%;
+	height:60px;
+	border:1px solid #dbdbdb;
+	border-radius:10px;
+	display:flex;
+	justify-content:space-between;
+	align-items:center;
+	padding:20px;
+	margin-bottom:10px;
+}
+
+.create-group-post-modal-box .add-group-photo-box div{
+	font-size:20px;
+	font-weight:700;
+}
+
+.create-group-post-modal-box .load-group-post-photo-btn{
+	border:none;
+	outline:none;
+	background-color:rgba(0,0,0,0);
+	display:flex;
+	align-items:center;
+	font-weight:700;
+	cursor:pointer;
+}
+
+.create-group-post-modal-box .load-group-post-photo-btn span{
+	color:#34b21b;
+	font-size:28px;
+	margin-right:5px;
+}
+
+.delete-group-comment-modal-section{
+	width:100%; 
+	height:100%;
+	background:rgba(0,0,0,0.5);
+	position:fixed ;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	margin:0 auto;
+	left:0;
+	right:0;
+	z-index:3;
+}
+
+.delete-group-comment-modal-section .delete-group-comment-modal-box{
+	width:330px;
+	border-radius:10px;
+	background-color:white;
+	position:fixed;
+	z-index:2;
+
+}
+.delete-group-comment-modal-box div{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.delete-group-comment-modal-box button{
+	outline: none;
+	border: none;
+	font-size:16px;
+	padding:15px;
+	width:100%;
+	background-color:rgba(0,0,0,0);
+	cursor: pointer;
+}
 
 
 

@@ -1,4 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
- <mapper namespace="com.h5tchibook.comment.dao.GroupCommentDAO"></mapper>
+ <mapper namespace="com.h5tchibook.comment.dao.GroupCommentDAO">
+ 
+ 	<insert id="createGroupComment" parameterType="com.h5tchibook.comment.model.GroupComment" useGeneratedKeys="true" keyProperty="id">
+ 		INSERT INTO
+ 			`groupComment`
+ 		(
+ 			`groupId`
+ 			,`memberId`
+ 			,`postId`
+ 			,`comment`
+ 			,`createdAt`
+ 			,`updatedAt`
+ 		)
+ 		VALUES
+ 		(
+ 			#{groupId}
+ 			,#{memberId}
+ 			,#{postId}
+ 			,#{comment}
+ 			,NOW()
+ 			,NOW()
+ 		)
+ 	</insert>
+ 	
+ 	<delete id="deleteGroupCommentById" parameterType="int">
+ 		DELETE FROM 
+ 			`groupComment`
+ 		WHERE
+ 			`id`=#{id}
+ 	</delete>
+ 	
+ 	<select id="selectGroupCommentById" parameterType="int" resultType="com.h5tchibook.comment.model.GroupComment">
+ 			SELECT 
+ 			`id`
+ 			,`groupId`
+ 			,`memberId`
+ 			,`postId`
+ 			,`comment`
+ 			,`createdAt`
+ 			,`updatedAt`
+ 		FROM
+ 			`groupComment`
+ 		WHERE
+ 			`id`=#{id}
+ 	</select>
+ 	
+ 	<select id="selectGroupCommentListByPostIdList" parameterType="java.util.List" resultType="com.h5tchibook.comment.model.GroupComment">
+ 		SELECT 
+ 			`id`
+ 			,`groupId`
+ 			,`memberId`
+ 			,`postId`
+ 			,`comment`
+ 			,`createdAt`
+ 			,`updatedAt`
+ 		FROM
+ 			`groupComment`
+ 		WHERE
+ 			`postId` IN
+ 			<foreach collection="postIdList" item="postId" open="(" close=")" separator=",">
+ 				${postId}
+ 			</foreach>
+ 	</select>
+ 	
+ 	<select id="selectGroupCommentListByPostId" parameterType="int" resultType="com.h5tchibook.comment.model.GroupComment">
+ 		SELECT 
+ 			`id`
+ 			,`groupId`
+ 			,`memberId`
+ 			,`postId`
+ 			,`comment`
+ 			,`createdAt`
+ 			,`updatedAt`
+ 		FROM
+ 			`groupComment`
+ 		WHERE
+ 			`postId` = #{postId}
+ 	</select>
+ 
+ </mapper>

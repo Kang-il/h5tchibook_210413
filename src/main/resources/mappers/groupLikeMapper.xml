@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
- <mapper namespace="com.h5tchibook.like.dao.GroupLikeDAO"></mapper>
+ 
+ <mapper namespace="com.h5tchibook.like.dao.GroupLikeDAO">
+ 	<select id="selectGroupLikeListByPostIdList" parameterType="java.util.List" resultType="com.h5tchibook.like.model.GroupLike">
+ 		SELECT 
+ 			`id`
+ 			,`groupId`
+ 			,`postId`
+ 			,`memberId`
+ 			,`createdAt`
+ 		FROM
+ 			`groupLike`
+ 		WHERE
+ 			`postId` IN
+ 			<foreach collection="postIdList" item="postId" open="(" close=")" separator=",">
+ 				${postId}
+ 			</foreach>
+ 	</select>
+ </mapper>

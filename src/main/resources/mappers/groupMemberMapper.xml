@@ -3,7 +3,7 @@
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  
  <mapper namespace="com.h5tchibook.group.dao.GroupMemberDAO">
- 	<insert id="insertGroupMember">
+ 	<insert id="insertGroupMember" parameterType="com.h5tchibook.group.model.GroupMember">
  		INSERT INTO 
  			`groupMember`
  		(
@@ -19,6 +19,15 @@
 		) 		
  	</insert>
  	
+ 	<select id="selectGroupMemberCountByGroupId" parameterType="int" resultType="int">
+ 		SELECT
+ 			COUNT(*)
+ 		FROM
+ 			`groupMember`
+ 		WHERE 
+ 			`groupId`=#{groupId}
+ 	</select>
+ 	
  	<select id="selectGroupMemberListByGroupMemberId" parameterType="int" resultType="com.h5tchibook.group.model.GroupMember">
  		SELECT
  			`id`
@@ -29,5 +38,20 @@
  			`groupMember`
  		WHERE
  			`groupMemberId`=#{groupMemberId}
+ 	</select>
+ 	
+ 	<select id="selectGroupMemberListByGroupId" parameterType="map" resultType="com.h5tchibook.group.model.GroupMember">
+ 		SELECT
+ 			`id`
+ 			,`groupId`
+ 			,`groupMemberId`
+ 			,`createdAt`
+ 		FROM
+ 			`groupMember`
+ 		WHERE
+ 			`groupId`=#{groupId}
+ 		<if test="limit!=null">
+ 		LIMIT ${limit}
+ 		</if>
  	</select>
  </mapper>

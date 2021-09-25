@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="com.h5tchibook.post.dao.GroupPostDAO">
+ 
+ 	<insert id="createGroupPost" parameterType="com.h5tchibook.post.model.GroupPost">
+ 		INSERT INTO 
+ 			`groupPost`
+ 		(
+ 			`groupMemberId`
+ 			,`groupId`
+ 			,`content`
+ 			,`contentType`
+ 			,`contentPath`
+ 		)
+ 		VALUES
+ 		(
+ 			#{groupMemberId}
+ 			,#{groupId}
+ 			,#{content}
+ 			,#{contentType}
+ 			,#{contentPath}		
+ 		)
+ 	</insert>
+ 		
+ 	<select id="selectGroupPostById" parameterType="int" resultType="com.h5tchibook.post.model.GroupPost">
+ 		SELECT
+ 			`id`
+ 			,`groupMemberId`
+ 			,`groupId`
+ 			,`content`
+ 			,`contentType`
+ 			,`contentPath`
+ 			,`createdAt`
+ 			,`updatedAt`
+ 		FROM
+ 			`groupPost`
+ 		WHERE
+ 			`id`=#{id}
+ 	</select>
+ 	
+ 	<select id="selectGroupPostListByGroupId" parameterType="int" resultType="com.h5tchibook.post.model.GroupPost">
+ 		SELECT
+ 			`id`
+ 			,`groupMemberId`
+ 			,`groupId`
+ 			,`content`
+ 			,`contentType`
+ 			,`contentPath`
+ 			,`createdAt`
+ 			,`updatedAt`
+ 		FROM
+ 			`groupPost`
+ 		WHERE
+ 			`groupId`=#{groupId}
+ 		ORDER BY
+ 			`id`
+ 		DESC
+ 	</select> 
+ 	
+ 	<select id="selectGroupPostListOnlyPhotoTypeByGroupId" parameterType="int" resultType="com.h5tchibook.post.model.GroupPost">
+ 		SELECT
+ 			`id`
+ 			,`groupMemberId`
+ 			,`groupId`
+ 			,`content`
+ 			,`contentType`
+ 			,`contentPath`
+ 			,`createdAt`
+ 			,`updatedAt`
+ 		FROM
+ 			`groupPost`
+ 		WHERE
+ 			`groupId`=#{groupId}
+ 		AND
+ 			`contentType`='photo'
+ 		ORDER BY 
+ 			`id`
+ 		DESC
+ 	</select>
+ 	
+ 	<delete id="deleteGroupPostByGroupId" parameterType="int">
+ 		DELETE FROM 
+ 			`groupPost`
+ 		WHERE
+ 			`groupId`=#{groupId}
+ 	</delete>
+ 	
+ </mapper>

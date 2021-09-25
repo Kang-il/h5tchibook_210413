@@ -1274,18 +1274,313 @@ $(document).ready(function(){
 	});
 	
 	
+	//group -timeline-section
+	$('.group-timeline-group-item').on('click',function(){
+		let groupName=$(this).data('group-name');
+		location.href="/feed/group/"+groupName;
+	});
+	
+	//group create post section
+	
+	$('.create-group-post-modal-btn').on('click',function(){
+		$('.create-group-post-modal-section').removeClass('d-none');
+		$('body').addClass('disabled-scroll');
+	});
+	
+	$('.group-post-modal-close-btn').on('click',function(){
+		$('.create-group-post-modal-section').addClass('d-none');
+		$('body').removeClass('disabled-scroll');
+	});
+	
+	$('.create-group-text-form').on('input',function(){
+		let text=$(this).val();
+		if(text=='' || text == undefined){
+			$('.create-group-post-btn').attr('disabled',true);
+		}else{
+			$('.create-group-post-btn').attr('disabled',false);
+		}
+	});
+	
+	$('.create-group-post-photo-btn').on('click',function(){
+		$('#loadGroupImageInput').trigger('click');
+	});
+	
+	$('#loadGroupImageInput').on('input',function(e){
+		let files = e.target.files;
+		let filesArr = Array.prototype.slice.call(files);
+
+		filesArr.forEach(function(f) {
+			if (!f.type.match("image.*")) {
+				alert("확장자는 이미지 확장자만 가능합니다.");
+				$("#loadGroupImageInput").val('');
+				return;
+			}
+			sel_file = f;
+			let reader = new FileReader();
+			reader.onload =function(e){
+				$('.create-group-post-img').attr('src',e.target.result);
+				$('.create-group-post-image-box').removeClass('d-none');
+				$('.create-group-post-img').removeClass('d-none');
+				$('.delete-group-img-btn').removeClass('d-none');
+				$('.create-group-post-modal-section').removeClass('d-none');
+				$('body').addClass('disabled-scroll');
+			}
+				reader.readAsDataURL(f);
+		});
+	});
+	
+	$('.delete-group-img-btn').on('click',function(){
+		$('.create-group-post-img').attr('src','');
+		$('.create-group-post-image-box').addClass('d-none');
+		$('.create-group-post-img').addClass('d-none');
+		$('.delete-group-img-btn').addClass('d-none');
+	});
+	
+	$('.create-group-post-btn').on('click',function(){
+		let filePath=$('#loadGroupImageInput').val();
+		let content = $('.create-group-text-form').val();
+		let groupId=$(this).data('group-id');
+
+		let file=null;
+		
+		if(filePath!=''){
+			file=$('#loadGroupImageInput')[0].files[0];
+
+		}
+		
+		let formData=new FormData();
+		formData.append("file",file);
+		
+		if(content==''){
+			alert('내용을 입력해 주세요');
+			return;
+		}
+		
+		formData.append('content',content);
+		
+		if(groupId == '' || groupId == undefined){
+			alert('잘못된 접근');
+			return;
+		}
+		formData.append('groupId',groupId)
+		
+		
+		$.ajax({
+			type:'POST'
+			,url:'/group/post/create_post'
+			,data:formData
+			,processData:false
+			,contentType:false
+			,enctype:"multipart/form-data"
+			,success:function(data){
+				if(data.loginCheck===true){
+					if(data.result===true){
+						location.reload();
+					}else{
+						if(data.valid_content == 'blank'){
+							//content값이 정상적으로 넘어가지 않은경우
+							alert('글 내용을 채워주세요');
+							return;
+						}
+						if(data.valid_wrong_extension =='file'){
+							alert('이미지 파일만 게시 가능합니다.');
+							return;
+						}
+						if(data.valid_empty_extension == 'file'){
+							alert('잘못된 파일입니다.');
+							return;
+						}
+						if(data.groupId == 'blank'){
+							alert('잘못된 접근입니다.');
+							return;
+						}
+					}
+				}else{
+					location.href='/user/sign_in_view';
+				}
+			}
+			,error:function(e){
+				alert(e);
+			}
+		});
+		
+		
+	});
 	
 	
+	$('.group-post-comment-btn').on('click',function(){
+		let postId=$(this).data('post-id');
+		$('#groupCommentInput'+postId).focus();
+	});
 	
+	$('.group-comment-create-btn').on('click',function(){
+		let postId=$(this).data('post-id');
+		let groupId=$(this).data('group-id');
+		let comment=$('#groupCommentInput'+postId).val();
+		
+		if(postId == undefined ){
+			alert('포스트 아이디 누락');
+		}
+		
+		if(groupId == undefined){
+			alert('그룹 아이디 누락');
+		}
+		
+		if(comment==''){
+			alert('내용을 입력해 주세요.');
+			return;
+		}
 	
+		$.ajax({
+			type:'POST'
+			,url:'/group/comment/create_comment'
+			,data:{'postId':postId
+					,'groupId':groupId
+					,'comment':comment}
+			,success:function(data){
+				//1.loginCheck
+				//2.commentBlankCheck
+				//3. postIdCheck
+				//4. groupIdCheck
+				//5. result
+				
+				if(data.loginCheck===true){
+					if(data.result===true){
+						location.reload();
+					}else{
+						if(data.commentBlankCheck===false){
+							alert('내용을 입력해 주세요');
+						}
+						if(data.postIdCheck===false){
+							alert('잘못된 접근입니다.\n(포스트 아이디 누락)');
+						}
+						if(data.groupIdCheck===false){
+							alert('잘못된 접근입니다.\n(그룹 아이디 누락)');
+						}
+					}
+				}else{
+					location.href='/user/user_sign_in';
+				}
+			}
+			,error:function(e){
+				alert(e);
+				return;
+			}
+		});
+		
+	});
 	
+	$('.group-more-comment').on('click',function(){
+		let postId = $(this).data('post-id');
+		let groupId=$(this).data('group-id');
+		let userId=$(this).data('user-id');
+		$.ajax({
+			type:'POST'
+			,data:{'postId': postId}
+			,url:'/group/comment/get_group_comment_list'
+			,success:function(data){
+				if(data.loginCheck===true){
+					if(data.result===true){
+						let commentList=data.groupCommentViewList;
+						let groupIdList=data.groupIdList;
+						$('#groupPostCommentBox'+postId).empty();
+						commentList.forEach(comment=>{
+								//private int id;
+								//private int userId;
+								//private int postId;
+								//private String comment;
+								//private Date createdAt;
+								//private Date updatedAt;
+								//private String userLoginId;
+								//private String userProfileImagePath;
+							let profileImagePath = comment.userProfileImagePath == null ? 
+							'/static/images/no_profile_image.png' : comment.userProfileImagePath;
+							
+							let button='';
+							
+							// 내가 그룹 매니저 인경우 댓글 삭제가 가능하도록 메뉴 창 노출
+							for(let i=0; i< groupIdList.length;i++){
+								if(groupIdList[i]==groupId){
+									button='<button type="button" class="material-icons-outlined group-comment-menu-btn">more_horiz</button>';
+									break;
+								}
+								if(groupIdList[i]!=groupId){
+									continue;
+								}
+							}
+							
+							// 내가 작성자인 경우 댓글 삭제가 가능하도록 메뉴 창 노출
+							if(userId==comment.memberId){
+								button='<button type="button" class="material-icons-outlined group-comment-menu-btn" data-comment-id="'+comment.id+'">more_horiz</button>';
+							}
+							
+							let html='<div class="group-post-comment-item">'
+										+'<a href="/feed/"'+comment.userLoginId+'>'
+											+'<img src="'+profileImagePath+'"/>'
+										+'</a>'
+										+'<div class="group-post-comment">'
+											+'<div><a href="/feed/"'+comment.userLoginId+'>'+comment.userLoginId+'</a></div>'
+											+'<div>'+comment.comment+'</div>'
+										+'</div>'
+										+button
+									+'</div>';
+									
+							$('#groupPostCommentBox'+postId).append(html);
+								
+						});
+						
+					}else{
+						alert('댓글 불러오기 실패 관리자에게 문의하세요');
+						return;
+					}
+				}else{
+					location.href='/user/sign_in_view';
+				}
+			}
+			,error:function(e){
+				alert(e);
+			}
+		});
+	});
 	
+	$('.group-post-item-box').on('click','.group-comment-menu-btn',function(){
+		let commentId=$(this).data('comment-id');
+		$('.delete-group-comment-modal-section').removeClass('d-none');
+		$('body').addClass('disabled-scroll');
+		$('.delete-group-comment-btn').data('comment-id',commentId);	
+	});
 	
+	$('.cancel-group-delete-comment-modal').on('click',function(){
+		$('.delete-group-comment-modal-section').addClass('d-none');
+		$('body').removeClass('disabled-scroll');
+	});
 	
-	
-	
-	
-	
-	
-	
+	$('.delete-group-comment-btn').on('click',function(){
+		let commentId=$(this).data('comment-id');
+		$.ajax({
+			type:'POST'
+			,url:'/group/comment/delete_group_comment'
+			,data:{'commentId':commentId}
+			,success:function(data){
+				if(data.loginCheck===true){
+					if(data.groupOwnerCheck===false && data.postOwnerCheck===false && data.commentOwnerCheck===false){
+						alert('삭제 권한이 없습니다.')
+						return;
+					}else{
+						if(data.result===true){
+							location.reload();
+						}else{
+							alert('삭제 실패 관리자에게 문의하세요');
+							return;
+						}
+					}
+				}else{
+					location.href='/user/sign_in_view';
+				}
+			}
+			,error:function(e){
+				alert(e);
+			}
+		});
+	});
 });
