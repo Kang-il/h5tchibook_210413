@@ -1383,7 +1383,7 @@ header{
 	border:none;	
 }
 
-.group-post-box .group-like-before-btn span , .group-post-comment-btn span{
+.group-post-box .group-like-before-btn span , .group-like-after-btn span , .group-post-comment-btn span{
 	margin-right:10px;
 }
 
@@ -1814,6 +1814,38 @@ footer .footer-item{
 	font-weight:500;
 	background-color:#1877f2;
 	color:white;
+	border-radius:10px;
+	display:flex;
+	align-items:center;
+	justify-content:center;
+	cursor:pointer;
+	padding-left:20px;
+	padding-right:20px;
+}
+
+.profile-nav-box .edit-group-btn{
+	height:30px;
+	border:none;
+	outline:none;
+	font-weight:500;
+	background-color:#dbdbdb;
+	color:black;
+	border-radius:10px;
+	display:flex;
+	align-items:center;
+	justify-content:center;
+	cursor:pointer;
+	padding-left:20px;
+	padding-right:20px;
+}
+
+.profile-nav-box .progress-join-group-btn{
+	height:30px;
+	border:none;
+	outline:none;
+	font-weight:500;
+	background-color:#dbdbdb;
+	color:black;
 	border-radius:10px;
 	display:flex;
 	align-items:center;
@@ -2953,5 +2985,134 @@ footer .footer-item{
 	cursor: pointer;
 }
 
+.group-feed-member-section{
+	width:940px;
+	margin:auto;
+	margin-top:20px;
+	background-color: white;
+	border:1px solid #dbdbdb;
+	border-radius: 15px;
+	padding:20px;
+}
 
+.group-feed-member-section .feed-title{
+	font-weight:700;
+}
 
+.group-feed-member-section .feed-member-row{
+	display: flex;
+}
+
+.group-feed-member-section .group-feed-member-item{	
+	border:1px solid #dbdbdb;
+	border-radius:10px;
+	cursor:pointer;
+	margin:10px;
+}
+
+.group-feed-member-section .group-feed-member-item img{
+	width:164px;
+	height:164px;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	border-bottom:1px solid #dbdbdb;
+}
+
+.group-feed-member-section .member-login-id{
+	color:black;
+	font-weight:700;
+	display: flex;
+	align-items: center;
+	padding:10px;
+
+}
+
+.group-feed-member-section .member-info-box{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	
+}
+
+.group-feed-member-section .group-member-menu-btn{
+	font-size:15px;
+	padding:10px;
+}
+
+.secession-group-modal-section{
+	width:100%; 
+	height:100%;
+	background:rgba(0,0,0,0.5);
+	position:fixed ;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	margin:0 auto;
+	left:0;
+	right:0;
+	z-index:3;
+}
+
+.secession-group-modal-section .secession-group-modal-box{
+	width:330px;
+	border-radius:10px;
+	background-color:white;
+	position:fixed;
+	z-index:2;
+
+}
+
+.secession-group-modal-box div{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.secession-group-modal-box button{
+	outline: none;
+	border: none;
+	font-size:16px;
+	padding:15px;
+	width:100%;
+	background-color:rgba(0,0,0,0);
+	cursor: pointer;
+}
+
+.request-join-group-cancel-modal-section{
+	width:100%; 
+	height:100%;
+	background:rgba(0,0,0,0.5);
+	position:fixed ;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	margin:0 auto;
+	left:0;
+	right:0;
+	z-index:3;
+}
+
+.request-join-group-cancel-modal-section .request-join-group-cancel-modal-box{
+	width:330px;
+	border-radius:10px;
+	background-color:white;
+	position:fixed;
+	z-index:2;
+
+}
+
+.request-join-group-cancel-modal-box div{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.request-join-group-cancel-modal-box button{
+	outline: none;
+	border: none;
+	font-size:16px;
+	padding:15px;
+	width:100%;
+	background-color:rgba(0,0,0,0);
+	cursor: pointer;
+}

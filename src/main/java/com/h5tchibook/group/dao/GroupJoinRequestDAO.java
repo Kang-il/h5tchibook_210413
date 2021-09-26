@@ -7,7 +7,9 @@ import com.h5tchibook.group.model.GroupJoinRequest;
 
 @Repository
 public interface GroupJoinRequestDAO {
-	public int createGroupJoinRequest(GroupJoinRequest groupJoinRequest);
+	public int insertGroupJoinRequest(GroupJoinRequest groupJoinRequest);
+	public int deleteGroupJoinRequestByGroupIdAndUserId(@Param("groupId")int groupId
+														,@Param("userId")int userId);
 	public GroupJoinRequest selectGroupJoinRequestByUserIdAndGroupId(@Param("userId") int userId 
 																	, @Param("groupId") int groupId);
 }

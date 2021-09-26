@@ -3,7 +3,7 @@
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  
  <mapper namespace="com.h5tchibook.group.dao.GroupJoinRequestDAO">
- 	<insert id="createGroupJoinRequest" parameterType="com.h5tchibook.group.model.GroupJoinRequest">
+ 	<insert id="insertGroupJoinRequest" parameterType="com.h5tchibook.group.model.GroupJoinRequest">
  		INSERT INTO
  			`groupJoinRequest`
  		(
@@ -18,6 +18,15 @@
  			,NOW()
  		)
  	</insert>
+ 	
+ 	<delete id="deleteGroupJoinRequestByGroupIdAndUserId" parameterType="map">
+ 		DELETE FROM 
+ 			`groupJoinRequest`
+ 		WHERE
+ 			`groupId`=#{groupId}
+ 		AND
+ 			`userId`=#{userId}
+ 	</delete>
  	
  	<select id="selectGroupJoinRequestByUserIdAndGroupId" parameterType="map" resultType="com.h5tchibook.group.model.GroupJoinRequest">
  		SELECT

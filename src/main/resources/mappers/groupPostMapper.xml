@@ -59,7 +59,7 @@
  		DESC
  	</select> 
  	
- 	<select id="selectGroupPostListOnlyPhotoTypeByGroupId" parameterType="int" resultType="com.h5tchibook.post.model.GroupPost">
+ 	<select id="selectGroupPostListOnlyPhotoTypeByGroupId" parameterType="map" resultType="com.h5tchibook.post.model.GroupPost">
  		SELECT
  			`id`
  			,`groupMemberId`
@@ -78,6 +78,9 @@
  		ORDER BY 
  			`id`
  		DESC
+ 		<if test="limit!=null">
+ 		LIMIT ${limit}
+ 		</if>
  	</select>
  	
  	<delete id="deleteGroupPostByGroupId" parameterType="int">

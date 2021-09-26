@@ -5,48 +5,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <section class="group-feed-section">
-		<div class="group-profile-box">
-			<div class="group-profile-background">
-			
-				<c:choose>
-					<c:when test="${group.groupCoverImagePath eq null}">
-						<img src="/static/images/no_background_image.jpg" class="group-background"/>					
-					</c:when>
-					<c:otherwise>
-						<img src="${group.groupCoverImagePath}" class="group-background"/>
-					</c:otherwise>
-				</c:choose>
-				<button class="background-edit-btn"><span class="material-icons">photo_camera</span> 커버사진 편집</button>
-			</div>
-			<div class="group-introduce-box">
-				<h3 class="group-id">${group.groupName}</h3>
-				<span class="group-member-count">그룹 멤버 ${groupMemberCount} 명</span>
-			<hr>
-	
-			</div>
-			<nav class="profile-nav-box">
-				<div class="profile-nav-item">
-					<a href="#" class="item-link">게시물 </a>
-					<a href="#" class="item-link">사진</a>
-				</div>
-				<c:choose>
-					<c:when test="${user.id eq group.groupManagerId}">
-						<button type="button" class="join-group-btn"><span class="material-icons">edit</span> &nbsp; 그룹 관리</button>
-					</c:when>
-					
-					<c:when test="${groupJoinRequest eq null }">
-						<button type="button" class="join-group-btn"><span class="material-icons">group_add</span> &nbsp; 그룹 가입</button>
-					</c:when>
-					
-					<c:when test="${groupJoinRequest ne null }">
-						<button type="button" class="join-group-btn"><span class="material-icons">group_add</span> &nbsp; 가입 승인 대기중</button>
-					</c:when>
-				</c:choose>
-				
-				
-				
-			</nav>
-		</div> 
+		<jsp:include page="../include/feed_group_profile.jsp"/>
 		
 		<section class="group-contents-section">
 			<section class="contents-info-section">

@@ -1622,5 +1622,65 @@ $(document).ready(function(){
 		setGroupLike(groupId,postId);
 	});
 	
+	$('.join-group-btn').on('click',function(){
+		let groupId=$(this).data('group-id');
+		alert(groupId);
+		$.ajax({
+			type:'POST'
+			,url:'/group/request_join_group'
+			,data:{'groupId':groupId}
+			,success:function(data){
+				if(data.loginCheck===true){
+					if(data.result===true){
+						location.reload();
+					}else{
+						alert('그룹가입 요청 실패 관리자에게 문의하세요');
+					}
+				}else{
+					location.href='/user/sign_in_view';
+				}
+			}
+			,error: function(e){
+				alert(e);
+			}
+		});
+	});
+	
+	$('.progress-join-group-btn').on('click',function(){
+		let groupId=$(this).data('group-id');
+		$('.request-join-group-cancel-modal-section').removeClass('d-none');
+		$('body').addClass('disabled-scroll');
+		$('.request-join-group-cancel-btn').data('group-id',groupId);
+	});
+	
+	$('.request-join-group-cancel-modal').on('click',function(){
+		$('.request-join-group-cancel-modal-section').addClass('d-none');
+		$('body').removeClass('disabled-scroll');
+	});
+	
+	$('.request-join-group-cancel-btn').on('click',function(){
+		let groupId=$(this).data('group-id');
+		$.ajax({
+			type:'POST'
+			,data:{'groupId':groupId}
+			,url:'/group/cancel_join_request'
+			,success:function(data){
+				if(data.loginCheck===true){
+					if(data.result===true){
+						location.reload();
+					}else{
+						alert('그룹가입요청 취소 실패! 관리자에게 문의하세요');
+						return;
+					}
+				}else{
+					location.href='/user/sign_in_view';
+				}
+			}
+			,error:function(e){
+				alert(e);
+			}
+			
+		});
+	});
 	
 });

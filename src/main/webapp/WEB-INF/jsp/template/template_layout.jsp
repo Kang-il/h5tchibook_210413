@@ -18,10 +18,11 @@
 
 <body>
 	<jsp:include page="../include/friend_modal.jsp"/>
-	<jsp:include page="../include/delete_group_comment_modal.jsp"></jsp:include>
+	<jsp:include page="../include/delete_group_comment_modal.jsp"/>
 	<jsp:include page="../include/delete_comment_modal.jsp"/>
 	<jsp:include page="../include/create_group_post_modal.jsp"/> 
 	<jsp:include page="../include/create_post_modal.jsp"/>
+	<jsp:include page="../include/group_member_modal.jsp"/>
 	<jsp:include page="../include/gnb.jsp"/>
 	<jsp:include page="../${userView}.jsp"/>
 </body>

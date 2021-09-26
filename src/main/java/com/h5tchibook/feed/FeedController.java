@@ -160,6 +160,7 @@ public class FeedController {
 	@RequestMapping("/group/{groupName}")
 	public String groupFeedView(Model model
 								,@PathVariable("groupName") String groupName
+								,@RequestParam(value="category",required=false) String category
 								,HttpServletRequest request) {
 		Date date= new Date();
 		HttpSession session=request.getSession();
@@ -168,11 +169,12 @@ public class FeedController {
 		//loginCheck
 		//existGroupCheck
 		//groupOwnerCheck
-		Map<String,Boolean> checkMap=checkBO.groupFeedCheckElements(user, group);
+		Map<String,Object> checkMap=checkBO.groupFeedCheckElements(user, group, category);
 		
-		if(checkMap.get("loginCheck")) {
+		
+		if((Boolean)checkMap.get("loginCheck")) {
 			//입력한 그룹이 존재하지 않는다면.
-			if(!checkMap.get("existGroupCheck")) {
+			if(!(Boolean)checkMap.get("existGroupCheck")) {
 				return "redirect:/timeline/group_timeline_view";
 			}
 
@@ -180,10 +182,19 @@ public class FeedController {
 				model.addAttribute(key,checkMap.get(key));
 			}
 			
-			List<GroupMemberView> groupMemberList=groupMemberBO.getGroupMemberViewListByGroupId(group.getId(),9);
+			
+			List<GroupMemberView> groupMemberList =null;
+			List<GroupPost> groupPhotoList=null;
+			List<GroupPostView> groupPostList=null;
+			
+			groupMemberList=groupMemberBO.getGroupMemberViewListByGroupId(group.getId(),category);
+			groupPhotoList=groupPostBO.getGroupPostListOnlyPhtoTypeByGroupId(group.getId(),category);
 			int groupMemberCount=groupMemberBO.getGroupMemberCountByGroupId(group.getId());
-			List<GroupPost> groupPhotoList=groupPostBO.getGroupPostListOnlyPhtoTypeByGroupId(group.getId());
-			List<GroupPostView> groupPostList=groupPostBO.getGroupPostViewListByGroupId(group.getId());
+			
+			if(category==null) {//category가 null일 경우에만 리스트를 가져온다.
+				groupPostList=groupPostBO.getGroupPostViewListByGroupId(group.getId());				
+			}
+			
 			//그룹 멤버 리스트와 그룹 멤버 카운트를 넘겨준다.
 			//1.내가 이 그룹에 가입신청을 했는지
 			GroupJoinRequest groupJoinRequest= groupJoinRequestBO.getGroupJoinRequestByUserIdAndGroupId(user.getId(), group.getId());
@@ -198,8 +209,8 @@ public class FeedController {
 		}
 		logger.debug("::::::::::::::::::::"+group.getGroupCoverImagePath());
 		model.addAttribute("group",group);
-		model.addAttribute("userView","group/group_feed_section");
 		model.addAttribute("currentTime",date.getTime());
+		
 		return "template/template_layout";
 	}
 }

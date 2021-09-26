@@ -1,6 +1,6 @@
 package com.h5tchibook.group;
 
-import java.util.Map;
+import java.util.Map;	
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -37,6 +37,19 @@ public class GroupJoinRestController {
 		return result;
 	}
 	
+	@RequestMapping("/cancel_join_request")
+	public Map<String,Boolean> cancleJoinRequest(@RequestParam("groupId") int groupId
+												,HttpServletRequest request){
+		HttpSession session=request.getSession();
+		User user=(User)session.getAttribute("user");
+		Group group=groupBO.getGroupById(groupId);
+		
+		Map<String,Boolean> result=groupJoinRequestBO.deleteJoinGroupRequest(user, group);
+		
+		
+		return result;
+	}
+	
 	@RequestMapping("/response_join_group")
 	public Map<String,Boolean>responseJoinGroup(@RequestParam("decision") String decision
 												,@RequestParam("userId") int userId
@@ -45,8 +58,9 @@ public class GroupJoinRestController {
 		
 		HttpSession session=request.getSession();
 		User user=(User)session.getAttribute("user");
+		Group group=groupBO.getGroupById(groupId);
+		Map<String,Boolean> result=groupJoinRequestBO.responseJoinGroup(user,group,userId,decision);
 		
-		
-		return null;
+		return result;
 	}
 }

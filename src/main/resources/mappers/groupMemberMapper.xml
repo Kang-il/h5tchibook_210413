@@ -19,6 +19,29 @@
 		) 		
  	</insert>
  	
+ 	<delete id="deleteGroupMemberByGroupIdAndGroupMemberId" parameterType="map">
+ 		DELETE FROM
+ 			`groupMember`
+ 		WHERE
+ 			`groupId`=#{groupId}
+ 		AND
+ 			`groupMemberId`=#{groupMemberId}
+ 	</delete>
+ 	
+ 	<select id="selectGroupMemberByGroupIdAndGroupMeberId" parameterType="map" resultType="com.h5tchibook.group.model.GroupMember">
+ 		SELECT
+ 			`id`
+ 			,`groupId`
+ 			,`groupMemberId`
+ 			,`createdAt`
+ 		FROM
+ 			`groupMember`
+ 		WHERE
+ 			`groupId`=#{groupId}
+ 		AND
+ 			`groupMemberId`=#{groupMemberId}
+ 	</select>
+ 	
  	<select id="selectGroupMemberCountByGroupId" parameterType="int" resultType="int">
  		SELECT
  			COUNT(*)
@@ -54,4 +77,6 @@
  		LIMIT ${limit}
  		</if>
  	</select>
+ 	
+ 	
  </mapper>

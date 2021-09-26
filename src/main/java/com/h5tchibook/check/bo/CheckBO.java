@@ -15,6 +15,7 @@ import com.h5tchibook.friend.bo.FriendBO;
 import com.h5tchibook.friend.model.Friend;
 import com.h5tchibook.group.model.Group;
 import com.h5tchibook.group.model.GroupJoinRequest;
+import com.h5tchibook.group.model.GroupMember;
 import com.h5tchibook.post.model.GroupPost;
 import com.h5tchibook.user.bo.UserBO;
 import com.h5tchibook.user.model.User;
@@ -221,8 +222,8 @@ public class CheckBO {
 		return result;
 	}
 	
-	public Map<String,Boolean> groupFeedCheckElements(User user, Group group){
-		Map<String,Boolean> result=new HashMap<>();
+	public Map<String,Object> groupFeedCheckElements(User user, Group group,String category){
+		Map<String,Object> result=new HashMap<>();
 		boolean loginCheck=loginCheck(user);
 		boolean existGroupCheck=false;
 		boolean groupOwnerCheck=false;
@@ -231,11 +232,21 @@ public class CheckBO {
 			existGroupCheck=group==null?  false : true;
 			
 			if(existGroupCheck) {
-				groupOwnerCheck=groupOwner(user.getId(),group.getId());
+				groupOwnerCheck=groupOwner(user.getId(),group.getGroupManagerId());
 			}
 			
 		}
 		
+		String userView=null;
+		if(category==null){
+			userView="group/group_feed_section";
+		}else if(category.equals("member")) {
+			userView="group/group_feed_member_section";
+		}else if(category.equals("photo")) {
+			userView="group/group_feed_photo_section";
+		}
+		
+		result.put("userView", userView);
 		result.put("loginCheck",loginCheck);
 		result.put("existGroupCheck", existGroupCheck);
 		result.put("groupOwnerCheck",groupOwnerCheck);
@@ -246,7 +257,7 @@ public class CheckBO {
 	public Map<String,Boolean> createGroupCheckElements(User user , Group group) {
 		Map<String,Boolean> result=new HashMap<String,Boolean>();	
 		boolean existGroupCheck= group==null ? true : false ;
-		boolean loginCheck = user==null? false : true ;
+		boolean loginCheck = loginCheck(user);
 		result.put("existGroupCheck", existGroupCheck);
 		result.put("loginCheck", loginCheck);
 		return result;
@@ -290,10 +301,71 @@ public class CheckBO {
 		
 		Map<String,Boolean> result=new HashMap<String,Boolean>();
 		
-		result.put("logincheck", loginCheck);
+		result.put("loginCheck", loginCheck);
 		result.put("existGroupCheck",existGroupCheck);
 		result.put("existGroupJoinRequestCheck", existGroupJoinRequestCheck);
 		return result;
+	}
+	
+	public Map<String,Boolean> deleteGroupMemberCheckElements(User user, Group group, GroupMember groupMember){
+		boolean loginCheck=loginCheck(user);
+		boolean existGroupCheck=existGroupCheck(group);
+		boolean groupOwnerCheck=groupOwner(user.getId(),group.getGroupManagerId());
+		boolean existGroupMemberCheck=existGroupMember(groupMember);
+		
+		Map<String,Boolean> result=new HashMap<String,Boolean>();
+		result.put("loginCheck", loginCheck);
+		result.put("existGroupCheck",existGroupCheck);
+		result.put("groupOwnerCheck",groupOwnerCheck);
+		result.put("existGroupMemberCheck", existGroupMemberCheck);
+		return result;
+	}
+	
+	public Map<String,Boolean> deleteGroupJoinRequestCheckElements(User user, Group group,GroupJoinRequest groupJoinRequest){
+		boolean loginCheck=loginCheck(user);
+		boolean existGroupCheck=existGroupCheck(group);
+		boolean existGroupJoinRequestCheck=existGroupJoinRequest(groupJoinRequest);
+		
+		//GroupJoinRequest 가 false 를 반환받았을 경우 있다는 뜻
+		if(existGroupJoinRequestCheck==false) {
+			//validationCheck하기 편하도록 true를 담아줌
+			existGroupJoinRequestCheck=true;
+		}
+		
+		Map<String,Boolean> result=new HashMap<String,Boolean>();
+		result.put("loginCheck", loginCheck);
+		result.put("existGroupCheck",existGroupCheck);
+		result.put("existGroupJoinRequest", existGroupJoinRequestCheck);
+		
+		return result;
+	}
+	
+	public Map<String,Boolean> responseJoinGroupCheckElements(User user,Group group,GroupJoinRequest groupJoinRequest,int userId){
+		boolean loginCheck=loginCheck(user);
+		boolean existGroupCheck=existGroupCheck(group);
+		boolean existGroupJoinRequestCheck=existGroupJoinRequest(groupJoinRequest);
+		boolean groupOwnerCheck=groupOwner(user.getId(), group.getGroupManagerId());
+		boolean existUserCheck=existUser(userBO.getUserById(userId));
+		if(existGroupJoinRequestCheck==false) {
+			existGroupJoinRequestCheck=true;
+		}
+		
+		Map<String,Boolean> result=new HashMap<String,Boolean>();
+		
+		result.put("loginCheck", loginCheck);
+		result.put("existGroupCheck",existGroupCheck);
+		result.put("existGroupJoinRequest", existGroupJoinRequestCheck);
+		result.put("groupOwnerCheck", groupOwnerCheck);
+		result.put("existUser", existUserCheck);
+		return result;
+	}
+	
+	private boolean existGroupMember(GroupMember groupMember) {
+		boolean existGroupMemberCheck=false;
+		if(groupMember!=null) {
+			existGroupMemberCheck=true;
+		}
+		return existGroupMemberCheck;
 	}
 	
 	private boolean existGroupJoinRequest(GroupJoinRequest groupJoinRequest) {
@@ -303,7 +375,7 @@ public class CheckBO {
 		}
 		return existGroupJoinRequest;
 	}
-	
+
 	private boolean existGroupCheck(Group group) {
 		boolean existGroupCheck=false;
 		

@@ -70,8 +70,23 @@ public class GroupPostBO {
 		return groupPostDAO.selectGroupPostById(id);
 	}
 	
-	public List<GroupPost> getGroupPostListOnlyPhtoTypeByGroupId(int groupId){
-		return groupPostDAO.selectGroupPostListOnlyPhotoTypeByGroupId(groupId);
+	public List<GroupPost> getGroupPostListOnlyPhtoTypeByGroupId(int groupId,String category){
+		Integer limit=null;
+		List<GroupPost> groupPostList=null;
+		boolean validationCheck=false;
+		
+		if(category==null) {
+			limit=9;
+			validationCheck=true;
+		}else if(category.equals("photo")) {
+			validationCheck=true;
+		}
+		
+		if(validationCheck) {
+			groupPostList=groupPostDAO.selectGroupPostListOnlyPhotoTypeByGroupId(groupId,limit);
+		}
+		
+		return groupPostList;
 	}
 	
 	public List<GroupPostView> getGroupPostViewListByGroupId(int groupId){
