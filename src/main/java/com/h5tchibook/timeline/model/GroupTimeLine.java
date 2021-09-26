@@ -10,6 +10,7 @@ import lombok.Setter;
 @Setter
 @Builder
 public class GroupTimeLine {
+	private int id;
 	private int groupId;
 	private int postId;
 	private int userId;

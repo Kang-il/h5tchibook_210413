@@ -737,11 +737,11 @@ header{
 }
 
 .user-contents-section .contents-info-section{
-	width:400px;	
-	height:1100px;
+	width:400px;
 	padding-top:20px;
-	position:sticky;
-	top:50px;
+	position: -webkit-sticky;
+ 	position: sticky;
+ 	top:50px;
 }
 
 .contents-info-section .content-photo-box{
@@ -752,6 +752,7 @@ header{
 	border-radius:10px;
 	border:1px solid #dbdbdb;
 	padding:10px;
+	
 }
 
 .content-photo-box .photo-box-title{
@@ -1854,6 +1855,23 @@ footer .footer-item{
 	padding-left:20px;
 	padding-right:20px;
 }
+
+.profile-nav-box .edit-group-join-btn{
+	height:30px;
+	border:none;
+	outline:none;
+	font-weight:500;
+	background-color:#dbdbdb;
+	color:black;
+	border-radius:10px;
+	display:flex;
+	align-items:center;
+	justify-content:center;
+	cursor:pointer;
+	padding-left:20px;
+	padding-right:20px;
+}
+
 
 .profile-nav-box .join-group-btn span{
 	margin-right:10px;
@@ -3115,4 +3133,33 @@ footer .footer-item{
 	width:100%;
 	background-color:rgba(0,0,0,0);
 	cursor: pointer;
+}
+
+.group-photo-section{
+	width:940px;
+	margin:auto;
+	margin-top:20px;
+	background-color: white;
+	border:1px solid #dbdbdb;
+	border-radius: 15px;
+	padding:20px;
+}
+
+.group-photo-section .feed-title{
+	font-weight:700;
+}
+
+.group-photo-section .group-photo-row{
+	display: flex;
+}
+
+.group-photo-section .group-photo-item{
+	padding:8px;	
+	cursor:pointer;
+}
+
+.group-photo-section .group-photo-item img{
+	width:164px;
+	height:164px;
+	border-radius:10px;
 }

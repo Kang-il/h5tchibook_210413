@@ -13,7 +13,7 @@
 				
 					<div class="photo-box-title">
 						<h5 class="title">사진</h5>
-						<a href="#">사진 더보기</a>
+						<a href="/feed/group/${group.groupName}?category=photo">사진 더보기</a>
 					</div>
 					
 					<div class="content-photo-item-section">
@@ -44,7 +44,7 @@
 				
 					<div class="friend-box-title">
 						<h5 class="title">그룹멤버</h5>
-						<a href="#">모든 멤버 보기</a>
+						<a href="/feed/group/${group.groupName}?category=member">모든 멤버 보기</a>
 					</div>
 					
 					<div>멤버 ${groupMemberCount}명</div>
@@ -66,7 +66,7 @@
 									</c:choose>
 									
 								</a>
-								<div><a href="#" class="friend-item-link">h5tchi</a></div>
+								<div><a href="#" class="friend-item-link">${ member.groupMemberLoginId}</a></div>
 							</div>
 						<c:if test="${status.index %3 eq 2 || status.index eq groupMemberSize-1 }">
 							</div>

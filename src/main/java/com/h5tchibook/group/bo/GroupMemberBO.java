@@ -61,6 +61,9 @@ public class GroupMemberBO {
 		return result;
 	}
 	
+	public GroupMember getGroupMemberByGroupIdAndMemberId(int groupId, int memberId) {
+		return groupMemberDAO.selectGroupMemberByGroupIdAndGroupMeberId(groupId, memberId);
+	}
 	
 	public List<GroupMember> getGroupMemberListByGroupMemberId(int memberId){
 		return groupMemberDAO.selectGroupMemberListByGroupMemberId(memberId);

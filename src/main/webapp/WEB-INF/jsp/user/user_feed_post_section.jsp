@@ -13,7 +13,7 @@
 				
 					<div class="photo-box-title">
 						<h5 class="title">사진</h5>
-						<a href="#">사진 더보기</a>
+						<a href="/feed/${feedOwner.loginId}?category=photo">사진 더보기</a>
 					</div>
 					
 					<div class="content-photo-item-section">
@@ -32,7 +32,7 @@
 				
 					<div class="friend-box-title">
 						<h5 class="title">친구</h5>
-						<a href="#">모든 친구 보기</a>
+						<a href="/feed/${feedOwner.loginId}?category=friend">모든 친구 보기</a>
 					</div>
 					
 					<div>친구 ${fn:length(friendList)}명</div>

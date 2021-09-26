@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,13 +16,17 @@ import com.h5tchibook.comment.bo.GroupCommentBO;
 import com.h5tchibook.comment.model.GroupCommentView;
 import com.h5tchibook.common.FileManagerService;
 import com.h5tchibook.group.bo.GroupBO;
+import com.h5tchibook.group.bo.GroupMemberBO;
 import com.h5tchibook.group.model.Group;
+import com.h5tchibook.group.model.GroupMember;
 import com.h5tchibook.like.bo.GroupLikeBO;
 import com.h5tchibook.like.model.GroupLikeView;
 import com.h5tchibook.post.dao.GroupPostDAO;
 import com.h5tchibook.post.model.ContentType;
 import com.h5tchibook.post.model.GroupPost;
 import com.h5tchibook.post.model.GroupPostView;
+import com.h5tchibook.timeline.bo.GroupTimeLineBO;
+import com.h5tchibook.timeline.model.GroupTimeLine;
 import com.h5tchibook.user.bo.UserBO;
 import com.h5tchibook.user.model.User;
 
@@ -38,6 +44,11 @@ public class GroupPostBO {
 	private FileManagerService fileManagerService;
 	@Autowired
 	private GroupBO groupBO;
+	@Autowired
+	private GroupTimeLineBO groupTimeLineBO;
+	@Autowired
+	private GroupMemberBO groupMemberBO;
+	private Logger logger=LoggerFactory.getLogger(this.getClass());
 	
 	public boolean createGroupPost(String userLoginId,GroupPost groupPost ,MultipartFile file) {
 		boolean resultCheck=false;
@@ -57,10 +68,18 @@ public class GroupPostBO {
 		groupPost.setContentType(contentType);
 		groupPost.setContentPath(imageUrl);
 		
-		int row=groupPostDAO.createGroupPost(groupPost);
+		int row=groupPostDAO.insertGroupPost(groupPost);
 		
 		if(row!=0) {
 			resultCheck=true;
+			
+			GroupTimeLine groupTimeLine=GroupTimeLine.builder()
+													 .groupId(groupPost.getGroupId())
+													 .postId(groupPost.getId())
+													 .userId(groupPost.getGroupMemberId())
+													 .build();
+			
+			groupTimeLineBO.createGroupTimeLine(groupTimeLine);
 		}
 		
 		return resultCheck;
@@ -173,22 +192,7 @@ public class GroupPostBO {
 				 
 				 //위의 코드 모두를 실행했을 경우 groupPostView를 가공할 모든 정보를 가져온 것이다.
 				 //groupPostView 가공 후 groupPostViewList에 담아준다
-				 GroupPostView groupPostView=GroupPostView
-						 					.builder()
-						 					.id(groupPost.getId())
-						 					.groupId(groupPost.getGroupId())
-						 					.groupMemberId(groupPost.getGroupMemberId())
-						 					.content(groupPost.getContent())
-						 					.contentType(groupPost.getContentType())
-						 					.contentPath(groupPost.getContentPath())
-						 					.createdAt(groupPost.getCreatedAt())
-						 					.updatedAt(groupPost.getUpdatedAt())
-						 					.groupName(group.getGroupName())
-						 					.userLoginId(owner.getLoginId())
-						 					.userProfilePath(owner.getProfileImagePath())
-						 					.commentList(commentList)
-						 					.likeList(likeList)
-						 					.build();
+				 GroupPostView groupPostView=setGroupPostView(owner, groupPost, group.getGroupName(), commentList, likeList);
 				 
 				 groupPostViewList.add(groupPostView);
 			 }
@@ -196,6 +200,103 @@ public class GroupPostBO {
 		 }
 		 return null;
 	 }
+	
+	public List<GroupPostView> getGroupPostViewListByGroupTimeLine(int userId){
+		List<GroupMember>groupMemberList=groupMemberBO.getGroupMemberListByGroupMemberId(userId);
+		List<Integer> groupIdList=new ArrayList<Integer>();
+		
+		//그룹 아이디만 추출
+		for(GroupMember groupMember : groupMemberList) {
+			groupIdList.add(groupMember.getGroupId());
+		}
+		
+		List<GroupTimeLine> groupTimeLineList=null;
+		List<Group> groupList=null;
+		
+		//그룹 아이디 리스트 사이즈가 0이 아닐경우 타임라인에서 그룹 아이디 리스트를 이용해 정보를 가져옴
+		//그룹을 모두 가져옴
+		if(groupIdList.size()!=0) {
+			groupTimeLineList=groupTimeLineBO.getGroupTimeLineListByGroupIdList(groupIdList);
+			groupList=groupBO.getGroupListByIdList(groupIdList);
+		}
+		
+		List<Integer> postIdList=new ArrayList<Integer>();
+		Set<Integer> userIdSet=new HashSet<Integer>();
+		List<Integer> userIdList=new ArrayList<Integer>();
+		
+		if(groupTimeLineList != null ) {
+			for(GroupTimeLine groupTimeLine : groupTimeLineList) {
+				postIdList.add(groupTimeLine.getPostId());
+				userIdSet.add(groupTimeLine.getUserId());
+			}
+			
+			for(Integer id : userIdSet) {
+				userIdList.add(id);
+			}
+		}
+		
+		List<User> userList=null;
+		if(userIdList.size()!=0) {
+			userList=userBO.getUserListByIdList(userIdList);
+		}
+		
+		List<GroupPost> groupPostList=null;
+		List<GroupCommentView> groupCommentViewList=null;
+		List<GroupLikeView> groupLikeViewList=null;
+		
+		if(postIdList.size()!=0) {
+			groupPostList=groupPostDAO.selectGroupPostListByIdList(postIdList);
+			groupCommentViewList=groupCommentBO.getGroupCommentViewListByPostIdList(postIdList);
+			groupLikeViewList=groupLikeBO.getGroupLikeViewListByPostIdList(postIdList);
+		}
+		
+		
+		List<GroupPostView> groupPostViewList=new ArrayList<GroupPostView>();
+		
+		if(groupPostList!=null) {
+			for(GroupPost groupPost : groupPostList) {
+				List<GroupCommentView> commentViewList=new ArrayList<GroupCommentView>();
+				List<GroupLikeView> likeViewList=new ArrayList<GroupLikeView>();
+				User owner=null;
+				Group postGroup=null;
+				
+				for(Group group : groupList ) {
+					if(group.getId() == groupPost.getGroupId()) {
+						postGroup=group;
+						break;
+					}
+				}
+				
+				for(User user : userList) {
+					if(groupPost.getGroupMemberId()==user.getId()) {
+						owner=user;
+						break;
+					}
+				}
+				
+				for(GroupCommentView comment : groupCommentViewList) {
+					if(comment.getPostId()!=groupPost.getId()) {
+						continue;
+					}
+					commentViewList.add(comment);
+				}
+				
+				for(GroupLikeView like : groupLikeViewList) {
+					if(like.getPostId() != groupPost.getId()) {
+						continue;
+					}
+					likeViewList.add(like);
+				}
+				
+				GroupPostView groupPostView=setGroupPostView(owner, groupPost, postGroup.getGroupName(), commentViewList, likeViewList);
+				
+				groupPostViewList.add(groupPostView);
+				
+			}
+		}
+		
+		return groupPostViewList;
+	}
 	
 	private String generateImageUrlByFile(String userLoginId,MultipartFile file) {
 		String imageUrl=null;
@@ -207,5 +308,25 @@ public class GroupPostBO {
 			}
 		}
 		return imageUrl;
+	}
+	
+	private GroupPostView setGroupPostView(User user, GroupPost groupPost ,String groupName ,List<GroupCommentView> commentList , List<GroupLikeView> likeList) {
+		 GroupPostView groupPostView=GroupPostView
+					.builder()
+					.id(groupPost.getId())
+					.groupId(groupPost.getGroupId())
+					.groupMemberId(groupPost.getGroupMemberId())
+					.content(groupPost.getContent())
+					.contentType(groupPost.getContentType())
+					.contentPath(groupPost.getContentPath())
+					.createdAt(groupPost.getCreatedAt())
+					.updatedAt(groupPost.getUpdatedAt())
+					.groupName(groupName)
+					.userLoginId(user.getLoginId())
+					.userProfilePath(user.getProfileImagePath())
+					.commentList(commentList)
+					.likeList(likeList)
+					.build();
+		 return groupPostView;
 	}
 }

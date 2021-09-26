@@ -4,7 +4,7 @@
  
  <mapper namespace="com.h5tchibook.post.dao.GroupPostDAO">
  
- 	<insert id="createGroupPost" parameterType="com.h5tchibook.post.model.GroupPost">
+ 	<insert id="insertGroupPost" parameterType="com.h5tchibook.post.model.GroupPost" useGeneratedKeys="true" keyProperty="id">
  		INSERT INTO 
  			`groupPost`
  		(
@@ -81,6 +81,27 @@
  		<if test="limit!=null">
  		LIMIT ${limit}
  		</if>
+ 	</select>
+ 	
+ 	<select id="selectGroupPostListByIdList" parameterType="java.util.List" resultType="com.h5tchibook.post.model.GroupPost">
+ 		SELECT
+ 			`id`
+ 			,`groupMemberId`
+ 			,`groupId`
+ 			,`content`
+ 			,`contentType`
+ 			,`contentPath`
+ 			,`createdAt`
+ 			,`updatedAt`
+ 		FROM
+ 			`groupPost`
+ 		WHERE
+ 			`id` IN
+ 			<foreach collection="idList" item="id" open="(" close=")" separator=",">
+ 				${id}
+ 			</foreach>
+ 		ORDER BY `id`
+ 		DESC
  	</select>
  	
  	<delete id="deleteGroupPostByGroupId" parameterType="int">

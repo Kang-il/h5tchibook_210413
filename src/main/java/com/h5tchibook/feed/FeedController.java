@@ -25,6 +25,7 @@ import com.h5tchibook.group.bo.GroupJoinRequestBO;
 import com.h5tchibook.group.bo.GroupMemberBO;
 import com.h5tchibook.group.model.Group;
 import com.h5tchibook.group.model.GroupJoinRequest;
+import com.h5tchibook.group.model.GroupMember;
 import com.h5tchibook.group.model.GroupMemberView;
 import com.h5tchibook.post.bo.GroupPostBO;
 import com.h5tchibook.post.bo.UserPostBO;
@@ -198,12 +199,15 @@ public class FeedController {
 			//그룹 멤버 리스트와 그룹 멤버 카운트를 넘겨준다.
 			//1.내가 이 그룹에 가입신청을 했는지
 			GroupJoinRequest groupJoinRequest= groupJoinRequestBO.getGroupJoinRequestByUserIdAndGroupId(user.getId(), group.getId());
+			GroupMember groupMember=groupMemberBO.getGroupMemberByGroupIdAndMemberId(group.getId(), user.getId());
+			
 			
 			model.addAttribute("groupJoinRequest",groupJoinRequest);
 			model.addAttribute("groupMemberList",groupMemberList);
 			model.addAttribute("groupMemberCount",groupMemberCount);
 			model.addAttribute("groupPhotoList",groupPhotoList);
 			model.addAttribute("groupPostList",groupPostList);
+			model.addAttribute("groupMemberCheck",groupMember);
 		}else {
 			return "redirect:/user/sign_in_view";
 		}

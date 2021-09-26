@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.h5tchibook.group.bo.GroupBO;
 import com.h5tchibook.group.model.Group;
+import com.h5tchibook.post.bo.GroupPostBO;
 import com.h5tchibook.post.bo.UserPostBO;
+import com.h5tchibook.post.model.GroupPost;
+import com.h5tchibook.post.model.GroupPostView;
 import com.h5tchibook.post.model.PostView;
 import com.h5tchibook.user.model.User;
 
@@ -27,7 +30,8 @@ public class TimeLineController {
 	private UserPostBO userPostBO;
 	@Autowired
 	private GroupBO groupBO;
-	
+	@Autowired
+	private GroupPostBO groupPostBO;
 	
 	private Date date =new Date();
 	
@@ -59,6 +63,9 @@ public class TimeLineController {
 			return "redirect:/user/sign_in_view";
 		}else {
 			List<Group> groupList=groupBO.getGroupListByMemberId(user.getId());
+			List<GroupPostView> postList=groupPostBO.getGroupPostViewListByGroupTimeLine(user.getId());
+			
+			model.addAttribute("groupPostList",postList);
 			model.addAttribute("groupList",groupList);
 		}
 		

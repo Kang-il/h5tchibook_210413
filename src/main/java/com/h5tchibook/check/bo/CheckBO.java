@@ -225,17 +225,17 @@ public class CheckBO {
 	public Map<String,Object> groupFeedCheckElements(User user, Group group,String category){
 		Map<String,Object> result=new HashMap<>();
 		boolean loginCheck=loginCheck(user);
-		boolean existGroupCheck=false;
+		boolean existGroupCheck=existGroupCheck(group);
 		boolean groupOwnerCheck=false;
+		boolean groupJoinCheck=false;
 		
-		if(loginCheck) {
-			existGroupCheck=group==null?  false : true;
+		
 			
-			if(existGroupCheck) {
-				groupOwnerCheck=groupOwner(user.getId(),group.getGroupManagerId());
-			}
-			
+		if(existGroupCheck) {
+			groupOwnerCheck=groupOwner(user.getId(),group.getGroupManagerId());
 		}
+			
+		
 		
 		String userView=null;
 		if(category==null){

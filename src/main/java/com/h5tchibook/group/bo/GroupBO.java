@@ -87,4 +87,8 @@ public class GroupBO {
 		
 		return groupIdStack;
 	}
+	
+	public List<Group> getGroupListByIdList(List<Integer> idList){
+		return groupDAO.selectGroupListByIdList(idList);
+	}
 }

@@ -15,7 +15,9 @@
 				<img src="${group.groupCoverImagePath}" class="group-background"/>
 		</c:otherwise>
 		</c:choose>
-		<button class="background-edit-btn"><span class="material-icons">photo_camera</span> 커버사진 편집</button>
+		<c:if test="${groupOwnerCheck eq true }">
+			<button class="background-edit-btn"><span class="material-icons">photo_camera</span> 커버사진 편집</button>		
+		</c:if>
 	</div>
 	<div class="group-introduce-box">
 		<h3 class="group-id">${group.groupName}</h3>
@@ -45,14 +47,20 @@
 				<button type="button" class="edit-group-btn"><span class="material-icons">edit</span> &nbsp; 그룹 관리</button>
 			</c:when>
 					 
-			<c:when test="${groupJoinRequest eq null }">
+			<c:when test="${groupJoinRequest eq null && groupMemberCheck eq null }">
 				<button type="button" class="join-group-btn" data-group-id="${group.id}"><span class="material-icons">group_add</span> &nbsp; 그룹 가입</button>
 			</c:when>
 					
 			<c:when test="${groupJoinRequest ne null }">
 				<button type="button" class="progress-join-group-btn" data-group-id="${group.id}"><span class="material-icons">group_add</span> &nbsp; 가입 승인 대기중</button>
 			</c:when>
+			
+			<c:when test="${groupMemberCheck ne null}">
+				<button type="button" class="edit-group-join-btn" data-group-id="${group.id}"><span class="material-icons">groups</span> &nbsp; 그룹 회원</button>
+			</c:when>
 		</c:choose> 
+		
+		
 
 	</nav>
 </div> 
