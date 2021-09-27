@@ -6,7 +6,7 @@
 
 	
 	<section class="contents-group-timeline-section">
-		<c:if test="${userView ne 'timeline/group_timeline_section'}">
+		<c:if test="${userView ne 'timeline/group_timeline_section' && groupMemberCheck ne null}">
 			<div class="create-group-post-section">
 				<div class="create-group-post-box">
 					<img src="/static/images/dummy_profile.jpg" alt="프로필" class="profile-img"/>
@@ -32,7 +32,7 @@
 							<img src="${post.userProfilePath}" alt="프로필"/>
 						</c:if>
 						<div>
-							<a href="/feed/${post.userLoginId}">${post.groupName}</a>
+							<a href="/feed/group/${post.groupName}">${post.groupName}</a>
 							<a href="/feed/${post.userLoginId}" class="group-user-id">${post.userLoginId}</a>
 						</div>
 					</div>

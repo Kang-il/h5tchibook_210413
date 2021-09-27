@@ -16,4 +16,5 @@ public interface GroupLikeDAO {
 	public int deleteGroupLiekByPostId(@Param("postId") int postId);
 	public GroupLike selectGroupLikeByPostIdAndMemberId(@Param("postId")int postId 
 													   ,@Param("memberId") int memberId);
+	public List<GroupLike> selectGroupLikeByPostId(@Param("postId") int postId);
 }

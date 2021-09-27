@@ -15,15 +15,19 @@
 						<h5 class="title">사진</h5>
 						<a href="/feed/${feedOwner.loginId}?category=photo">사진 더보기</a>
 					</div>
-					
+					<c:set var="photoListSize" value="${fn:length(photoList)}"/>
 					<div class="content-photo-item-section">
-						<div class="photo-item-row">
-							<c:forEach var="photo" items="${photoList}">
-								<div class="photo-item-box">
-									<a href="/post/detail?postId=${photo.id}"><img class="photo-item" src="${photo.contentPath}"/></a>
-								</div>
+							<c:forEach var="photo" items="${photoList}" varStatus="status">
+								<c:if test="${status.index % 3 eq 0}">
+									<div class="photo-item-row">
+								</c:if>
+									<div class="photo-item-box">
+										<a href="/post/post_detail_view?postId=${photo.id}"><img class="photo-item" src="${photo.contentPath}"/></a>
+									</div>
+								<c:if test="${status.index % 3 eq 2 || status.index eq photoListSize-1 }">
+									</div>
+								</c:if>
 							</c:forEach>
-						</div>
 					</div>
 					
 				</div>
@@ -37,9 +41,12 @@
 					
 					<div>친구 ${fn:length(friendList)}명</div>
 					
+					<c:set var="friednListSize" value="${fn:length(friendList)}"/>
 					<div class="content-friend-item-section">
-						<div class="friend-item-row">
-							<c:forEach var="friend" items="${friendList}">
+							<c:forEach var="friend" items="${friendList}" varStatus="status">
+								<c:if test="${status.index % 3 eq 0}">
+									<div class="friend-item-row">
+								</c:if>								
 								<div class="friend-item-box">
 									
 									<a href="/feed/${friend.friendLoginId}">
@@ -52,10 +59,12 @@
 										</c:if>
 									</a>
 									
-									<div><a href="#" class="friend-item-link">${friend.friendLoginId}</a></div>
+									<div><a href="/feed/${friend.friendLoginId}" class="friend-item-link">${friend.friendLoginId}</a></div>
 								</div>
+								<c:if test="${status.index %3 eq 2 || status.index eq friendListSize-1}">
+									</div>
+								</c:if>
 							</c:forEach>
-						</div>
 					</div>
 					
 				</div>

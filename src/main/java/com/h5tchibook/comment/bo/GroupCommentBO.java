@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +29,7 @@ public class GroupCommentBO {
 	private GroupCommentDAO groupCommentDAO;
 	@Autowired
 	private CheckBO checkBO;
-	
+	Logger logger=LoggerFactory.getLogger(this.getClass());
 	
 	public Map<String,Boolean> createComment(User user, GroupComment groupComment ){
 		Map<String,Boolean> result= checkBO.createCommentCheckElements(user,groupComment);
@@ -58,6 +60,49 @@ public class GroupCommentBO {
 		return groupCommentDAO.selectGroupCommentById(id);
 	}
 	
+	public List<GroupCommentView> getGroupCommentViewListByPostId(int postId){
+		List<GroupComment> groupCommentList=groupCommentDAO.selectGroupCommentListByPostId(postId);
+		List<GroupCommentView> groupCommentViewList=new ArrayList<GroupCommentView>();
+		
+		if(groupCommentList!=null) {
+			List<User> userList=getUserList(groupCommentList);
+			
+			for(GroupComment comment : groupCommentList) {
+				
+				for(User user : userList) {
+					if(user.getId()!=comment.getMemberId()) {
+						continue;
+					}
+					GroupCommentView groupCommentView=setGroupCommentView(user, comment);
+					groupCommentViewList.add(groupCommentView);
+					break;
+				}
+				
+			}
+		}
+		logger.debug(":::::::::::::: groupCommentViewList"+groupCommentViewList);
+		return groupCommentViewList;
+	}
+	
+	private List<User> getUserList(List<GroupComment> groupCommentList){
+		
+		List<User> userList=null;
+		
+		if(groupCommentList!=null) {
+			Set<Integer> userIdSet=new HashSet<Integer>();
+			for(GroupComment groupComment : groupCommentList) {
+				userIdSet.add(groupComment.getMemberId());
+			}
+			
+			List<Integer> userIdList=new ArrayList<Integer>(userIdSet);
+			
+			
+			userList=userBO.getUserListByIdList(userIdList);			
+		}
+		
+		return userList;
+	}
+	
 	public Map<String,Object> getGroupCommentViewListByPostId(User user,int postId){
 		Map<String,Object> result=new HashMap<String,Object>();
 		boolean loginCheck=false;
@@ -68,18 +113,8 @@ public class GroupCommentBO {
 			loginCheck=true;
 			groupCommentList=groupCommentDAO.selectGroupCommentListByPostId(postId);
 			if(groupCommentList!=null) {
-				
-				Set<Integer> userIdSet=new HashSet<Integer>();
-				for(GroupComment groupComment : groupCommentList) {
-					userIdSet.add(groupComment.getMemberId());
-				}
-				
-				List<Integer> userIdList=new ArrayList<Integer>();
-				for(Integer userId : userIdSet) {
-					userIdList.add(userId);
-				}
-				
-				List<User> userList=userBO.getUserListByIdList(userIdList);
+
+				List<User> userList=getUserList(groupCommentList);
 				groupCommentViewList=new ArrayList<GroupCommentView>();
 				
 				for(GroupComment groupComment : groupCommentList) {

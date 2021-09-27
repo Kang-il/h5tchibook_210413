@@ -27,7 +27,7 @@
 						</c:if>
 						
 							<div class="photo-item-box">
-								<a href="#">
+								<a href="/group/post/group_post_detail_view?postId=${photo.id}">
 									<img class="photo-item" src="${photo.contentPath}"/>
 								</a>
 							</div>

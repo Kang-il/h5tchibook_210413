@@ -57,6 +57,28 @@ public class GroupLikeBO {
 		return result;
 	}
 	
+	public List<GroupLikeView> getGroupLikeViewListByPostId(int postId){
+		List<GroupLike> likeList=groupLikeDAO.selectGroupLikeByPostId(postId);
+		List<GroupLikeView> likeViewList=new ArrayList<GroupLikeView>();
+		if(likeList!=null) {
+			List<User> userList=getUserList(likeList);
+			for(GroupLike like : likeList) {
+				for(User user : userList) {
+					if(user.getId()!=like.getMemberId()) {
+						continue;
+					}
+					GroupLikeView likeView=setGroupLikeView(user, like);
+					likeViewList.add(likeView);
+					break;
+				}
+			}
+		}
+		
+		return likeViewList;
+	}
+	
+	
+	
 	public List<GroupLikeView> getGroupLikeViewListByPostIdList(List<Integer> postIdList){
 		//포스트 아이디리스트로 라이크를 받아올 경우 
 		List<GroupLike> groupLikeList=groupLikeDAO.selectGroupLikeListByPostIdList(postIdList);
@@ -87,23 +109,44 @@ public class GroupLikeBO {
 						continue;
 					}
 					
-					GroupLikeView groupLikeView=GroupLikeView
-												.builder()
-												.id(groupLike.getId())
-												.groupId(groupLike.getGroupId())
-												.postId(groupLike.getPostId())
-												.memberId(groupLike.getMemberId())
-												.createdAt(groupLike.getCreatedAt())
-												.userLoginId(user.getLoginId())
-												.userProfileImagePath(user.getProfileImagePath())
-												.build();
+					GroupLikeView groupLikeView=setGroupLikeView(user, groupLike);
 					
 					groupLikeViewList.add(groupLikeView);
+					break;
 				}
 			}
 			
 			return groupLikeViewList;
 		}
 		return null;
+	}
+	
+	
+	private List<User> getUserList(List<GroupLike> likeList){
+		List<User> userList =null;
+		if(likeList!=null) {
+			Set<Integer> userIdSet=new HashSet<Integer>();
+			for(GroupLike like:likeList) {
+				userIdSet.add(like.getMemberId());
+			}
+			List<Integer> userIdList=new ArrayList<Integer>(userIdSet);
+			userList=userBO.getUserListByIdList(userIdList);
+		}
+		return userList;
+	}
+	
+	private GroupLikeView setGroupLikeView(User user , GroupLike groupLike) {
+		GroupLikeView groupLikeView=GroupLikeView
+				.builder()
+				.id(groupLike.getId())
+				.groupId(groupLike.getGroupId())
+				.postId(groupLike.getPostId())
+				.memberId(groupLike.getMemberId())
+				.createdAt(groupLike.getCreatedAt())
+				.userLoginId(user.getLoginId())
+				.userProfileImagePath(user.getProfileImagePath())
+				.build();
+		
+		return groupLikeView;
 	}
 }

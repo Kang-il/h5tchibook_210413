@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -296,6 +297,22 @@ public class GroupPostBO {
 		}
 		
 		return groupPostViewList;
+	}
+	
+	public GroupPostView getGroupPostViewById(int id) {
+		GroupPost groupPost=groupPostDAO.selectGroupPostById(id);
+		GroupPostView groupPostView=null;
+		if(groupPost!=null) {
+			List<GroupCommentView> commentList=groupCommentBO.getGroupCommentViewListByPostId(id);
+			List<GroupLikeView> likeList=groupLikeBO.getGroupLikeViewListByPostId(id);
+			Group group=groupBO.getGroupById(groupPost.getGroupId());
+			User user=userBO.getUserById(groupPost.getGroupMemberId());
+			
+			groupPostView=setGroupPostView(user, groupPost, group.getGroupName(), commentList, likeList);
+			logger.debug("::::::::::::::::::: groupPostView" +groupPostView);
+		}
+		
+		return groupPostView;
 	}
 	
 	private String generateImageUrlByFile(String userLoginId,MultipartFile file) {

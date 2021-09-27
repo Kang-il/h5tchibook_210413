@@ -159,6 +159,7 @@ public class CheckBO {
 		boolean previousPasswordCheck=false;
 		//패스워드가 조건에 부함한지 체크
 		boolean passwordRegexCheck=false;
+		
 		//이전의 아이디와 입력받은 아이디가 동일하거나
 		//동일하지않다면 아이디 길이가 조건에 맞고 중복체크값이 true인 경우
 		boolean loginIdCheck=false;

@@ -272,6 +272,7 @@ function checkPassword(loginId,password){
 				if(data.result===true){
 					location.href='/profile/edit/user_info_view/'+loginId
 				}else{
+					
 					$('.wrong-password-alert').removeClass('d-none');
 				}
 			}else{
@@ -306,7 +307,74 @@ function setGroupLike(groupId,postId){
 	});
 }
 	
+function createGroupComment(postId, groupId, comment) {
+	$.ajax({
+		type: 'POST'
+		, url: '/group/comment/create_comment'
+		, data: {
+			'postId': postId
+			, 'groupId': groupId
+			, 'comment': comment
+		}
+		, success: function(data) {
+			//1.loginCheck
+			//2.commentBlankCheck
+			//3. postIdCheck
+			//4. groupIdCheck
+			//5. result
 
+			if (data.loginCheck === true) {
+				if (data.result === true) {
+					location.reload();
+				} else {
+					if (data.commentBlankCheck === false) {
+						alert('내용을 입력해 주세요');
+					}
+					if (data.postIdCheck === false) {
+						alert('잘못된 접근입니다.\n(포스트 아이디 누락)');
+					}
+					if (data.groupIdCheck === false) {
+						alert('잘못된 접근입니다.\n(그룹 아이디 누락)');
+					}
+				}
+			} else {
+				location.href = '/user/user_sign_in';
+			}
+		}
+		, error: function(e) {
+			alert(e);
+			return;
+		}
+	});
+}
+
+function deleteGroupComment(commentId) {
+	$.ajax({
+		type: 'POST'
+		, url: '/group/comment/delete_group_comment'
+		, data: { 'commentId': commentId }
+		, success: function(data) {
+			if (data.loginCheck === true) {
+				if (data.groupOwnerCheck === false && data.postOwnerCheck === false && data.commentOwnerCheck === false) {
+					alert('삭제 권한이 없습니다.')
+					return;
+				} else {
+					if (data.result === true) {
+						location.reload();
+					} else {
+						alert('삭제 실패 관리자에게 문의하세요');
+						return;
+					}
+				}
+			} else {
+				location.href = '/user/sign_in_view';
+			}
+		}
+		, error: function(e) {
+			alert(e);
+		}
+	});
+}
 
 $(document).ready(function(){
 //-------------------sign-up-modal
@@ -680,14 +748,11 @@ $(document).ready(function(){
 	
 	$('.post-item-box').on('click','.comment-menu-btn',function(){
 		let commentId = $(this).data('comment-id');
-		let postId=$(this).data('post-id');
-		let postOwnerId=$(this).data('post-owner-id');
-		
+
 		$('body').addClass('disabled-scroll');
 		$('.delete-comment-modal-section').removeClass('d-none');
 		$('.delete-comment-btn').data('comment-id',commentId);
-		$('.delete-comment-btn').data('post-id',postId);
-		$('.delete-comment-btn').data('post-owner-id',postOwnerId);
+
 	});
 	
 	$('.delete-comment-btn').on('click',function(){
@@ -1220,13 +1285,14 @@ $(document).ready(function(){
 						});
 					}else{
 						//1.이전 아이디가 동일하지 않다면
-						if(data.previousLoginId===false){
+							
+							
+						if(data.previousLoginIdCheck===false){
 							if(data.loginIdLengthCheck===false){
 								//아이디 길이조건이 부합하지 않다면
 								$('.too-short-login-id').removeClass('d-none');
 								return;								
 							}
-							
 							if(data.duplicateLoginIdCheck===false){
 								//아이디 중복확인 결과를 통과하지 못했다면
 								$('.duplicate-login-id').removeClass('d-none');
@@ -1297,7 +1363,13 @@ $(document).ready(function(){
 		}
 	});
 	
-	
+	$('#editLoginId, #editPassword').on('input',function(){
+		$('.blank-login-id').addClass('d-none');
+		$('.too-short-login-id').addClass('d-none');
+		$('.duplicate-login-id').addClass('d-none');
+		$('.previous-password').addClass('d-none');
+		$('.no-validate-password-condition').addClass('d-none');
+	});
 	//group -timeline-section
 	$('.group-timeline-group-item').on('click',function(){
 		let groupName=$(this).data('group-name');
@@ -1454,45 +1526,15 @@ $(document).ready(function(){
 			alert('내용을 입력해 주세요.');
 			return;
 		}
-	
-		$.ajax({
-			type:'POST'
-			,url:'/group/comment/create_comment'
-			,data:{'postId':postId
-					,'groupId':groupId
-					,'comment':comment}
-			,success:function(data){
-				//1.loginCheck
-				//2.commentBlankCheck
-				//3. postIdCheck
-				//4. groupIdCheck
-				//5. result
-				
-				if(data.loginCheck===true){
-					if(data.result===true){
-						location.reload();
-					}else{
-						if(data.commentBlankCheck===false){
-							alert('내용을 입력해 주세요');
-						}
-						if(data.postIdCheck===false){
-							alert('잘못된 접근입니다.\n(포스트 아이디 누락)');
-						}
-						if(data.groupIdCheck===false){
-							alert('잘못된 접근입니다.\n(그룹 아이디 누락)');
-						}
-					}
-				}else{
-					location.href='/user/user_sign_in';
-				}
-			}
-			,error:function(e){
-				alert(e);
-				return;
-			}
-		});
+		
+		createGroupComment(postId,groupId,comment);
+		
+		
 		
 	});
+	
+	
+
 	
 	$('.group-more-comment').on('click',function(){
 		let postId = $(this).data('post-id');
@@ -1581,33 +1623,8 @@ $(document).ready(function(){
 	
 	$('.delete-group-comment-btn').on('click',function(){
 		let commentId=$(this).data('comment-id');
-		$.ajax({
-			type:'POST'
-			,url:'/group/comment/delete_group_comment'
-			,data:{'commentId':commentId}
-			,success:function(data){
-				if(data.loginCheck===true){
-					if(data.groupOwnerCheck===false && data.postOwnerCheck===false && data.commentOwnerCheck===false){
-						alert('삭제 권한이 없습니다.')
-						return;
-					}else{
-						if(data.result===true){
-							location.reload();
-						}else{
-							alert('삭제 실패 관리자에게 문의하세요');
-							return;
-						}
-					}
-				}else{
-					location.href='/user/sign_in_view';
-				}
-			}
-			,error:function(e){
-				alert(e);
-			}
-		});
+		deleteGroupComment(commentId)
 	});
-	
 	
 	// groupLike Action
 	$('.group-like-before-btn').on('click',function(){
@@ -1682,5 +1699,76 @@ $(document).ready(function(){
 			
 		});
 	});
+	
+	// ----- post-detail-comment
+	$('.comment-input-btn').on('click',function(){
+		let postId=$(this).data('post-id');
+		let comment=$('.post-detail-input').val();
+		
+		if(postId==undefined){
+			alert('잘못된 접근입니다.');
+			return;
+		}
+		
+		if(comment==''){
+			alert('내용을 입력하세요');
+			return;
+		}
+		
+		createComment(postId,comment);
+	});
+	
+	$('.post-detail-comment-menu-btn').on('click',function(){
+		let commentId=$(this).data('comment-id');
+		$('.delete-comment-modal-section').removeClass('d-none');
+		$('body').addClass('disabled-scroll');
+		$('.delete-comment-btn').data('comment-id',commentId);
+	});
+	
+	$('.post-detail-comment-btn').on('click',function(){
+		$('.post-detail-input').focus();
+	});
+	
+	$('.group-photo-item').on('click',function(){
+		let postId=$(this).data('post-id');
+		location.href="/group/post/group_post_detail_view?postId="+postId;
+	});
+	
+	$('.group-post-detail-comment-btn').on('click',function(){
+		$('.group-post-detail-input').focus();
+	});
+	
+	$('.group-comment-input-btn').on('click',function(){
+		let postId=$(this).data('post-id');
+		let groupId=$(this).data('group-id');
+		let comment=$('.group-post-detail-input').val();
+
+		if(comment==''){
+			alert('내용을 입력하세요');
+			return;
+		}
+		
+		if(postId == undefined || groupId == undefined){
+			alert('잘못된 접근입니다.');
+			return;
+		}
+		createGroupComment(postId, groupId, comment);
+	});
+	
+	$('.detail-group-like-before-btn, .detail-group-like-after-btn').on('click',function(){
+		let postId=$(this).data('post-id');
+		let groupId=$(this).data('group-id');
+		
+		if(postId == undefined || groupId==undefined){
+			alert('잘못된 접근입니다.');
+			return;
+		}
+		
+		setGroupLike(groupId,postId);
+	});
+	
+	
+	
+	
 	
 });
