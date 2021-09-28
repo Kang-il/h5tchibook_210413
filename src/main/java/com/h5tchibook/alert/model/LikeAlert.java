@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class LikeAlert {
+public class LikeAlert implements AlertTimeLine{
 	//alert 내용
 	private int alertId;
 	private int sendUserId;

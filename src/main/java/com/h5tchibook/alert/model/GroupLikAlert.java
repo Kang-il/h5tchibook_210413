@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class GroupLikAlert {
+public class GroupLikAlert implements AlertTimeLine{
 	//alert 내용
 	private int alertId;
 	private int sendUserId;
