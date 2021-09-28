@@ -1,5 +1,7 @@
 package com.h5tchibook.group.bo;
 
+import java.util.ArrayList;	
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -11,7 +13,9 @@ import com.h5tchibook.check.bo.CheckBO;
 import com.h5tchibook.group.dao.GroupJoinRequestDAO;
 import com.h5tchibook.group.model.Group;
 import com.h5tchibook.group.model.GroupJoinRequest;
+import com.h5tchibook.group.model.GroupJoinRequestView;
 import com.h5tchibook.group.model.GroupMember;
+import com.h5tchibook.user.bo.UserBO;
 import com.h5tchibook.user.model.User;
 
 @Service
@@ -22,6 +26,9 @@ public class GroupJoinRequestBO {
 	private CheckBO checkBO;
 	@Autowired
 	private GroupMemberBO groupMemberBO;
+	@Autowired
+	private UserBO userBO;
+	
 	Logger logger=LoggerFactory.getLogger(this.getClass());
 	
 	public Map<String, Boolean> createGroupJoinRequest(User user,Group group){
@@ -87,7 +94,7 @@ public class GroupJoinRequestBO {
 					}
 				}
 			//그룹 가입 요청을 취소한 경우
-			}else if(decision.equals("deny")) {
+			}else if(decision.equals("refuse")) {
 				//멤버를 추가시키지 않고 가입요청내역만 지워주면 된다.
 				int row=groupJoinRequestDAO.deleteGroupJoinRequestByGroupIdAndUserId(group.getId(), userId);
 				if(row!=0) {
@@ -132,5 +139,46 @@ public class GroupJoinRequestBO {
 	
 	public GroupJoinRequest getGroupJoinRequestByUserIdAndGroupId(int userId , int groupId) {
 		return groupJoinRequestDAO.selectGroupJoinRequestByUserIdAndGroupId(userId,groupId);
+	}
+	
+	public List<GroupJoinRequestView> getGroupJoinRequestViewByGroupId(int groupId){
+		List<GroupJoinRequest> requestList=groupJoinRequestDAO.selectGroupJoinRequestByGroupId(groupId);
+		List<GroupJoinRequestView> requestViewList=new ArrayList<>();
+		if(requestList!=null) {
+			List<Integer> userIdList=new ArrayList<Integer>();
+			for(GroupJoinRequest request:requestList) {
+				userIdList.add(request.getUserId());
+			}
+			
+			List<User> userList=null;
+			if(userIdList.size()!=0) {
+				userList=userBO.getUserListByIdList(userIdList);
+			}
+			
+			for(GroupJoinRequest request:requestList) {
+				for(User user : userList) {
+					if(request.getUserId()!=user.getId()) {
+						continue;
+					}
+					GroupJoinRequestView requestView=setGroupJoinRequestView(user, request);
+					requestViewList.add(requestView);
+					break;
+				}
+			}
+			
+		}
+		return requestViewList;
+	}
+	
+	private GroupJoinRequestView setGroupJoinRequestView(User user, GroupJoinRequest request) {
+		GroupJoinRequestView requestView=GroupJoinRequestView.builder()
+															 .id(request.getId())
+															 .userId(request.getUserId())
+															 .groupId(request.getGroupId())
+															 .createdAt(request.getCreatedAt())
+															 .userLoginId(user.getLoginId())
+															 .userProfileImagePath(user.getProfileImagePath())
+															 .build();
+		return requestView;
 	}
 }

@@ -17,6 +17,11 @@
 
 
 <body>
+	<jsp:include page="../include/delete_group_modal.jsp"/>
+	<jsp:include page="../include/delete_group_post_modal.jsp"/>
+	<jsp:include page="../include/delete_user_post_modal.jsp"/>
+	<jsp:include page="../include/edit_group_cover_image_modal.jsp"/>
+	<jsp:include page="../include/delete_group_member_modal.jsp"/>
 	<jsp:include page="../include/friend_modal.jsp"/>
 	<jsp:include page="../include/delete_group_comment_modal.jsp"/>
 	<jsp:include page="../include/delete_comment_modal.jsp"/>

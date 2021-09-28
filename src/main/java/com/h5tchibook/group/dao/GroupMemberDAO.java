@@ -12,6 +12,7 @@ public interface GroupMemberDAO {
 	public int insertGroupMember(GroupMember groupMember);
 	public int deleteGroupMemberByGroupIdAndGroupMemberId(@Param("groupId") int groupId 
 														, @Param("groupMemberId") int groupMemberId);
+	public void deleteGroupMemberByGroupId(@Param("groupId") int groupId);
 	public int selectGroupMemberCountByGroupId(@Param("groupId")int groupId);
 	public GroupMember selectGroupMemberByGroupIdAndGroupMeberId(@Param("groupId") int groupId
 																,@Param("groupMemberId") int groupMemberId);

@@ -9,14 +9,17 @@
 			
 		<c:choose>
 			<c:when test="${group.groupCoverImagePath eq null}">
-				<img src="/static/images/no_background_image.jpg" class="group-background"/>					
+				<img src="/static/images/no_background_image.jpg" class="group-background"/>
+				<input type="hidden" class="group-cover-image-path" value="${group.groupCoverImagePath}"/>					
 			</c:when>
 			<c:otherwise>
 				<img src="${group.groupCoverImagePath}" class="group-background"/>
+				<input type="hidden" class="group-cover-image-path" value="${group.groupCoverImagePath}"/>	
 		</c:otherwise>
 		</c:choose>
 		<c:if test="${groupOwnerCheck eq true }">
-			<button class="background-edit-btn"><span class="material-icons">photo_camera</span> 커버사진 편집</button>		
+			<button class="background-edit-btn" data-group-id="${group.id}"><span class="material-icons">photo_camera</span> 커버사진 편집</button>		
+			<input type="file" class="d-none" id="editGroupCoverImage"/>		
 		</c:if>
 	</div>
 	<div class="group-introduce-box">
@@ -44,7 +47,7 @@
 		</div>
 		<c:choose>
 			<c:when test="${user.id eq group.groupManagerId}">
-				<button type="button" class="edit-group-btn"><span class="material-icons">edit</span> &nbsp; 그룹 관리</button>
+				<button type="button" class="edit-group-btn" data-group-name="${group.groupName}"><span class="material-icons">edit</span> &nbsp; 그룹 관리</button>
 			</c:when>
 					 
 			<c:when test="${groupJoinRequest eq null && groupMemberCheck eq null }">

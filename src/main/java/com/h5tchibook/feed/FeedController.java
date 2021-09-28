@@ -187,13 +187,15 @@ public class FeedController {
 			List<GroupMemberView> groupMemberList =null;
 			List<GroupPost> groupPhotoList=null;
 			List<GroupPostView> groupPostList=null;
+			List<Group> groupList=null;
 			
 			groupMemberList=groupMemberBO.getGroupMemberViewListByGroupId(group.getId(),category);
 			groupPhotoList=groupPostBO.getGroupPostListOnlyPhtoTypeByGroupId(group.getId(),category);
 			int groupMemberCount=groupMemberBO.getGroupMemberCountByGroupId(group.getId());
 			
 			if(category==null) {//category가 null일 경우에만 리스트를 가져온다.
-				groupPostList=groupPostBO.getGroupPostViewListByGroupId(group.getId());				
+				groupPostList=groupPostBO.getGroupPostViewListByGroupId(group.getId());
+				groupList=groupBO.getGroupListByMemberId(user.getId());
 			}
 			
 			//그룹 멤버 리스트와 그룹 멤버 카운트를 넘겨준다.
@@ -201,7 +203,7 @@ public class FeedController {
 			GroupJoinRequest groupJoinRequest= groupJoinRequestBO.getGroupJoinRequestByUserIdAndGroupId(user.getId(), group.getId());
 			GroupMember groupMember=groupMemberBO.getGroupMemberByGroupIdAndMemberId(group.getId(), user.getId());
 			
-			
+			model.addAttribute("groupList",groupList);
 			model.addAttribute("groupJoinRequest",groupJoinRequest);
 			model.addAttribute("groupMemberList",groupMemberList);
 			model.addAttribute("groupMemberCount",groupMemberCount);

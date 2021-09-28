@@ -44,7 +44,9 @@ public class TimeLineController {
 			return "redirect:/user/sign_in_view";
 		}else {
 			List<PostView> postList = userPostBO.getPostListByUserIdAndTimeLineList(user.getId());
+			List<Group> groupList=groupBO.getGroupListByMemberId(user.getId());
 			model.addAttribute("postList",postList);
+			model.addAttribute("groupList",groupList);
 			model.addAttribute("currentTime",date.getTime());
 			model.addAttribute("userView", "timeline/user_timeline_section");
 		}

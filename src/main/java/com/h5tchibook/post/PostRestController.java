@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.h5tchibook.common.ValidateHandler;
 import com.h5tchibook.post.bo.UserPostBO;
+import com.h5tchibook.post.model.Post;
 import com.h5tchibook.post.model.ValidateUserPost;
 import com.h5tchibook.user.model.User;
 
@@ -72,6 +73,33 @@ public class PostRestController {
 		return result;
 	}
 	
+	@PostMapping("/delete_post")
+	public Map<String,Object> deletePost(@RequestParam("postId")int postId
+										,HttpServletRequest request
+										){
+		
+		Map<String,Object> result=new HashMap<String,Object>();
+		HttpSession session=request.getSession();
+		User user=(User)session.getAttribute("user");
+		boolean loginCheck=false;
+		boolean resultCheck=false;
+		
+		
+		if(user!=null) {
+			loginCheck=true;
+			Post post=userPostBO.getPostById(postId);
+			if(post!=null && post.getUserId()==user.getId()) {
+				userPostBO.deletePostById(postId);
+				resultCheck=true;
+			}
+		}
+		
+		result.put("loginCheck",loginCheck);
+		result.put("result",resultCheck);
+		
+		return result;
+	}
+		
 	
 	
 

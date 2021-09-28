@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.h5tchibook.group.bo.GroupBO;
 import com.h5tchibook.group.bo.GroupMemberBO;
 import com.h5tchibook.group.model.Group;
+import com.h5tchibook.post.bo.GroupPostBO;
 import com.h5tchibook.user.model.User;
 
 @RestController
@@ -23,6 +24,8 @@ public class GroupMemberRestController {
 	private GroupMemberBO groupMemberBO;
 	@Autowired
 	private GroupBO groupBO;
+	@Autowired
+	private GroupPostBO groupPostBO;
 	
 	@PostMapping("/delete_group_member")
 	public Map<String,Boolean> deleteGroupMember(@RequestParam("groupId") int groupId
@@ -34,6 +37,10 @@ public class GroupMemberRestController {
 		Group group =groupBO.getGroupById(groupId);
 		
 		Map<String,Boolean> result=groupMemberBO.deleteGroupMember(user,group,groupMemberId);
+		
+		if(result.get("result")) {
+			groupPostBO.deleteGroupPostByMemberId(groupId, groupMemberId);
+		}
 		
 		return result;
 	}

@@ -4,7 +4,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-    <div class="modal-window"></div>
+    <div class="modal-window d-none"></div>
     
 	<header class="header-section">
 	

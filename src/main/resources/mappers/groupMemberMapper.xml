@@ -28,6 +28,13 @@
  			`groupMemberId`=#{groupMemberId}
  	</delete>
  	
+ 	<delete id="deleteGroupMemberByGroupId" parameterType="int">
+ 		DELETE FROM
+ 			`groupMember`
+ 		WHERE
+ 			`groupId`=#{groupId}
+ 	</delete>
+ 	
  	<select id="selectGroupMemberByGroupIdAndGroupMeberId" parameterType="map" resultType="com.h5tchibook.group.model.GroupMember">
  		SELECT
  			`id`

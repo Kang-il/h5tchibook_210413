@@ -56,12 +56,12 @@
 										<button class="disclosure-status material-icons">lock</button>
 									</c:when>
 								</c:choose>
-								
+								 
 							</div>
 							
 							<div>
 								<c:if test="${user.id eq post.userId}">
-									<button type="button" class="profile-menu-btn material-icons">menu</button>
+									<button type="button" class="profile-menu-btn material-icons user-post-menu-btn" data-post-id="${post.id}">menu</button>
 								</c:if>
 							</div>
 							

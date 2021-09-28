@@ -13,7 +13,8 @@ public interface GroupLikeDAO {
 	public int insertGroupLike(GroupLike groupLike);
 	public int deleteGroupLikeByPostIdAndMemberId(@Param("postId")int postId 
 												 ,@Param("memberId") int memberId);
-	public int deleteGroupLiekByPostId(@Param("postId") int postId);
+	public void deleteGroupLikeByPostIdList(@Param("postIdList")List<Integer> postIdList);
+	public int deleteGroupLikeByPostId(@Param("postId") int postId);
 	public GroupLike selectGroupLikeByPostIdAndMemberId(@Param("postId")int postId 
 													   ,@Param("memberId") int memberId);
 	public List<GroupLike> selectGroupLikeByPostId(@Param("postId") int postId);

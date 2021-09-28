@@ -23,7 +23,7 @@
  			,#{contentPath}		
  		)
  	</insert>
- 		
+
  	<select id="selectGroupPostById" parameterType="int" resultType="com.h5tchibook.post.model.GroupPost">
  		SELECT
  			`id`
@@ -104,11 +104,45 @@
  		DESC
  	</select>
  	
+ 	<select id="selectGroupPostListByGroupIdAndMemberId" parameterType="java.util.List" resultType="com.h5tchibook.post.model.GroupPost">
+ 		SELECT
+ 			`id`
+ 			,`groupMemberId`
+ 			,`groupId`
+ 			,`content`
+ 			,`contentType`
+ 			,`contentPath`
+ 			,`createdAt`
+ 			,`updatedAt`
+ 		FROM
+ 			`groupPost`
+ 		WHERE
+ 			`groupId`=#{groupId}
+ 		AND
+ 			`groupMemberId`=#{groupMemberId}
+ 	</select>
+ 	
  	<delete id="deleteGroupPostByGroupId" parameterType="int">
  		DELETE FROM 
  			`groupPost`
  		WHERE
  			`groupId`=#{groupId}
+ 	</delete>
+ 	
+ 	<delete id="deleteGroupPostByGroupIdAndMemberId" parameterType="map">
+ 		DELETE FROM 
+ 			`groupPost`
+ 		WHERE
+ 			`groupId`=#{groupId}
+ 		AND
+ 			`groupMemberId`=#{groupMemberId}
+ 	</delete>
+ 	
+ 	<delete id="deleteGroupPostById" parameterType="map">
+ 		DELETE FROM 
+ 			`groupPost`
+ 		WHERE
+ 			`id`=#{id}
  	</delete>
  	
  </mapper>

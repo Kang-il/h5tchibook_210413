@@ -11,6 +11,8 @@ import com.h5tchibook.comment.model.GroupComment;
 public interface GroupCommentDAO {
 	public int createGroupComment(GroupComment groupComment);
 	public int deleteGroupCommentById(@Param("id") int id);
+	public void deleteGroupCommentByPostIdList(@Param("postIdList")List<Integer> postIdList);
+	public void deleteGroupCommentByPostId(@Param("postId") int postId);
 	public GroupComment selectGroupCommentById(@Param("id")int id);
 	public List<GroupComment> selectGroupCommentListByPostIdList(@Param("postIdList") List<Integer>postIdList);
 	public List<GroupComment> selectGroupCommentListByPostId(@Param("postId") int postId);

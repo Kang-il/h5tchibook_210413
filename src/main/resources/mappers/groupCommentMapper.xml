@@ -32,6 +32,23 @@
  			`id`=#{id}
  	</delete>
  	
+ 	<delete id="deleteGroupCommentByPostIdList" parameterType="java.util.List">
+ 		DELETE FROM 
+ 			`groupComment`
+ 		WHERE
+ 			`postId` IN
+ 			<foreach collection="postIdList" item="postId" open="(" close=")" separator=",">
+ 				${postId}
+ 			</foreach>
+ 	</delete>
+ 	
+ 	<delete id="deleteGroupCommentByPostId" parameterType="int">
+ 		DELETE FROM 
+ 			`groupComment`
+ 		WHERE
+ 			`postId`=#{postId}
+ 	</delete>
+ 	
  	<select id="selectGroupCommentById" parameterType="int" resultType="com.h5tchibook.comment.model.GroupComment">
  			SELECT 
  			`id`

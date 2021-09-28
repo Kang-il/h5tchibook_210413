@@ -25,19 +25,46 @@
 			<div class="group-post-box">
 				<div class="group-post-profile-box">
 					<div class="group-profile-item">
-						<c:if test="${post.userProfilePath eq null}">
-							<img src="/static/images/no_profile_image.png" alt="프로필"/>
+					<c:forEach var="group" items="${groupList}">
+						<c:if test="${group.id eq post.groupId}">
+							<c:set var="groupProfileImagePath" value="${group.groupProfileImagePath}"/>
 						</c:if>
-						<c:if test="${post.userProfilePath ne null}">
-							<img src="${post.userProfilePath}" alt="프로필"/>
-						</c:if>
+					</c:forEach>
+						<c:choose>
+						
+							<c:when test="${post.userProfilePath eq null && userView eq 'group/group_feed_section'}">
+								<img src="/static/images/no_profile_image.png" alt="프로필"/>
+							</c:when>
+							
+							<c:when test="${post.userProfilePath ne null && userView eq 'group/group_feed_section'}">
+								<img src="${post.userProfilePath}" alt="프로필"/>
+							</c:when>
+							
+							<c:when test="${groupProfileImagePath ne null && userView eq 'timeline/group_timeline_section'}">
+								<img src="${groupProfileImagePath}" alt="프로필"/>
+							</c:when>
+							
+							<c:when test="${groupProfileImagePath eq null && userView eq 'timeline/group_timeline_section'}">
+								<img src="/static/images/no_profile_image.png" alt="프로필"/>
+							</c:when>
+							
+						</c:choose>
+						
+						
 						<div>
 							<a href="/feed/group/${post.groupName}">${post.groupName}</a>
 							<a href="/feed/${post.userLoginId}" class="group-user-id">${post.userLoginId}</a>
 						</div>
 					</div>
 					<div>
-						<button type="button" class="group-post-menu-btn material-icons">menu</button>
+						<c:forEach var="group" items="${groupList}">
+							<c:if test="${post.groupId eq group.id}">
+								<c:set var="thisGroup" value="${group}"/>
+							</c:if>
+						</c:forEach>
+						<c:if test="${post.groupMemberId eq user.id || group.groupManagerId eq user.id}">
+							<button type="button" class="group-post-menu-btn material-icons " data-post-id="${post.id}">menu</button>
+						</c:if>
 					</div>
 				</div>
 				<div class="group-post-content-section">${post.content}</div>

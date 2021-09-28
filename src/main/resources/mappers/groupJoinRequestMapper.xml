@@ -42,4 +42,16 @@
  			`groupId`=#{groupId}
  	</select>
  	
+ 	<select id="selectGroupJoinRequestByGroupId" parameterType="map" resultType="com.h5tchibook.group.model.GroupJoinRequest">
+ 		SELECT
+ 			`id`
+ 			,`groupId`
+ 			,`userId`
+ 			,`createdAt`
+ 		FROM 
+ 			`groupJoinRequest`
+ 		WHERE
+ 			`groupId`=#{groupId}
+ 	</select>
+ 	
  </mapper>

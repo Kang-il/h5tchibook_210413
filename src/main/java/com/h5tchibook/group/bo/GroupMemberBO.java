@@ -28,6 +28,7 @@ public class GroupMemberBO {
 	private CheckBO checkBO;
 	
 	
+
 	private Logger logger=LoggerFactory.getLogger(this.getClass());
 	
 	public int createGroupMember(GroupMember groupMember) {
@@ -59,6 +60,10 @@ public class GroupMemberBO {
 		
 		result.put("result", resultCheck);
 		return result;
+	}
+	
+	public void deleteGroupMemberByGroupId(int groupId) {
+		groupMemberDAO.deleteGroupMemberByGroupId(groupId);
 	}
 	
 	public GroupMember getGroupMemberByGroupIdAndMemberId(int groupId, int memberId) {

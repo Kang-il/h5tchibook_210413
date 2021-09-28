@@ -17,7 +17,7 @@
 				<c:if test="${status.index % 5 eq 0}"> 
 					<div class="group-photo-row">
 				</c:if>
-					<div class="group-photo-item" data-post-id="${photo.id}">
+					<div class="group-photo-item" data-post-id="${photo.id}" data-group-id="${group.id}">
 						<img src="${photo.contentPath}"/>
 					</div>
 				<c:if test="${status.index % 5 eq 4 || status.index eq photoListSize-1}">

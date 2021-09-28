@@ -1,5 +1,6 @@
 package com.h5tchibook.group.bo;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -7,8 +8,10 @@ import java.util.Stack;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.h5tchibook.check.bo.CheckBO;
+import com.h5tchibook.common.FileManagerService;
 import com.h5tchibook.group.dao.GroupDAO;
 import com.h5tchibook.group.model.Group;
 import com.h5tchibook.group.model.GroupMember;
@@ -20,9 +23,11 @@ public class GroupBO {
 	private GroupDAO groupDAO;
 	@Autowired
 	private CheckBO checkBO;
-	
 	@Autowired
 	private GroupMemberBO groupMemberBO;
+	@Autowired
+	private FileManagerService fileManagerService;
+	
 	
 	public Map<String,Boolean> createGroup(User user,Group group) {
 		Group groupCheck=groupDAO.selectGroupByGroupName(group.getGroupName());
@@ -45,6 +50,63 @@ public class GroupBO {
 		}
 		result.put("result",resultCheck);
 		return result;
+	}
+	
+	public void editGroupProfileImage(int groupId,MultipartFile file) {
+		Group group=groupDAO.selectGroupById(groupId);
+		
+		if(group.getGroupProfileImagePath()!=null) {
+			try {				
+				fileManagerService.deleteFile(group.getGroupProfileImagePath());
+			}catch(IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		String imageUrl=generateImageUrlByFile(group.getGroupName(), file);
+		groupDAO.updateGroupProfileImage(groupId, imageUrl);
+	}
+	
+	public void editGroupCoverImage(int groupId,MultipartFile file) {
+		Group group=groupDAO.selectGroupById(groupId);
+		
+		if(group.getGroupProfileImagePath()!=null) {
+			try {				
+				fileManagerService.deleteFile(group.getGroupProfileImagePath());
+			}catch(IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		String imageUrl=generateImageUrlByFile(group.getGroupName(), file);
+		groupDAO.updateGroupCoverImage(groupId, imageUrl);
+	}
+	
+	public void deleteGroupById(int id) {
+		Group group=groupDAO.selectGroupById(id);
+		List<String> groupImagePathList=new ArrayList<String>();
+		
+		if(group.getGroupCoverImagePath()!=null) {
+			groupImagePathList.add(group.getGroupCoverImagePath());
+		}
+		
+		if(group.getGroupProfileImagePath()!=null) {
+			groupImagePathList.add(group.getGroupProfileImagePath());
+		}
+		
+		if(groupImagePathList.size()!=0) {
+			
+			for(String imagePath : groupImagePathList) {
+				try {
+					fileManagerService.deleteFile(imagePath);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		groupDAO.deleteGroupById(id);
+		
 	}
 	
 	public Group getGroupByGroupName(String groupName) {
@@ -90,5 +152,17 @@ public class GroupBO {
 	
 	public List<Group> getGroupListByIdList(List<Integer> idList){
 		return groupDAO.selectGroupListByIdList(idList);
+	}
+	
+	private String generateImageUrlByFile(String userLoginId, MultipartFile file) {
+		String imageUrl=null;
+		if(file!=null) {
+			try {
+				imageUrl=fileManagerService.saveFile(userLoginId, file);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return imageUrl;
 	}
 }

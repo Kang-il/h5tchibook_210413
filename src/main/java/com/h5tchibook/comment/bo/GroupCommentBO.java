@@ -210,6 +210,14 @@ public class GroupCommentBO {
 		return result;
 	}
 	
+	public void deleteCommentByPostId(int postId) {
+		groupCommentDAO.deleteGroupCommentByPostId(postId);
+	}
+	
+	public void deleteCommentByPostIdList(List<Integer>postIdList) {
+		groupCommentDAO.deleteGroupCommentByPostIdList(postIdList);
+	}
+	
 	private GroupCommentView setGroupCommentView(User user, GroupComment groupComment) {
 		
 		GroupCommentView groupCommentView=GroupCommentView

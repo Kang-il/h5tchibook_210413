@@ -15,5 +15,10 @@ public interface GroupPostDAO {
 	public List<GroupPost> selectGroupPostListOnlyPhotoTypeByGroupId(@Param("groupId") int groupId
 																	,@Param("limit") Integer limit);
 	public List<GroupPost> selectGroupPostListByIdList(@Param("idList")List<Integer> idList);
+	public List<GroupPost> selectGroupPostListByGroupIdAndMemberId(@Param("groupId")int groupId
+																	,@Param("groupMemberId") int groupMemberId);
 	public void deleteGroupPostByGroupId(@Param("groupId") int groupId);
+	public void deleteGroupPostById(@Param("id")int id);
+	public void deleteGroupPostByGroupIdAndMemberId(@Param("groupId") int groupId
+												   ,@Param("groupMemberId") int groupMemberId);
 }

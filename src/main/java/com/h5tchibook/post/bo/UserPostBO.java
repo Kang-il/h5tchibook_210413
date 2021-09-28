@@ -89,17 +89,18 @@ public class UserPostBO {
 		return row;
 	}
 	
-	private String generateImageUrlByFile(String userLogInId, MultipartFile file) {
-		String imageUrl=null;
-		if(file!=null) {
+	public void deletePostById(int postId) {
+		Post post=userPostDAO.selectPostById(postId);
+		userPostDAO.deleteUserPostById(postId);
+		if(post.getContentPath()!=null) {
 			try {
-				imageUrl=fileManagerService.saveFile(userLogInId, file);
-				logger.error(":::::::::::::::: 이미지 경루 ::::"+imageUrl);
+				fileManagerService.deleteFile(post.getContentPath());
 			} catch (IOException e) {
-				logger.error(":::::::::::::::: 이미지 업로드 오류 ::::"+e.getMessage());
+				e.printStackTrace();
 			}
 		}
-		return imageUrl;
+		commentBO.deleteCommentByPostId(postId);
+		likeBO.deleteLikeByPostId(postId);
 	}
 	
 	public Post getPostById(int postId) {
@@ -110,9 +111,13 @@ public class UserPostBO {
 	public PostView getPostViewById(int postId) {
 		
 		Post userPost=userPostDAO.selectPostById(postId);
-		User user=userBO.getUserById(userPost.getUserId());
-
-		return setPostView(userPost, user);
+		PostView postView=null;
+		if(userPost!=null) {
+			User user=userBO.getUserById(userPost.getUserId());
+			postView=setPostView(userPost,user);
+		}
+		
+		return postView;
 	}
 
 	public List<PostView> getPostListByUserId(int userId, DisclosureStatus disclosureStatus){
@@ -192,4 +197,16 @@ public class UserPostBO {
 		return postView;
 	}
 	
+	private String generateImageUrlByFile(String userLogInId, MultipartFile file) {
+		String imageUrl=null;
+		if(file!=null) {
+			try {
+				imageUrl=fileManagerService.saveFile(userLogInId, file);
+				logger.error(":::::::::::::::: 이미지 경루 ::::"+imageUrl);
+			} catch (IOException e) {
+				logger.error(":::::::::::::::: 이미지 업로드 오류 ::::"+e.getMessage());
+			}
+		}
+		return imageUrl;
+	}
 }

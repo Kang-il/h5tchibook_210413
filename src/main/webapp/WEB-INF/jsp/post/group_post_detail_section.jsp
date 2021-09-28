@@ -36,7 +36,7 @@
 			
 			<div>
 				<c:if test="${user.id eq post.groupMemberId || user.id eq group.groupManagerId}">
-					<button type="button" class="profile-menu-btn material-icons">menu</button>
+					<button type="button" class="profile-menu-btn material-icons" id="groupPostDetailMenuBtn" data-post-id="${post.id}">menu</button>
 				</c:if>
 			</div>
 			 
@@ -83,7 +83,7 @@
 			</c:if>
 		
 			<div>
-				<button class="group-post-detail-comment-btn" data-post-id="${post.id}">
+				<button class="group-post-detail-comment-btn">
 					<span class="material-icons-outlined">chat_bubble_outline</span> 댓글달기
 				</button>
 			</div>

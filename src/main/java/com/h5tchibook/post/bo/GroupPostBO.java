@@ -86,6 +86,72 @@ public class GroupPostBO {
 		return resultCheck;
 	}
 	
+	public void deleteGroupPostByGroupId(int groupId) {
+		List<GroupPost> postList=groupPostDAO.selectGroupPostListByGroupId(groupId);
+		
+		if(postList!=null) {
+			
+			List<Integer> postIdList=new ArrayList<Integer>();
+			
+			groupPostDAO.deleteGroupPostByGroupId(groupId);
+			
+			for(GroupPost post: postList) {
+				if(post.getContentPath()!=null) {
+					try {
+						fileManagerService.deleteFile(post.getContentPath());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			
+			for(GroupPost post : postList) {
+				postIdList.add(post.getId());
+			}
+			
+			if(postIdList.size()!=0) {
+				groupCommentBO.deleteCommentByPostIdList(postIdList);
+				groupLikeBO.deleteGroupLikeByPostIdList(postIdList);
+			}
+		}
+	}
+	
+	public void deleteGroupPostByMemberId(int groupId ,int memberId) {
+		List<GroupPost> groupPostList=groupPostDAO.selectGroupPostListByGroupIdAndMemberId(groupId, memberId);
+		groupPostDAO.deleteGroupPostByGroupIdAndMemberId(groupId,memberId);
+		if(groupPostList!=null) {
+			for(GroupPost post : groupPostList) {
+				if(post.getContentPath() != null) {
+					try {
+						fileManagerService.deleteFile(post.getContentPath());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			List<Integer> groupIdList=new ArrayList<Integer>();
+			for(GroupPost groupPost:groupPostList) {
+				groupIdList.add(groupPost.getId());
+			}
+			groupCommentBO.deleteCommentByPostIdList(groupIdList);
+			groupLikeBO.deleteGroupLikeByPostIdList(groupIdList);
+		}
+	}
+	
+	public void deleteGroupPostById(int postId) {
+		GroupPost post=groupPostDAO.selectGroupPostById(postId);
+		groupPostDAO.deleteGroupPostById(postId);
+		if(post.getContentPath()!=null) {
+			try {
+				fileManagerService.deleteFile(post.getContentPath());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		groupCommentBO.deleteCommentByPostId(postId);
+		groupLikeBO.deleteGroupLikeByPostId(postId);
+	}
+	
 	public GroupPost getGroupPostById(int id) {
 		return groupPostDAO.selectGroupPostById(id);
 	}
@@ -108,7 +174,7 @@ public class GroupPostBO {
 		
 		return groupPostList;
 	}
-	
+
 	public List<GroupPostView> getGroupPostViewListByGroupId(int groupId){
 		
 		Group group=groupBO.getGroupById(groupId);

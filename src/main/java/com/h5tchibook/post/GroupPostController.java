@@ -27,6 +27,7 @@ public class GroupPostController {
 	
 	@RequestMapping("/group_post_detail_view")
 	public String groupPostDetailView(@RequestParam("postId") int postId
+									 ,@RequestParam("groupId") int groupId
 									 , Model model
 									 , HttpServletRequest request) {
 		//groupOwnerCheck
@@ -37,7 +38,12 @@ public class GroupPostController {
 			return "redirect:/user/sign_in_view";
 		}else {
 			GroupPostView post=groupPostBO.getGroupPostViewById(postId);
-			Group group=groupBO.getGroupById(post.getGroupId());
+			
+			Group group=groupBO.getGroupById(groupId);
+			
+			if(post==null) {
+				return "redirect:/feed/group/"+group.getGroupName();
+			}
 			
 			//contentType이 photo가 아니면 해당 그룹 피드로 리다이렉트
 			if(!post.getContentType().getContentType().equals("photo")) {

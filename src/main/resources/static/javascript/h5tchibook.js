@@ -376,6 +376,54 @@ function deleteGroupComment(commentId) {
 	});
 }
 
+function responseJoinGroup(decision, userId, groupId) {
+	$.ajax({
+		type: 'POST'
+		, url: '/group/response_join_group'
+		, data: {
+			'decision': decision
+			, 'userId': userId
+			, 'groupId': groupId
+		}
+		, success: function(data) {
+			if (data.loginCheck === true) {
+				if (data.result === true) {
+					location.reload();
+				} else {
+					alert('가입요청 응답 실패 관리자에게 문의하세요');
+				}
+			} else {
+				location.href = "/user/sign_in_view";
+			}
+		}
+		, error: function(e) {
+			alert(e);
+		}
+	});
+}
+
+function deleteGroupMember(groupId, groupMemberId) {
+	$.ajax({
+		type: 'POST'
+		, url: '/group/member/delete_group_member'
+		, data: {
+			'groupId': groupId
+			, 'groupMemberId': groupMemberId
+		}
+		, success: function(data) {
+			if (data.loginCheck === true) {
+				if (data.result === true) {
+					location.reload();
+				} else {
+					alert('탈퇴 실패 관리자에게 문의하세요!');
+				}
+			} else {
+				location.href = '/user/sign_in_view';
+			}
+		}
+	});
+}
+
 $(document).ready(function(){
 //-------------------sign-up-modal
 	$('.sign-up-form-btn').on('click',function(){
@@ -650,6 +698,10 @@ $(document).ready(function(){
 		location.href="/group/create_group_view";
 	});
 	
+	$('.edit-my-group').on('click',function(){
+		location.href="/group/edit/edit_group_list_view";
+	});
+	
 	//-----------gnb
 	$('.menu-profile-box').on('click',function(){
 		let loginId = $(this).data('user-login-id');
@@ -667,12 +719,14 @@ $(document).ready(function(){
 	});
 	
 	$('.modal-window').on('click',function(e){
-		if(!$('.nav-menu-modal').has(e.target).length){
+		if(!$('.nav-menu-modal').has(e.target).length || $('.edit-group-profile-menu-btn').has(e.target).length){
 			$('.nav-menu-modal').addClass('d-none');
 			$('.modal-window').addClass('d-none');
 			$('.profile-pic-modal').addClass('d-none');
+			$('.edit-group-profile-menu-btn').addClass('d-none');
 		}
 	});
+	
 	
 	$('.nav-profile-box').on('click',function(){
 		let loginId=$(this).data('user-login-id');
@@ -1731,7 +1785,8 @@ $(document).ready(function(){
 	
 	$('.group-photo-item').on('click',function(){
 		let postId=$(this).data('post-id');
-		location.href="/group/post/group_post_detail_view?postId="+postId;
+		let groupId=$(this).data('group-id');
+		location.href="/group/post/group_post_detail_view?postId="+postId+"&groupId="+groupId;
 	});
 	
 	$('.group-post-detail-comment-btn').on('click',function(){
@@ -1767,8 +1822,465 @@ $(document).ready(function(){
 		setGroupLike(groupId,postId);
 	});
 	
+	$('.group-item , .edit-group-btn').on('click',function(){
+		let groupName=$(this).data('group-name');
+		location.href='/group/edit/edit_group_view/'+groupName;
+	});
 	
 	
+	
+	//request-join------------------------------------------------
+	$('.group-join-accept-btn').on('click',function(){
+		const DECISION='accept';
+		let groupId=$(this).data('group-id');
+		let userId=$(this).data('user-id');
+
+		if(groupId ==undefined || userId==undefined){
+			alert('잘못된 접근');
+			return;
+		}
+		
+		responseJoinGroup(DECISION,userId,groupId);
+	});
+	
+	$('.group-join-refuse-btn').on('click',function(){
+		const DECISION='refuse';
+		let groupId=$(this).data('group-id');
+		let userId=$(this).data('user-id');
+		
+		if(groupId ==undefined || userId==undefined){
+			alert('잘못된 접근');
+			return;
+		}
+		
+		responseJoinGroup(DECISION,userId,groupId);
+	});
+	
+	$('.group-member-delete-btn').on('click',function(){
+		let profileImagePath=$(this).data('user-profile-image-path');
+		if(profileImagePath==undefined || profileImagePath ==null || profileImagePath == ''){
+			profileImagePath='/static/images/no_profile_image.png';
+		}
+		let userId=$(this).data('user-id');
+		let userLoginId=$(this).data('user-login-id');
+		let groupId=$(this).data('group-id');
+			
+		$('.delete-group-member-modal-section').removeClass('d-none');
+		$('body').addClass('disabled-scroll');
+		
+		$('.delete-member-profile-img').attr('src',profileImagePath);
+		$('.delete-group-member-btn').data('group-id',groupId);
+		$('.delete-group-member-btn').data('group-member-id',userId);
+		$('.delete-member-login-id').text(userLoginId);
+	});
+	
+	$('.cancel-member-delete-modal').on('click',function(){
+		$('.delete-group-member-modal-section').addClass('d-none');
+		$('body').removeClass('disabled-scroll');
+		
+		$('.delete-member-profile-img').attr('src',profileImagePath);
+		$('.delete-group-member-btn').data('group-id','');
+		$('.delete-group-member-btn').data('group-member-id','');
+		$('.delete-member-login-id').text('');
+	});
+	
+	$('.backward-btn').on('click',function(){
+		location.href="/group/edit/edit_group_list_view";
+	});
+	
+	$('.delete-group-member-btn').on('click',function(){
+		let groupId=$(this).data('group-id');
+		let groupMemberId=$(this).data('group-member-id');
+		
+		deleteGroupMember(groupId,groupMemberId);
+	});
+	
+	$('.group-profile-img-edit-btn').on('click',function(){
+		$('.edit-group-profile-menu-btn').removeClass('d-none');
+		$('.modal-window').removeClass('d-none');
+	});
+	
+	$('.change-group-profile-btn').on('click',function(){
+		$('#editGroupProfileInput').trigger('click');
+	});
+	
+	$('#editGroupProfileInput').on('input',function(e){
+		let files = e.target.files;
+		let filesArr = Array.prototype.slice.call(files);
+
+		filesArr.forEach(function(f) {
+			if (!f.type.match("image.*")) {
+				alert("확장자는 이미지 확장자만 가능합니다.");
+				$("#editGroupProfileInput").val('');
+				return;
+			}
+		});
+		
+		let filePath=$('#editGroupProfileInput').val();
+		let file=null;
+		let groupId=$('.change-group-profile-btn').data('group-id');
+		
+		if(groupId==undefined){
+			alert('잘못된 접근입니다.');
+			return;
+		}
+		
+		
+		if(filePath!=''){
+			file=$('#editGroupProfileInput')[0].files[0];
+		}
+		
+		let formData =new FormData();
+		formData.append('groupId',groupId);
+		formData.append('file',file);
+		
+		$.ajax({
+			type:'POST'
+			,url:'/group/edit/group_profile_image'
+			,data:formData
+			,processData:false
+			,contentType:false
+			,encType:'multipart/form-data'
+			,success:function(data){
+				if(data.loginCheck===true){
+					if(data.result===true){
+						location.reload();
+					}else{
+						alert('그룹 프로필 변경 실패 관리자에게 문의하세요');
+						return;
+					}
+				}else{
+					location.href="/user/sign_in_view";
+				}
+			}
+			,error:function(e){
+				alert(e);
+			}
+			
+		});
+	});
+	
+	
+	$('.basic-group-profile-btn').on('click',function(){
+		let groupId=$(this).data('group-id');
+		
+		if(groupId==undefined){
+			alert('잘못된 접근입니다.');
+			return;
+		}
+		
+		let file=null;
+		
+		let formData =new FormData();
+		formData.append('groupId',groupId);
+		formData.append('file',file);
+		
+		$.ajax({
+			type:'POST'
+			,url:'/group/edit/group_profile_image'
+			,data:formData
+			,processData:false
+			,contentType:false
+			,encType:'multipart/form-data'
+			,success:function(data){
+				if(data.loginCheck===true){
+					if(data.result===true){
+						location.reload();
+					}else{
+						alert('그룹 프로필 변경 실패 관리자에게 문의하세요');
+						return;
+					}
+				}else{
+					location.href="/user/sign_in_view";
+				}
+			}
+			,error:function(e){
+				alert(e);
+			}
+			
+		});
+		
+	});
+	
+	$('#groupTimeLineBtn , #groupSectionMyTimeLineBtn').on('click',function(){
+		location.href="/timeline/user_timeline_view";
+	});
+	
+	$('#friendViewBtn').on('click',function(){
+		let loginId=$(this).data('user-login-id');
+		location.href="/feed/"+loginId+"?category=friend";
+	});
+	
+	$('.timeline-group-item').on('click',function(){
+		let groupName=$(this).data('group-name');
+		location.href="/feed/group/"+groupName;
+	});
+	
+	$('.group-timeline-user-profile').on('click',function(){
+		let loginId=$(this).data('user-login-id');
+		location.href="/feed/"+loginId;
+	});
+	
+	$('.background-edit-btn').on('click',function(){
+		let groupId=$(this).data('group-id');
+		
+		$('.edit-group-background-section').removeClass('d-none');
+		$('body').addClass('disabled-scroll');
+		$('.change-group-background-action-btn').data('group-id',groupId);
+	});
+	
+	$('.change-group-background-close-btn').on('click',function(){
+		let imgPath=$('.group-cover-image-path').val();
+		
+		if(imgPath == undefined || imgPath ==''){
+			imgPath="/static/images/no_background_image.jpg";
+		}
+		
+		$('.edit-group-background-section').addClass('d-none');
+		$('body').removeClass('disabled-scroll');
+		$('#editGroupCoverImage').val('');
+		$('.group-background').attr('src',imgPath);
+		$('.change-group-background-action-btn').attr('disabled',true);
+	});
+	
+	$('#editGroupCoverImage').on('input',function(){
+		let imgPath=$('.group-cover-image-path').val();
+		
+		if(imgPath == undefined && $('.group-background').attr('src') == "/static/images/no_background_image.jpg"){
+			$('.change-group-background-action-btn').attr('disabled',true);
+			return;
+		}
+		$('.change-group-background-action-btn').attr('disabled',false);
+	});
+	
+	$('.change-group-background-btn').on('click',function(){
+		$('#editGroupCoverImage').trigger('click');
+	});
+	
+	$('.basic-group-background-img-btn').on('click',function(){
+		const BASIC_PATH="/static/images/no_background_image.jpg";
+		let imgPath=$('.group-cover-image-path').val();
+		
+		//기존이미지가 비어있지 않은 경우 
+		if(imgPath != undefined || imgPath !=''){
+			imgPath=BASIC_PATH;
+			$('.change-group-background-action-btn').attr('disabled',true);
+			$('#editGroupCoverImage').val('');
+			$('.group-background').attr('src',imgPath);
+			return;
+		}
+		
+		if(imgPath == undefined || imgPath ==''){
+			imgPath=BASIC_PATH;
+			$('.change-group-background-action-btn').attr('disabled',false);
+			$('#editGroupCoverImage').val('');
+			$('.group-background').attr('src',imgPath);
+			return;
+		}
+	});
+	
+	$('#editGroupCoverImage').on('change',function(e){
+	
+		let files = e.target.files;
+		let filesArr = Array.prototype.slice.call(files);
+
+		filesArr.forEach(function(f) {
+			if (!f.type.match("image.*")) {
+				alert("확장자는 이미지 확장자만 가능합니다.");
+				$("#editGroupCoverImage").val('');
+				return;
+			}
+			sel_file = f;
+			let reader = new FileReader();
+			reader.onload =function(e){
+				$('.group-background').attr('src',e.target.result);
+				$('.edit-group-background-section').removeClass('d-none');
+			}
+				reader.readAsDataURL(f);
+		});
+	});
+	
+	$('.change-group-background-action-btn').on('click',function(){
+		let groupId=$(this).data('group-id');
+		
+		if(groupId==undefined){
+			alert('잘못된 접근입니다.');
+			return;
+		}
+		
+		let filePath=$('#editGroupCoverImage').val();
+		let file=null;
+		
+		if(filePath!=''){
+			file=$('#editGroupCoverImage')[0].files[0];
+		}
+		
+		let formData =new FormData();
+		
+		formData.append('groupId',groupId);
+		formData.append('file',file);
+		
+		$.ajax({
+			type:'POST'
+			,url:'/group/edit/group_cover_image'
+			,data:formData
+			,processData:false
+			,contentType:false
+			,encType:'multipart/form-data'
+			,success:function(data){
+				if(data.loginCheck===true){
+					if(data.result===true){
+						location.reload();
+					}else{
+						alert('그룹 프로필 변경 실패 관리자에게 문의하세요');
+						return;
+					}
+				}else{
+					location.href="/user/sign_in_view";
+				}
+			}
+			,error:function(e){
+				alert(e);
+			}
+			
+		});
+	
+	});
+	
+	$('.user-post-menu-btn , #postDetailMenuBtn').on('click',function(){
+		let postId=$(this).data('post-id');
+		$('.delete-post-modal-section').removeClass('d-none');
+		$('body').addClass('disabled-scroll');
+		$('.delete-post-btn').data('post-id',postId);
+	});
+	
+	$('.cancel-delete-post-modal').on('click',function(){
+		$('.delete-post-modal-section').addClass('d-none');
+		$('body').removeClass('disabled-scroll');
+		$('.delete-post-btn').data('post-id',undefined);
+	});
+	
+	$('.delete-post-btn').on('click',function(){
+		let postId=$(this).data('post-id');
+		$.ajax({
+			type:'POST'
+			,url:'/post/delete_post'
+			,data:{'postId':postId}
+			,success:function(data){
+				if(data.loginCheck===true){
+					if(data.result===true){
+						location.reload();
+					}else{
+						alert('게시글 지우기 실패 관리자에게 문의하세요.');	
+						return;
+					}
+				}else{
+					location.href='/user/sign_in_view';
+				}
+			}
+			,error:function(e){
+				alert(e);
+				return;
+			}
+		});
+	});
+	
+	$('.group-post-menu-btn , #groupPostDetailMenuBtn').on('click',function(){
+		let postId=$(this).data('post-id');
+		$('.delete-group-post-modal-section').removeClass('d-none');
+		$('body').addClass('disabled-scroll');
+		$('.delete-group-post-btn').data('post-id',postId);
+	});
+	
+	$('.cancel-delete-group-post-modal').on('click',function(){
+		$('.delete-group-post-modal-section').addClass('d-none');
+		$('body').removeClass('disabled-scroll');
+		$('.delete-group-post-btn').data('post-id',undefined);
+	});
+	
+	$('.delete-group-post-btn').on('click',function(){
+		let postId=$(this).data('post-id');
+		$.ajax({
+			type:'POST'
+			,url:'/group/post/delete_post'
+			,data:{'postId':postId}
+			,success:function(data){
+				if(data.loginCheck===true){
+					if(data.result===true){
+						location.reload();
+					}else{
+						alert('게시글 지우기 실패 관리자에게 문의하세요.');	
+						return;
+					}
+				}else{
+					location.href='/user/sign_in_view';
+				}
+			}
+			,error:function(e){
+				alert(e);
+				return;
+			}
+		});
+	});
+	
+	$('.delete-group-btn').on('click',function(){
+		const BASIC_PROFILE_IMAGE_PATH="/static/images/no_profile_image.png";
+		$('.delete-group-modal-section').removeClass('d-none');
+		$('body').addClass('disabled-scroll');
+		let groupName=$(this).data('group-name');
+		let groupId=$(this).data('group-id');
+		let groupProfileImagePath=$(this).data('group-profile-image-path');
+		$('.delete-group-name').text(groupName);
+		$('.delete-group-action-btn').data('group-id',groupId);
+		
+		if(groupProfileImagePath == undefined || groupProfileImagePath ==''){
+			groupProfileImagePath=BASIC_PROFILE_IMAGE_PATH;
+		}
+		$('.delete-group-profile-img').attr('src',groupProfileImagePath);
+	});
+	
+	$('.cancel-group-delete-modal').on('click',function(){
+		$('.delete-group-modal-section').addClass('d-none');
+		$('body').removeClass('disabled-scroll');
+		$('.delete-group-name').text('');
+		$('.delete-group-action-btn').data('group-id','');
+		$('.delete-group-profile-img').attr('src','');
+	});
+	
+	$('.delete-group-action-btn').on('click',function(){
+		let groupId=$(this).data('group-id');
+		
+		if(groupId == '' || groupId == undefined){
+			alert('잘못된 접근입니다.');
+			return;
+		}
+		
+		$.ajax({
+			type:'POST'
+			,url:'/group/delete_group'
+			,data:{'groupId':groupId}
+			,success:function(data){
+				if(data.loginCheck===true){
+					if(data.result===true){
+						alert('삭제가 완됴되었습니다.');
+						location.href="/group/edit/edit_group_list_view";
+					}else{
+						alert('게시글 지우기 실패 관리자에게 문의하세요.');	
+						return;
+					}
+				}else{
+					location.href='/user/sign_in_view';
+				}
+			}
+			,error:function(e){
+				alert(e);
+				return;
+			}
+			
+		});
+	});
 	
 	
 });
+
+

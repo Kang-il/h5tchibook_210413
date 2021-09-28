@@ -27,6 +27,13 @@
  			)
  	</insert>
  	
+ 	<delete id="deleteUserPostById" parameterType="int">
+ 		DELETE FROM
+ 			`post`
+ 		WHERE 
+ 			`id`=#{id}
+ 	</delete>
+ 	
  	<select id="selectPostById" parameterType="int" resultType="com.h5tchibook.post.model.Post">
  		SELECT
  			`id`

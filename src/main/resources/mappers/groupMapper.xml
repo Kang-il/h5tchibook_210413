@@ -21,6 +21,31 @@
  		)
  	</insert>
  	
+ 	<update id="updateGroupProfileImage" parameterType="map">
+ 		UPDATE
+ 			`group`
+ 		SET
+ 			`groupProfileImagePath`=#{profileImagePath, jdbcType=VARCHAR}
+ 		WHERE
+ 			`id`=#{id}
+ 	</update>
+ 	
+ 	<update id="updateGroupCoverImage" parameterType="map">
+ 		UPDATE
+ 			`group`
+ 		SET
+ 			`groupCoverImagePath`=#{coverImagePath, jdbcType=VARCHAR}
+ 		WHERE
+ 			`id`=#{id}
+ 	</update>
+ 	
+ 	<delete id="deleteGroupById" parameterType="int">
+ 		DELETE FROM 
+ 			`group`
+ 		WHERE
+ 			`id`=#{id}
+ 	</delete>
+ 	
  	<select id="selectGroupByGroupName" parameterType="String" resultType="com.h5tchibook.group.model.Group">
  		SELECT 
  			`id`

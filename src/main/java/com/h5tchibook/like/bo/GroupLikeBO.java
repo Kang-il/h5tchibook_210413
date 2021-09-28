@@ -56,6 +56,13 @@ public class GroupLikeBO {
 		
 		return result;
 	}
+	public void deleteGroupLikeByPostIdList(List<Integer> postIdList) {
+		groupLikeDAO.deleteGroupLikeByPostIdList(postIdList);
+	}
+	
+	public void deleteGroupLikeByPostId(int postId) {
+		groupLikeDAO.deleteGroupLikeByPostId(postId);
+	}
 	
 	public List<GroupLikeView> getGroupLikeViewListByPostId(int postId){
 		List<GroupLike> likeList=groupLikeDAO.selectGroupLikeByPostId(postId);

@@ -19,6 +19,16 @@
  		)
  	</insert>
  	
+ 	<delete id="deleteGroupLikeByPostIdList" parameterType="java.util.List">
+ 		DELETE FROM
+ 			`groupLike`
+ 		WHERE
+ 			`postId` IN
+ 			<foreach collection="postIdList" item="postId" open="(" close=")" separator=",">
+ 				${postId}
+ 			</foreach>
+ 	</delete>
+ 	
  	<delete id="deleteGroupLikeByPostIdAndMemberId" parameterType="map">
  		DELETE FROM
  			`groupLike`
