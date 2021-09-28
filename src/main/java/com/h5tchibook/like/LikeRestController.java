@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.h5tchibook.like.bo.LikeBO;
+import com.h5tchibook.post.bo.UserPostBO;
+import com.h5tchibook.post.model.Post;
 import com.h5tchibook.user.model.User;
 
 @RestController
@@ -22,6 +24,8 @@ public class LikeRestController {
 	
 	@Autowired
 	private LikeBO likeBO;
+	@Autowired
+	private UserPostBO userPostBO;
 	
 	@RequestMapping("/set_like/{postId}")
 	public Map<String,Boolean> setLike(@PathVariable("postId") int postId
@@ -30,8 +34,8 @@ public class LikeRestController {
 		HttpSession session= request.getSession();
 		
 		User user = (User)session.getAttribute("user");
-		
-		Map<String, Boolean> result=likeBO.setLike(user, postId);
+		Post post = userPostBO.getPostById(postId);
+		Map<String, Boolean> result=likeBO.setLike(user, post);
 	
 		return result;
 	}

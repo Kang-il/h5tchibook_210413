@@ -6,9 +6,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.h5tchibook.alert.bo.CommentAlertBO;
+import com.h5tchibook.alert.model.Alert;
+import com.h5tchibook.alert.model.AlertType;
 import com.h5tchibook.comment.dao.CommentDAO;
 import com.h5tchibook.comment.model.Comment;
 import com.h5tchibook.comment.model.CommentView;
+import com.h5tchibook.post.model.Post;
 import com.h5tchibook.user.bo.UserBO;
 import com.h5tchibook.user.model.User;
 
@@ -19,13 +23,32 @@ public class CommentBO {
 	private CommentDAO commentDAO;
 	@Autowired
 	private UserBO userBO;
+	@Autowired
+	private CommentAlertBO commentAlertBO;
 	
-	public void createComment(Comment comment) {
+	public void createComment(Comment comment,Post post) {
 		commentDAO.insertComment(comment);
+		
+		//본인 포스터에 남긴 본인 댓글이 아닌 경우에만 알람생성
+		if(comment.getUserId()!=post.getUserId()) {
+			
+			Alert alert=Alert.builder()
+							.sendUserId(comment.getUserId())
+							.receiveUserId(post.getUserId())
+							.alertType(AlertType.COMMENT)
+							.build();
+			
+			commentAlertBO.createCommentAlert(alert, comment.getId(), post.getId());
+		}
+		
 	}
 	
 	public void deletecommentById(int id) {
-		commentDAO.deleteCommentById(id);
+		Comment comment=commentDAO.selectCommentById(id);
+		if(comment!=null) {
+			commentDAO.deleteCommentById(id);
+			
+		}
 	}
 	
 	public void deleteCommentByPostId(int postId) {

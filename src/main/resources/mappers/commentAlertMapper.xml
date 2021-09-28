@@ -2,4 +2,44 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  
- <mapper namespace="com.h5tchibook.alert.dao.CommentAlertDAO"></mapper>
+ <mapper namespace="com.h5tchibook.alert.dao.CommentAlertDAO">
+ 	
+ 	<insert id="insertCommentAlert" parameterType="com.h5tchibook.alert.model.CommentAlert">
+ 		INSERT INTO
+ 			`commentAlert`
+ 		(
+ 			`alertId`
+ 			,`commentId`
+ 			,`postId`
+ 			,`createdAt`
+ 		)
+ 		VALUES
+ 		(
+ 			#{alertId}
+ 			,#{commentId}
+ 			,#{postId}
+ 			,NOW()
+ 		)
+ 	</insert>
+ 	
+ 	<delete id="deleteCommentAlertByCommentId" parameterType="int">
+ 		DELETE FROM
+ 			`commentAlert`
+ 		WHERE
+ 			`commentId`=#{commentId}
+ 	</delete>
+ 	
+ 	<select id="selectCommentAlertByCommentId" parameterType="int">
+ 		SELECT 
+ 			`id`
+ 			,`alertId`
+ 			,`commentId`
+ 			,`postId`
+ 			,`createdAt`
+ 		FROM
+ 			`commentAlert`
+ 		WHERE
+ 			`commentId`=#{commentId}
+ 	</select>
+ 	
+ </mapper>

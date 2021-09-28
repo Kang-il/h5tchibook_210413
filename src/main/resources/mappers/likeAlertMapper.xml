@@ -2,4 +2,44 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  
- <mapper namespace="com.h5tchibook.alert.dao.LikeAlertDAO"></mapper>
+ <mapper namespace="com.h5tchibook.alert.dao.LikeAlertDAO">
+ 
+ 	<insert id="insertLikeAlert" parameterType="com.h5tchibook.alert.model.LikeAlert">
+ 		INSERT INTO
+ 			`likeAlert`
+ 		(
+			`alertId`
+			,`postId`
+			,`likeId`
+			,`createdAt`
+ 		)
+ 		VALUES
+ 		(
+ 			#{alertId}
+ 			,#{postId}
+ 			,#{likeId}
+ 			,NOW()
+ 		)
+ 	</insert>
+ 	
+ 	<delete id="deleteLikeAlertByLikeId" parameterType="int">
+ 		DELETE FROM
+ 			`likeAlert`
+ 		WHERE
+ 			`likeId`=#{likeId}
+ 	</delete>
+ 	
+ 	<select id="selectLikeAlertByLikeId" parameterType="int">
+ 		SELECT
+ 			`id`
+ 			,`alertId`
+ 			,`postId`
+ 			,`likeId`
+ 			,`createdAt`
+ 		FROM
+ 			`likeAlert`
+ 		WHERE
+ 			`likeId`=#{likeId}
+ 	</select>
+ 	
+ </mapper>

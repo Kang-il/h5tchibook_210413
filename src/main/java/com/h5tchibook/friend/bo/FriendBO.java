@@ -6,6 +6,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.h5tchibook.alert.bo.AlertBO;
+import com.h5tchibook.alert.bo.FriendRequestAlertBO;
+import com.h5tchibook.alert.model.Alert;
+import com.h5tchibook.alert.model.AlertType;
 import com.h5tchibook.friend.dao.FriendDAO;
 import com.h5tchibook.friend.model.Friend;
 import com.h5tchibook.friend.model.FriendView;
@@ -18,9 +22,38 @@ public class FriendBO {
 	private FriendDAO friendDAO;
 	@Autowired
 	private UserBO userBO;
+	@Autowired
+	private FriendRequestAlertBO friendRequestAlertBO;
+	@Autowired
+	private AlertBO alertBO;
 	
 	public void createFriend(int userId, int friendId) {
+		
 		friendDAO.insertFriend(userId,friendId);
+		
+		Friend requestFriend = friendDAO.selectFriendByUserIdAndFriendId(userId, friendId);
+		Friend checkFriend =friendDAO.selectFriendByUserIdAndFriendId(friendId, userId);
+		
+		//두 개의 값이 모두 있는 경우는 서로친구
+		//requestFriend 만있다면 내가 보낸 친구 요청만 존재
+		//후자의 경우에만 알람 생성해주기
+		
+		//1.내가 친구 추가 했고 상대방의 요청을 기다리는 상황
+		if(requestFriend!=null && checkFriend==null) {
+			Alert alert=Alert.builder()
+						   	 .sendUserId(userId)
+							 .receiveUserId(friendId)
+							 .alertType(AlertType.FRIEND_REQUEST)
+							 .build();
+			friendRequestAlertBO.createFriendRequestAlert(alert);
+		}
+		
+		//2.내가 상대방에게 친구요청을 받았고 내가 친구요청을 수락했음.
+		// Alert sendUser --- friendId  receiveUser --- userId
+		// 두 사람간 다른 타입의 알람은 무수히 주고받지만 친구알람은 한번 줌
+		if(requestFriend != null && checkFriend != null) {
+			
+		}
 	}
 	
 	public void deleteFriend(int userId, int friendId) {

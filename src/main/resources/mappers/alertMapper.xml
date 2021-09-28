@@ -13,4 +13,28 @@
  			,`createdAt`
  		)
  	</insert>
+ 	
+ 	<delete id="deleteAlertById" parameterType="int">
+ 		DELETE FROM
+ 			`alert`
+ 		WHERE
+ 			`id`=#{id}
+ 	</delete>
+ 	
+ 	<select id="selectAlertBySendUserIdAndReceiveUserIdAndFriendAlertType" parameterType="map">
+ 		SELECT
+ 			`id`
+ 			,`sendUserId`
+ 			,`receiveUserId`
+ 			,`alertType`
+ 			,`createdAt`
+ 		FROM
+ 			`alert`
+ 		WHERE
+ 			`sendUserId`=#{sendUserId}
+ 		AND
+ 			`receiveUserId`=#{receiveUserId}
+ 		AND 
+ 			`alertType`=#{alertType}
+ 	</select>
  </mapper>

@@ -1695,7 +1695,6 @@ $(document).ready(function(){
 	
 	$('.join-group-btn').on('click',function(){
 		let groupId=$(this).data('group-id');
-		alert(groupId);
 		$.ajax({
 			type:'POST'
 			,url:'/group/request_join_group'
@@ -2002,7 +2001,7 @@ $(document).ready(function(){
 		
 	});
 	
-	$('#groupTimeLineBtn , #groupSectionMyTimeLineBtn').on('click',function(){
+	$('#groupSectionMyTimeLineBtn').on('click',function(){
 		location.href="/timeline/user_timeline_view";
 	});
 	

@@ -40,11 +40,12 @@ public class CommentRestController {
 		boolean resultCheck;
 		if(user!=null) {
 			loginCheck=true;
+			Post post=userPostBO.getPostById(postId);
 			Comment comments=Comment.builder()
 			.userId(user.getId())
 			.postId(postId)
 			.comment(comment).build();
-			commentBO.createComment(comments);
+			commentBO.createComment(comments,post);
 			resultCheck=true;
 		}else {
 			loginCheck=false;
