@@ -29,7 +29,7 @@
  			`likeId`=#{likeId}
  	</delete>
  	
- 	<select id="selectLikeAlertByLikeId" parameterType="int">
+ 	<select id="selectLikeAlertByLikeId" parameterType="int" resultType="com.h5tchibook.alert.model.LikeAlert">
  		SELECT
  			`id`
  			,`alertId`
@@ -40,6 +40,19 @@
  			`likeAlert`
  		WHERE
  			`likeId`=#{likeId}
+ 	</select>
+ 	
+ 	<select id="selectLikeAlertByAlertId" parameterType="int" resultType="com.h5tchibook.alert.model.LikeAlert">
+ 			SELECT
+ 			`id`
+ 			,`alertId`
+ 			,`postId`
+ 			,`likeId`
+ 			,`createdAt`
+ 		FROM
+ 			`likeAlert`
+ 		WHERE
+ 			`alertId`=#{alertId}
  	</select>
  	
  </mapper>

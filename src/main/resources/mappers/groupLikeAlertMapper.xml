@@ -2,4 +2,87 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  
- <mapper namespace="com.h5tchibook.alert.dao.GroupLikeAlertDAO"></mapper>
+ <mapper namespace="com.h5tchibook.alert.dao.GroupLikeAlertDAO">
+ 	<insert id="insertGroupLikeAlert" parameterType="com.h5tchibook.alert.model.GroupLikeAlert">
+ 		INSERT INTO
+ 			`groupLikeAlert`
+ 		(
+ 			`alertId`
+ 			,`groupId`
+ 			,`postId`
+ 			,`likeId`
+ 			,`createdAt`
+ 		)
+ 		VALUES
+ 		(
+ 			#{alertId}
+ 			,#{groupId}
+ 			,#{postId}
+ 			,#{likeId}
+ 			,NOW()
+ 		)
+ 	</insert>
+ 	
+ 	<delete id="deleteGroupLikeByLikeId" parameterType="int">
+ 		DELETE FROM
+ 			`groupLikeAlert`
+ 		WHERE
+ 			`likeId`=#{likeId}
+ 	</delete>
+ 	
+ 	<delete id="deleteGroupLikeAlertByLikeIdLis" parameterType="java.util.List">
+ 		DELETE FROM
+ 			`groupLikeAlert`
+ 		WHERE
+ 			`likeId` IN
+ 			<foreach collection="likeIdList" item="likeId" open="(" close=")" separator=",">
+ 				${likeId}
+ 			</foreach>
+ 	</delete>
+ 	
+ 	<select id="selectGroupLikeAlertByLikeId" parameterType="int" resultType="com.h5tchibook.alert.model.GroupLikeAlert">
+ 		SELECT
+ 			`id`
+ 			,`alertId`
+ 			,`groupId`
+ 			,`postId`
+ 			,`likeId`
+ 			,`createdAt`
+ 		FROM 
+ 			`groupLikeAlert`
+ 		WHERE
+ 			`likeId`=#{likeId}
+ 	</select>
+ 	
+ 	<select id="selectGroupLikeAlertListByLikeIdList" parameterType="java.util.List" resultType="com.h5tchibook.alert.model.GroupLikeAlert">
+ 		SELECT
+ 			`id`
+ 			,`alertId`
+ 			,`groupId`
+ 			,`postId`
+ 			,`likeId`
+ 			,`createdAt`
+ 		FROM 
+ 			`groupLikeAlert`
+ 		WHERE
+ 			`likeId` IN
+ 			<foreach collection="likeIdList" item="likeId" open="(" close=")" separator=",">
+ 				${likeId}
+ 			</foreach>
+ 	</select>
+ 	
+ 	<select id="selectGroupLikeAlertByAlertId" parameterType="int" resultType="com.h5tchibook.alert.model.GroupLikeAlert">
+ 		SELECT
+ 			`id`
+ 			,`alertId`
+ 			,`groupId`
+ 			,`postId`
+ 			,`likeId`
+ 			,`createdAt`
+ 		FROM 
+ 			`groupLikeAlert`
+ 		WHERE
+ 			`alertId`=#{alertId}
+ 	</select>
+ 
+ </mapper>

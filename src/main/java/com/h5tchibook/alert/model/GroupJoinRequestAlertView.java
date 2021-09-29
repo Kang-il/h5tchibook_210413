@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class GroupJoinRequestAlertView {
+public class GroupJoinRequestAlertView implements AlertTimeLineView{
 	//alert Table 정보
 	private int alertId;
 	private int sendUserId;

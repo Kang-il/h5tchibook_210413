@@ -1,12 +1,11 @@
 package com.h5tchibook.friend.bo;
 
-import java.util.ArrayList;
+import java.util.ArrayList;	
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.h5tchibook.alert.bo.AlertBO;
 import com.h5tchibook.alert.bo.FriendRequestAlertBO;
 import com.h5tchibook.alert.model.Alert;
 import com.h5tchibook.alert.model.AlertType;
@@ -24,8 +23,6 @@ public class FriendBO {
 	private UserBO userBO;
 	@Autowired
 	private FriendRequestAlertBO friendRequestAlertBO;
-	@Autowired
-	private AlertBO alertBO;
 	
 	public void createFriend(int userId, int friendId) {
 		
@@ -47,13 +44,6 @@ public class FriendBO {
 							 .build();
 			friendRequestAlertBO.createFriendRequestAlert(alert);
 		}
-		
-		//2.내가 상대방에게 친구요청을 받았고 내가 친구요청을 수락했음.
-		// Alert sendUser --- friendId  receiveUser --- userId
-		// 두 사람간 다른 타입의 알람은 무수히 주고받지만 친구알람은 한번 줌
-		if(requestFriend != null && checkFriend != null) {
-			
-		}
 	}
 	
 	public void deleteFriend(int userId, int friendId) {
@@ -64,7 +54,18 @@ public class FriendBO {
 	}
 	
 	public void deleteFriendRequest(int userId, int friendId) {
-		friendDAO.deleteFriendByUserIdAndFriendId(userId, friendId);
+		
+		Friend requestFriend = friendDAO.selectFriendByUserIdAndFriendId(userId, friendId);
+		
+		Friend checkFriend = friendDAO.selectFriendByUserIdAndFriendId(friendId, userId);
+		
+		if(requestFriend!=null && checkFriend == null ) {
+			//friendRequest 제거 후 
+			friendDAO.deleteFriendByUserIdAndFriendId(userId, friendId);
+			//friendRequestAlert 지워주기
+			friendRequestAlertBO.deleteFriendRequestAlert(userId, friendId);
+		}
+		
 	}
 	
 	public List<FriendView> selectFriendListByUserId(int userId , Integer limit){

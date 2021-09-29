@@ -9,4 +9,5 @@ import com.h5tchibook.alert.model.FriendRequestAlert;
 public interface FriendRequestAlertDAO {
 	public void insertFriendRequestAlert(FriendRequestAlert friendRequestAlert);
 	public void deleteFriendRequestAlertByAlertId(@Param("alertId") int alertId);
+	public FriendRequestAlert selectFreindRequestAlertByAlertId(@Param("alertId") int alertId);
 }

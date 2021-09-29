@@ -12,6 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.h5tchibook.alert.bo.AlertTimeLineBO;
+import com.h5tchibook.alert.model.AlertTimeLineView;
 import com.h5tchibook.group.bo.GroupBO;
 import com.h5tchibook.group.bo.GroupJoinRequestBO;
 import com.h5tchibook.group.bo.GroupMemberBO;
@@ -30,6 +32,8 @@ public class EditGroupController {
 	private GroupJoinRequestBO groupJoinRequestBO;
 	@Autowired
 	private GroupMemberBO groupMemberBO;
+	@Autowired
+	private AlertTimeLineBO alertTimeLineBO;
 	
 	@RequestMapping("/edit_group_list_view")
 	public String editGroupListView(Model model, HttpServletRequest request) {
@@ -39,14 +43,18 @@ public class EditGroupController {
 		HttpSession session=request.getSession();
 		User user=(User)session.getAttribute("user");
 		
+		List<AlertTimeLineView> alertList=null;
+		List<Group>groupList=null;
+		
 		if(user == null) {
 			return "redirect:/user/sign_in_view";
 		}else {
-			List<Group> groupList =groupBO.getGroupListByGroupManagerId(user.getId());
-			model.addAttribute("groupList",groupList);
+			groupList =groupBO.getGroupListByGroupManagerId(user.getId());
+			alertList=alertTimeLineBO.getAlertTimelineViewByUserId(user.getId());
 		}
 		
-		
+		model.addAttribute("alertList",alertList);
+		model.addAttribute("groupList",groupList);
 		model.addAttribute("currentTime",date.getTime());
 		model.addAttribute("userView","group/edit_group_list_section");
 	
@@ -61,27 +69,38 @@ public class EditGroupController {
 		
 		Date date =new Date();
 		
+		
 		HttpSession session=request.getSession();
 		User user=(User)session.getAttribute("user");
+		
+		Group group=null;
+		List<AlertTimeLineView> alertList=null;
+		List<Group> groupList=null;
+		List<GroupJoinRequestView> requestViewList=null;
+		List<GroupMemberView> memberList=null;
 		
 		if(user == null) {
 			return "redirect:/user/sign_in_view";
 		}else {
-			Group group=groupBO.getGroupByGroupName(groupName);
+			group=groupBO.getGroupByGroupName(groupName);
+			
 			if(group==null || group.getGroupManagerId() != user.getId()) {
 				return "redirect:/timeline/group_timeline_view";
 			}
-			List<Group> groupList=groupBO.getGroupListByMemberId(user.getId());
-			List<GroupJoinRequestView> requestViewList=groupJoinRequestBO.getGroupJoinRequestViewByGroupId(group.getId());
-			List<GroupMemberView> memberList=groupMemberBO.getGroupMemberViewListByGroupId(group.getId(),"member");
-			model.addAttribute("group",group);
-			model.addAttribute("groupList",groupList);
-			model.addAttribute("joinRequestList",requestViewList);
-			model.addAttribute("groupMemberList",memberList);
+			
+			alertList=alertTimeLineBO.getAlertTimelineViewByUserId(user.getId());
+			groupList=groupBO.getGroupListByMemberId(user.getId());
+			requestViewList=groupJoinRequestBO.getGroupJoinRequestViewByGroupId(group.getId());
+			memberList=groupMemberBO.getGroupMemberViewListByGroupId(group.getId(),"member");
 			
 		}
 		
 		
+		model.addAttribute("alertList",alertList);
+		model.addAttribute("group",group);
+		model.addAttribute("groupList",groupList);
+		model.addAttribute("joinRequestList",requestViewList);
+		model.addAttribute("groupMemberList",memberList);
 		model.addAttribute("currentTime",date.getTime());
 		model.addAttribute("userView","group/edit_group_section");
 		

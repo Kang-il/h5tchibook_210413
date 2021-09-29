@@ -3,7 +3,8 @@
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  
  <mapper namespace="com.h5tchibook.alert.dao.AlertDAO">
- 	<insert id="insertAlert" parameterType="com.h5tchibook.alert.model.Alert">
+ 
+ 	<insert id="insertAlert" parameterType="com.h5tchibook.alert.model.Alert" useGeneratedKeys="true" keyProperty="id">
  		INSERT INTO
  			`alert`
  		(
@@ -21,6 +22,16 @@
  			`id`=#{id}
  	</delete>
  	
+ 	<delete id="deleteAlertByIdlist" parameterType="java.util.List">
+ 		DELETE FROM
+ 			`alert`
+ 		WHERE
+ 			id IN
+ 			<foreach collection="idList" item="id" open="(" close=")" separator=",">
+ 				${id}
+ 			</foreach>
+ 	</delete>
+ 	
  	<select id="selectAlertBySendUserIdAndReceiveUserIdAndFriendAlertType" parameterType="map">
  		SELECT
  			`id`
@@ -36,5 +47,18 @@
  			`receiveUserId`=#{receiveUserId}
  		AND 
  			`alertType`=#{alertType}
+ 	</select>
+ 	
+ 	<select id="selectAlertListByReceiveUserId" parameterType="int" resultType="com.h5tchibook.alert.model.Alert">
+ 		SELECT
+ 			`id`
+ 			,`sendUserId`
+ 			,`receiveUserId`
+ 			,`alertType`
+ 			,`createdAt`
+ 		FROM
+ 			`alert`
+ 		WHERE
+ 			`receiveUserId`=#{receiveUserId}
  	</select>
  </mapper>

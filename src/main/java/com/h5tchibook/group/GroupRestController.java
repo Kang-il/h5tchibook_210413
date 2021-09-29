@@ -59,11 +59,14 @@ public class GroupRestController {
 		if(user!=null) {
 			loginCheck=true;
 			Group group=groupBO.getGroupById(groupId);
+			
+			
 			if(group.getGroupManagerId()==user.getId()) {
+				groupPostBO.deleteGroupPostByGroupId(groupId);
+				groupMemberBO.deleteGroupMemberByGroupId(groupId);
 				groupBO.deleteGroupById(groupId);
 			}
-			groupPostBO.deleteGroupPostByGroupId(groupId);
-			groupMemberBO.deleteGroupMemberByGroupId(groupId);
+			
 			resultCheck =true;
 		}
 		

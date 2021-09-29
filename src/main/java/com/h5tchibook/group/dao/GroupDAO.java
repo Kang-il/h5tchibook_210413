@@ -15,6 +15,7 @@ public interface GroupDAO {
 	public void updateGroupCoverImage(@Param("id") int id
 									, @Param("coverImagePath") String coverImagePath);
 	public void deleteGroupById(@Param("id")int id);
+	public void deleteGroupByGroupManagerId(@Param("groupManagerId") int groupManagerId);
 	public Group selectGroupByGroupName(@Param("groupName")String groupName);
 	public Group selectGroupById(@Param("id") int id); 
 	public List<Group> selectGroupListByIdList(@Param("idList")List<Integer> idList);

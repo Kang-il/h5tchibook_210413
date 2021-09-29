@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.h5tchibook.alert.bo.AlertTimeLineBO;
+import com.h5tchibook.alert.model.AlertTimeLineView;
 import com.h5tchibook.check.bo.CheckBO;
 import com.h5tchibook.friend.bo.FriendBO;
 import com.h5tchibook.friend.model.FriendView;
@@ -57,7 +59,8 @@ public class FeedController {
 	private GroupPostBO groupPostBO;
 	@Autowired
 	private GroupJoinRequestBO groupJoinRequestBO;
-	
+	@Autowired
+	private AlertTimeLineBO alertTimeLineBO;
 	
 	private Logger logger=LoggerFactory.getLogger(this.getClass());
 	
@@ -79,13 +82,14 @@ public class FeedController {
 		
 		//내 정보와 피드 주인의 정보를 통한 여러 체크리스트를 작성하는 메서드.
 		Map<String,Boolean> checkMap=checkBO.feedCheckElements(user, feedOwner);
-		
+		List<AlertTimeLineView> alertList=null;
 
 		
 		
 		if(checkMap.get("loginCheck")) {
 			//1. 로그인 되어있는경우
-	
+			alertList=alertTimeLineBO.getAlertTimelineViewByUserId(user.getId());
+			
 			if(checkMap.get("existUser")) {
 				
 				DisclosureStatus disclosureStatus=null;
@@ -112,6 +116,7 @@ public class FeedController {
 					List<Post> photoList=userPostBO.getPostListOnlyPhotoByUserId(feedOwner.getId(),9,disclosureStatus);
 					//피드주인의 친구 목록 가져오기
 					List<FriendView> friendList=friendBO.selectFriendListByUserId(feedOwner.getId(), 9);
+					
 					
 					//친구리스트
 					model.addAttribute("friendList",friendList);
@@ -153,6 +158,8 @@ public class FeedController {
 		for(String key : checkMap.keySet()) {
 			model.addAttribute(key, checkMap.get(key));
 		}
+		
+		model.addAttribute("alertList",alertList);
 		model.addAttribute("currentTime",date.getTime());
 		
 		
@@ -188,7 +195,8 @@ public class FeedController {
 			List<GroupPost> groupPhotoList=null;
 			List<GroupPostView> groupPostList=null;
 			List<Group> groupList=null;
-			
+					
+			List<AlertTimeLineView> alertList=alertTimeLineBO.getAlertTimelineViewByUserId(user.getId());
 			groupMemberList=groupMemberBO.getGroupMemberViewListByGroupId(group.getId(),category);
 			groupPhotoList=groupPostBO.getGroupPostListOnlyPhtoTypeByGroupId(group.getId(),category);
 			int groupMemberCount=groupMemberBO.getGroupMemberCountByGroupId(group.getId());
@@ -203,6 +211,7 @@ public class FeedController {
 			GroupJoinRequest groupJoinRequest= groupJoinRequestBO.getGroupJoinRequestByUserIdAndGroupId(user.getId(), group.getId());
 			GroupMember groupMember=groupMemberBO.getGroupMemberByGroupIdAndMemberId(group.getId(), user.getId());
 			
+			model.addAttribute("alertList",alertList);
 			model.addAttribute("groupList",groupList);
 			model.addAttribute("groupJoinRequest",groupJoinRequest);
 			model.addAttribute("groupMemberList",groupMemberList);

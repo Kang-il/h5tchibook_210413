@@ -11,9 +11,13 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.h5tchibook.alert.bo.GroupLikeAlertBO;
+import com.h5tchibook.alert.model.Alert;
+import com.h5tchibook.alert.model.AlertType;
 import com.h5tchibook.like.dao.GroupLikeDAO;
 import com.h5tchibook.like.model.GroupLike;
 import com.h5tchibook.like.model.GroupLikeView;
+import com.h5tchibook.post.model.GroupPost;
 import com.h5tchibook.user.bo.UserBO;
 import com.h5tchibook.user.model.User;
 
@@ -23,8 +27,10 @@ public class GroupLikeBO {
 	private GroupLikeDAO groupLikeDAO;
 	@Autowired
 	private UserBO userBO;
+	@Autowired
+	private GroupLikeAlertBO groupLikeAlertBO;
 	
-	public Map<String,Boolean> setGroupLike(User user , int groupId, int postId){
+	public Map<String,Boolean> setGroupLike(User user , int groupId, GroupPost post){
 		Map<String,Boolean> result=new HashMap<String,Boolean>();
 		
 		boolean loginCheck=false;
@@ -33,21 +39,29 @@ public class GroupLikeBO {
 		if(user!=null) {
 			loginCheck=true;
 			
-			GroupLike groupLike=groupLikeDAO.selectGroupLikeByPostIdAndMemberId(postId, user.getId());
+			GroupLike groupLike=groupLikeDAO.selectGroupLikeByPostIdAndMemberId(post.getId(), user.getId());
 			if(groupLike!=null) {
-				row=groupLikeDAO.deleteGroupLikeByPostIdAndMemberId(postId, user.getId());
+				row=groupLikeDAO.deleteGroupLikeByPostIdAndMemberId(post.getId(), user.getId());
+				groupLikeAlertBO.deleteGroupLikeAlertByLikeId(groupLike.getId());
 			}else {
 				groupLike=GroupLike
 						.builder()
 						.groupId(groupId)
 						.memberId(user.getId())
-						.postId(postId)
+						.postId(post.getId())
 						.build();
 				row=groupLikeDAO.insertGroupLike(groupLike);
 			}
 			
 			if(row!=0) {
 				resultCheck=true;
+				Alert alert=Alert.builder()
+								 .sendUserId(user.getId())
+								 .receiveUserId(post.getGroupMemberId())
+								 .alertType(AlertType.GROUP_LIKE)
+								 .build();
+				groupLikeAlertBO.createGroupLikeAlert(alert, post.getId(), groupLike.getId(), groupId);
+				
 			}
 		}
 		
@@ -57,7 +71,17 @@ public class GroupLikeBO {
 		return result;
 	}
 	public void deleteGroupLikeByPostIdList(List<Integer> postIdList) {
-		groupLikeDAO.deleteGroupLikeByPostIdList(postIdList);
+		List<GroupLike> groupLikeList=groupLikeDAO.selectGroupLikeListByPostIdList(postIdList);
+		if(groupLikeList!=null) {
+			List<Integer> idList=new ArrayList<Integer>();
+			
+			groupLikeDAO.deleteGroupLikeByPostIdList(postIdList);
+			for(GroupLike like : groupLikeList) {
+				idList.add(like.getId());
+			}
+			
+			groupLikeAlertBO.deleteGroupLikeAlertByLikeIdList(idList);
+		}
 	}
 	
 	public void deleteGroupLikeByPostId(int postId) {

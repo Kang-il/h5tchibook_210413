@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.h5tchibook.like.bo.GroupLikeBO;
+import com.h5tchibook.post.bo.GroupPostBO;
+import com.h5tchibook.post.model.GroupPost;
 import com.h5tchibook.user.model.User;
 
 @RestController
@@ -20,6 +22,8 @@ public class GroupLikeRestController {
 	
 	@Autowired
 	private GroupLikeBO groupLikeBO;
+	@Autowired
+	private GroupPostBO groupPostBO;
 	
 	@RequestMapping("/set_like/{postId}")
 	public Map<String,Boolean> setLike(@PathVariable("postId") int postId
@@ -29,8 +33,9 @@ public class GroupLikeRestController {
 		HttpSession session=request.getSession();
 		
 		User user=(User)session.getAttribute("user");
+		GroupPost post=groupPostBO.getGroupPostById(groupId);
 		
-		Map<String,Boolean> result=groupLikeBO.setGroupLike(user, groupId, postId);
+		Map<String,Boolean> result=groupLikeBO.setGroupLike(user, groupId, post);
 		
 		return result;
 	}

@@ -3,7 +3,7 @@
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  
  <mapper namespace="com.h5tchibook.like.dao.GroupLikeDAO">
- 	<insert id="insertGroupLike" parameterType="com.h5tchibook.like.model.GroupLike">
+ 	<insert id="insertGroupLike" parameterType="com.h5tchibook.like.model.GroupLike" useGeneratedKeys="true" keyProperty="id">
  		INSERT INTO
  			`groupLike`
  		(

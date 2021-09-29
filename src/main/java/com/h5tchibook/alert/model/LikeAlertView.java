@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class LikeAlertView {
+public class LikeAlertView implements AlertTimeLineView{
 	//alert 내용
 	private int alertId;
 	private int sendUserId;

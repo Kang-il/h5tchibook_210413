@@ -10,6 +10,7 @@ import lombok.Data;
 @Builder
 public class GroupLikeAlert implements AlertTimeLine{
 	private int id;
+	private int alertId;
 	private int groupId;
 	private int postId;
 	private int likeId;

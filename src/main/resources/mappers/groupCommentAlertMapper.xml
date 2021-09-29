@@ -2,4 +2,87 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  
- <mapper namespace="com.h5tchibook.alert.dao.GroupCommentAlertDAO"></mapper>
+ <mapper namespace="com.h5tchibook.alert.dao.GroupCommentAlertDAO">
+ 	<insert id="insertGroupCommentAlert" parameterType="com.h5tchibook.alert.model.GroupCommentAlert">
+ 		INSERT INTO
+ 			`groupCommentAlert`
+ 		(
+ 			`alertId`
+ 			,`groupId`
+ 			,`postId`
+ 			,`commentId`
+ 			,`createdAt`
+ 		)
+ 		VALUES
+ 		(
+ 			,#{alertId}
+ 			,#{groupId}
+ 			,#{postId}
+ 			,#{commentId}
+ 			,NOW()
+ 		)
+ 	</insert>
+ 	
+ 	<delete id="deleteGroupCommentAlertByCommentId" parameterType="int">
+ 		DELETE FROM
+ 			`groupCommentAlert
+ 		WHERE
+ 			`commentId`=#{commentId}
+ 	</delete>
+ 	
+ 	<delete id="deleteGroupCommentAlertByPostIdList" parameterType="java.util.List">
+ 		DELETE FROM
+ 			`groupCommentAlert
+ 		WHERE
+ 			`postId` IN
+ 			<foreach collection="postIdList" item="postId" open="(" close=")" separator=",">
+ 				${postId}
+ 			</foreach>
+ 	</delete>
+ 	
+ 	<select id="selectGroupCommentAlertByCommentId" parameterType="int" resultType="com.h5tchibook.alert.model.GroupCommentAlert">
+ 		SELECT
+ 			`id`
+ 			,`alertId`
+ 			,`groupId`
+ 			,`postId`
+ 			,`commentId`
+ 			,`createdAt`
+ 		FROM
+ 			`groupCommentAlert`
+ 		WHERE
+ 			`commentId`=#{commentId}
+ 	</select>
+ 	
+ 	<select id="selectGroupCommentAlertByAlertId" parameterType="int" resultType="com.h5tchibook.alert.model.GroupCommentAlert">
+ 		SELECT
+ 			`id`
+ 			,`alertId`
+ 			,`groupId`
+ 			,`postId`
+ 			,`commentId`
+ 			,`createdAt`
+ 		FROM
+ 			`groupCommentAlert`
+ 		WHERE
+ 			`alertId`=#{alertId}
+ 	</select>
+ 	
+ 	<select id="selectGroupCommentAlertListByPostIdList" parameterType="java.util.List" resultType="com.h5tchibook.alert.model.GroupCommentAlert">
+ 		SELECT
+ 			`id`
+ 			,`alertId`
+ 			,`groupId`
+ 			,`postId`
+ 			,`commentId`
+ 			,`createdAt`
+ 		FROM
+ 			`groupCommentAlert`
+ 		WHERE
+ 			`postId` IN
+ 			<foreach collection="postIdList" item="postId" open="(" close=")" separator=",">
+ 				${postId}
+ 			</foreach>
+ 	</select>
+
+ </mapper>

@@ -2,4 +2,58 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
  
- <mapper namespace="com.h5tchibook.alert.dao.GroupJoinRequestAlertDAO"></mapper>
+ <mapper namespace="com.h5tchibook.alert.dao.GroupJoinRequestAlertDAO">
+ 	<insert id="insertGroupJoinRequestAlert" parameterType="int">
+	 	INSERT INTO
+	 		`groupJoinRequestAlert`
+	 	(
+	 		`alertId`
+	 		,`groupId`
+	 		,`createdAt`
+	 	)
+	 	VALUES
+	 	(
+			#{alertId} 		
+	 		,#{groupId}
+	 		,NOW()
+	 	)
+ 	</insert>
+ 	
+ 	<delete id="deleteGroupJoinRequestAlertByAlertId" parameterType="int">
+ 		DELETE FROM
+ 			`groupJoinRequestAlert`
+ 		WHERE
+ 			`alertId`=#{alertId}
+ 	</delete>
+ 	
+ 	<delete id="deleteGroupJoinRequestAlertByGroupId" parameterType="int">
+ 		DELETE FROM 
+ 			`groupJoinRequestAlert`
+ 		WHERE
+ 			`groupId`=#{groupId}	
+ 	</delete>
+ 	
+ 	<select id="selectGroupJoinRequestAlertListByGroupId" parameterType="int" resultType="com.h5tchibook.alert.model.GroupJoinRequestAlert">
+ 		SELECT
+ 			`id`
+ 			,`alertId`
+ 			,`groupId`
+ 			,`createdAt`
+ 		FROM 
+ 			`groupJoinRequestAlert`
+ 		WHERE
+ 			`groupId`
+ 	</select>
+ 	
+ 	<select id="selectGroupJoinRequestAlertByAlertId" parameterType="int" resultType="com.h5tchibook.alert.model.GroupJoinRequestAlert">
+ 		SELECT
+ 			`id`
+ 			,`alertId`
+ 			,`groupId`
+ 			,`createdAt`
+ 		FROM 
+ 			`groupJoinRequestAlert`
+ 		WHERE
+ 			`alertId`=#{alertId}
+ 	</select>
+ </mapper>

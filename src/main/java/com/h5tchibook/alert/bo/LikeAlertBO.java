@@ -36,4 +36,8 @@ public class LikeAlertBO {
 			alertBO.deleteAlertById(alert.getAlertId());			
 		}
 	}
+	
+	public LikeAlert getLikeAlertByAlertId(int alertId) {
+		return likeAlertDAO.selectLikeAlertByAlertId(alertId);
+	}
 }

@@ -25,4 +25,12 @@
  			`alertId`=#{alertId}
  	</delete>
  	
+ 	<select id="selectFreindRequestAlertByAlertId" parameterType="int" resultType="com.h5tchibook.alert.model.FriendRequestAlert">
+ 		SELECT
+ 			`id`
+ 			,`alertId`
+ 			,`createdAt`
+ 		WHERE
+ 			`alertId`=${alertId}
+ 	</select>
  </mapper>

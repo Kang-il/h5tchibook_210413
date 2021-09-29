@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.h5tchibook.alert.bo.GroupCommentAlertBO;
 import com.h5tchibook.comment.bo.GroupCommentBO;
 import com.h5tchibook.comment.model.GroupCommentView;
 import com.h5tchibook.common.FileManagerService;
@@ -49,6 +50,7 @@ public class GroupPostBO {
 	private GroupTimeLineBO groupTimeLineBO;
 	@Autowired
 	private GroupMemberBO groupMemberBO;
+
 	private Logger logger=LoggerFactory.getLogger(this.getClass());
 	
 	public boolean createGroupPost(String userLoginId,GroupPost groupPost ,MultipartFile file) {
@@ -110,6 +112,7 @@ public class GroupPostBO {
 			}
 			
 			if(postIdList.size()!=0) {
+				
 				groupCommentBO.deleteCommentByPostIdList(postIdList);
 				groupLikeBO.deleteGroupLikeByPostIdList(postIdList);
 			}

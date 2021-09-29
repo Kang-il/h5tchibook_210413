@@ -46,8 +46,9 @@ public class GroupCommentRestController {
 											  .postId(postId)
 											  .comment(comment)
 											  .build();
-		 
-		Map<String,Boolean> result=groupCommentBO.createComment(user,groupComment);
+		
+		GroupPost post=groupPostBO.getGroupPostById(postId); 
+		Map<String,Boolean> result=groupCommentBO.createComment(user,groupComment,post);
 		
 		return result;
 	}

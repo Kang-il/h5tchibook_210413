@@ -12,6 +12,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.h5tchibook.alert.bo.GroupCommentAlertBO;
+import com.h5tchibook.alert.model.Alert;
+import com.h5tchibook.alert.model.AlertType;
 import com.h5tchibook.check.bo.CheckBO;
 import com.h5tchibook.comment.dao.GroupCommentDAO;
 import com.h5tchibook.comment.model.GroupComment;
@@ -29,10 +32,13 @@ public class GroupCommentBO {
 	private GroupCommentDAO groupCommentDAO;
 	@Autowired
 	private CheckBO checkBO;
+	@Autowired
+	private GroupCommentAlertBO groupCommentAlertBO;
+	
 	Logger logger=LoggerFactory.getLogger(this.getClass());
 	
-	public Map<String,Boolean> createComment(User user, GroupComment groupComment ){
-		Map<String,Boolean> result= checkBO.createCommentCheckElements(user,groupComment);
+	public Map<String,Boolean> createComment(User user, GroupComment groupComment ,GroupPost post){
+		Map<String,Boolean> result= checkBO.createCommentCheckElements(user,groupComment,post);
 		boolean resultCheck=false;
 		//for 문을 무사 통과했다면 유효성 체크를 통과 한것.
 		//loginCheck
@@ -50,6 +56,14 @@ public class GroupCommentBO {
 		
 		if(row!=0) {
 			resultCheck=true;
+			if(user.getId()!=post.getGroupMemberId()) {
+				Alert alert=Alert.builder()
+								 .sendUserId(user.getId())
+								 .receiveUserId(post.getGroupMemberId())
+								 .alertType(AlertType.GROUP_COMMENT)
+								 .build();
+				groupCommentAlertBO.createGroupCommentAlert(alert, groupComment.getGroupId(), groupComment.getId(), post.getId());
+			}
 		}
 		
 		result.put("result", resultCheck);
@@ -203,6 +217,10 @@ public class GroupCommentBO {
 			int row=groupCommentDAO.deleteGroupCommentById(groupComment.getId());
 			if(row!=0) {
 				resultCheck=true;
+				//내 아이디와 포스트 아이디가 다를 경우에만 groupCommentAlert가 생성됨.
+				if(user.getId() != groupPost.getGroupMemberId()) {
+					groupCommentAlertBO.deleteGroupCommentAlertByGroupCommentId(groupComment.getId());
+				}
 			}
 		}
 		result.put("result", resultCheck);
@@ -215,7 +233,12 @@ public class GroupCommentBO {
 	}
 	
 	public void deleteCommentByPostIdList(List<Integer>postIdList) {
-		groupCommentDAO.deleteGroupCommentByPostIdList(postIdList);
+		List<GroupComment> groupCommentList = groupCommentDAO.selectGroupCommentListByPostIdList(postIdList);
+		
+		if(groupCommentList!=null) {
+			groupCommentDAO.deleteGroupCommentByPostIdList(postIdList);
+			groupCommentAlertBO.deleteGroupCommentAlertByPostIdList(postIdList);
+		}
 	}
 	
 	private GroupCommentView setGroupCommentView(User user, GroupComment groupComment) {

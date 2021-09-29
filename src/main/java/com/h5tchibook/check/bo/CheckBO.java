@@ -264,18 +264,21 @@ public class CheckBO {
 		return result;
 	}
 	
-	public Map<String,Boolean> createCommentCheckElements(User user,GroupComment comment){
+	public Map<String,Boolean> createCommentCheckElements(User user,GroupComment comment,GroupPost post){
 		Map<String,Boolean> result=new HashMap<String,Boolean>();
 		
 		boolean loginCheck=loginCheck(user);
 		boolean commentBlankCheck=commentBlankCheck(comment);
+		boolean existPostCheck=post==null? false : true;
 		boolean postIdCheck=comment.getPostId()==0? false : true;
 		boolean groupIdCheck=comment.getGroupId()==0? false : true;
+		
 		
 		result.put("loginCheck",loginCheck);
 		result.put("commentBlankCheck", commentBlankCheck);
 		result.put("postIdCheck", postIdCheck);
 		result.put("groupIdCheck", groupIdCheck);
+		result.put("existPostCheck",existPostCheck);
 		
 		return result;
 	}

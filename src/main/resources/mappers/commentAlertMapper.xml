@@ -42,4 +42,17 @@
  			`commentId`=#{commentId}
  	</select>
  	
+ 	<select id="selectCommentAlertByAlertId" parameterType="int" resultType="com.h5tchibook.alert.model.CommentAlert">
+ 		SELECT 
+ 			`id`
+ 			,`alertId`
+ 			,`commentId`
+ 			,`postId`
+ 			,`createdAt`
+ 		FROM
+ 			`commentAlert`
+ 		WHERE
+ 			`alertId`=#{alertId}
+ 	</select>
+ 	
  </mapper>

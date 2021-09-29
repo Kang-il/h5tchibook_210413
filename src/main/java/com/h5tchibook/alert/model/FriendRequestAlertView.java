@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class FriendRequestAlertView {
+public class FriendRequestAlertView implements AlertTimeLineView{
 	// alert 내용
 	private int alertId;
 	private int sendUserId;
@@ -21,5 +21,4 @@ public class FriendRequestAlertView {
 	// 추가사항
 	private String sendUserLoginId;
 	private String sendUserProfileImagePath;
-	private String postImagePath;
 }

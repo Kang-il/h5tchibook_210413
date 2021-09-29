@@ -1,5 +1,7 @@
 package com.h5tchibook.alert.bo;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +22,15 @@ public class AlertBO {
 		alertDAO.deletealertById(id);
 	}
 	
-//	public Alert getAlertBySendUserIdAndReceiveUserIdAndFriendAlertType(int sendUserId,int receiveUserId) {
-//		AlertType alertType=AlertType.FRIEND_REQUEST;
-//	}
+	public void deleteAlertByIdList(List<Integer> idList) {
+		alertDAO.deleteAlertByIdList(idList);
+	}
+	
+	public Alert getAlertBySendUserIdAndReceiveUserIdAndAlertType(int sendUserId,int receiveUserId,AlertType alertType) {
+		return alertDAO.selectAlertBySendUserIdAndReceiveUserIdAndFriendAlertType(sendUserId, receiveUserId, alertType);
+	}
+	
+	public List<Alert> getAlertListBySendUserId(int sendUserId){
+		return alertDAO.selectAlertListByReceiveUserId(sendUserId);
+	}
 }

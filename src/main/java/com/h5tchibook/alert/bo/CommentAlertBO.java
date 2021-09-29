@@ -35,4 +35,9 @@ public class CommentAlertBO {
 			alertBO.deleteAlertById(alert.getAlertId());
 		}
 	}
+	
+	public CommentAlert getCommentAlertByAlertId(int alertId) {
+		return commentAlertDAO.selectCommentAlertByAlertId(alertId);
+	}
+	
 }

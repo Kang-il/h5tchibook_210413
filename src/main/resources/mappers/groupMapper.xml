@@ -46,6 +46,13 @@
  			`id`=#{id}
  	</delete>
  	
+ 	<delete id="deleteGroupByGroupManagerId" parameterType="int">
+ 		DELETE FROM
+ 			`group`
+ 		WHRE
+ 			`groupManagerId`=#{groupManagerId}
+ 	</delete>
+ 	
  	<select id="selectGroupByGroupName" parameterType="String" resultType="com.h5tchibook.group.model.Group">
  		SELECT 
  			`id`

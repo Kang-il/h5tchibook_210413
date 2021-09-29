@@ -9,6 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.h5tchibook.alert.bo.GroupJoinRequestAlertBO;
+import com.h5tchibook.alert.model.Alert;
+import com.h5tchibook.alert.model.AlertType;
 import com.h5tchibook.check.bo.CheckBO;
 import com.h5tchibook.group.dao.GroupJoinRequestDAO;
 import com.h5tchibook.group.model.Group;
@@ -28,6 +31,8 @@ public class GroupJoinRequestBO {
 	private GroupMemberBO groupMemberBO;
 	@Autowired
 	private UserBO userBO;
+	@Autowired
+	private GroupJoinRequestAlertBO groupJoinRequestAlertBO;
 	
 	Logger logger=LoggerFactory.getLogger(this.getClass());
 	
@@ -54,6 +59,14 @@ public class GroupJoinRequestBO {
 			int row =groupJoinRequestDAO.insertGroupJoinRequest(groupJoinRequest);
 			if(row!=0) {
 				resultCheck=true;
+				Alert alert =Alert
+							.builder()
+							.sendUserId(user.getId())
+							.receiveUserId(group.getGroupManagerId())
+							.alertType(AlertType.GROUP_JOIN_REQUEST)
+							.build();
+				
+				groupJoinRequestAlertBO.createGroupJoinRequestAlert(alert, group.getId());
 			}
 		}
 		result.put("result",resultCheck);
@@ -99,6 +112,7 @@ public class GroupJoinRequestBO {
 				int row=groupJoinRequestDAO.deleteGroupJoinRequestByGroupIdAndUserId(group.getId(), userId);
 				if(row!=0) {
 					resultCheck=true;
+					groupJoinRequestAlertBO.deleteGroupJoinRequestAlertBySendUserIdAndReceiveUserIdAndAlertType(userId,group.getGroupManagerId());
 				}
 			}
 		}
@@ -130,6 +144,7 @@ public class GroupJoinRequestBO {
 			 int row=groupJoinRequestDAO.deleteGroupJoinRequestByGroupIdAndUserId(group.getId(), user.getId());
 			 if(row!=0) {
 				 resultCheck=true;
+				 groupJoinRequestAlertBO.deleteGroupJoinRequestAlertBySendUserIdAndReceiveUserIdAndAlertType(user.getId(), group.getGroupManagerId());
 			 }
 		 }
 		 

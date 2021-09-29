@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.h5tchibook.alert.bo.GroupCommentAlertBO;
+import com.h5tchibook.alert.bo.GroupJoinRequestAlertBO;
+import com.h5tchibook.alert.bo.GroupLikeAlertBO;
 import com.h5tchibook.check.bo.CheckBO;
 import com.h5tchibook.common.FileManagerService;
 import com.h5tchibook.group.dao.GroupDAO;
@@ -27,6 +30,12 @@ public class GroupBO {
 	private GroupMemberBO groupMemberBO;
 	@Autowired
 	private FileManagerService fileManagerService;
+	@Autowired
+	private GroupJoinRequestAlertBO groupJoinRequestAlertBO;
+	@Autowired
+	private GroupCommentAlertBO groupCommentAlertBO;
+	@Autowired
+	private GroupLikeAlertBO groupLikeAlertBO;
 	
 	
 	public Map<String,Boolean> createGroup(User user,Group group) {
@@ -84,29 +93,48 @@ public class GroupBO {
 	
 	public void deleteGroupById(int id) {
 		Group group=groupDAO.selectGroupById(id);
-		List<String> groupImagePathList=new ArrayList<String>();
 		
-		if(group.getGroupCoverImagePath()!=null) {
-			groupImagePathList.add(group.getGroupCoverImagePath());
-		}
+		deleteGroupImage(group);
 		
-		if(group.getGroupProfileImagePath()!=null) {
-			groupImagePathList.add(group.getGroupProfileImagePath());
-		}
+		groupDAO.deleteGroupById(id);
+		groupJoinRequestAlertBO.deleteroupJoinRequestAlertByGroupId(id);
 		
-		if(groupImagePathList.size()!=0) {
+	}
+	
+	private void deleteGroupImage(Group group) {
+		if(group!=null) {
+			List<String> groupImagePathList=new ArrayList<String>();
 			
-			for(String imagePath : groupImagePathList) {
-				try {
-					fileManagerService.deleteFile(imagePath);
-				} catch (IOException e) {
-					e.printStackTrace();
+			if(group.getGroupCoverImagePath()!=null) {
+				groupImagePathList.add(group.getGroupCoverImagePath());
+			}
+			
+			if(group.getGroupProfileImagePath()!=null) {
+				groupImagePathList.add(group.getGroupProfileImagePath());
+			}
+			
+			if(groupImagePathList.size()!=0) {
+				
+				for(String imagePath : groupImagePathList) {
+					try {
+						fileManagerService.deleteFile(imagePath);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
-		
-		groupDAO.deleteGroupById(id);
-		
+	}
+	
+	public void deleteGroupByGroupManagerId(int groupManagerId) {
+		List<Group> groupList=groupDAO.selectGroupListByGroupmanagerId(groupManagerId);
+		if(groupList!=null) {
+			for(Group group : groupList) {
+				deleteGroupImage(group);
+				groupJoinRequestAlertBO.deleteroupJoinRequestAlertByGroupId(group.getId());
+			}
+			groupDAO.deleteGroupByGroupManagerId(groupManagerId);			
+		}
 	}
 	
 	public Group getGroupByGroupName(String groupName) {

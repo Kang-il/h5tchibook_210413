@@ -6,8 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-@Builder
-public class GroupCommentAlertView {
+@Builder 
+public class GroupCommentAlertView implements AlertTimeLineView{
 		//alert 내용
 		private int alertId;
 		private int sendUserId;
@@ -26,4 +26,5 @@ public class GroupCommentAlertView {
 		private String sendUserProfileImagePath;
 		private String postImagePath;
 		private String comment;
+		private String groupName;
 }
