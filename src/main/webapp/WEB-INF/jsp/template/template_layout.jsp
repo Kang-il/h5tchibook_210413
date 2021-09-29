@@ -17,6 +17,7 @@
 
 
 <body>
+	<jsp:include page="../include/secession_group_modal.jsp"/>
 	<jsp:include page="../include/delete_group_modal.jsp"/>
 	<jsp:include page="../include/delete_group_post_modal.jsp"/>
 	<jsp:include page="../include/delete_user_post_modal.jsp"/>

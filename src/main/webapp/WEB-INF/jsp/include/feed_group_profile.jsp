@@ -59,8 +59,8 @@
 			</c:when>
 			
 			<c:when test="${groupMemberCheck ne null}">
-				<button type="button" class="edit-group-join-btn" data-group-id="${group.id}"><span class="material-icons">groups</span> &nbsp; 그룹 회원</button>
-			</c:when>
+				<button type="button" class="edit-group-join-btn" data-group-id="${group.id}" data-group-member-id="${user.id}"><span class="material-icons">groups</span> &nbsp; 그룹 회원</button>
+			</c:when> 
 		</c:choose> 
 		
 		

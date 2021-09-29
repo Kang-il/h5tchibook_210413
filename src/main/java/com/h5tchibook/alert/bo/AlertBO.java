@@ -19,7 +19,7 @@ public class AlertBO {
 	}
 	
 	public void deleteAlertById(int id) {
-		alertDAO.deletealertById(id);
+		alertDAO.deleteAlertById(id);
 	}
 	
 	public void deleteAlertByIdList(List<Integer> idList) {
@@ -27,7 +27,7 @@ public class AlertBO {
 	}
 	
 	public Alert getAlertBySendUserIdAndReceiveUserIdAndAlertType(int sendUserId,int receiveUserId,AlertType alertType) {
-		return alertDAO.selectAlertBySendUserIdAndReceiveUserIdAndFriendAlertType(sendUserId, receiveUserId, alertType);
+		return alertDAO.selectAlertBySendUserIdAndReceiveUserIdAndAlertType(sendUserId, receiveUserId, alertType);
 	}
 	
 	public List<Alert> getAlertListBySendUserId(int sendUserId){

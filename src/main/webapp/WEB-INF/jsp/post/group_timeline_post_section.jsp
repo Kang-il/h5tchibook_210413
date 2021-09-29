@@ -92,7 +92,6 @@
 					</c:if>
 					<hr>
 						<div class="group-post-btn-box">
-							
 							<c:set var="likeCheck" value="false"/>
 							<c:forEach var="like" items="${post.likeList}">
 								<c:if test="${like.memberId eq user.id}">

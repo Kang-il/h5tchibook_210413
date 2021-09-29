@@ -21,7 +21,10 @@ public class GroupLikeAlertView implements AlertTimeLineView{
 	private Date createdAt;
 	
 	//추가사항 
+	private int groupId;
 	private String sendUserLoginId;
 	private String sendUserProfileImagePath;
 	private String postImagePath;
+	private String groupName;
+	private String groupProfileImagePath;
 }

@@ -44,11 +44,6 @@ public class PostController{
 		}else if(user!=null) {
 			postView=userPostBO.getPostViewById(postId);
 			alertList=alertTimeLineBO.getAlertTimelineViewByUserId(user.getId());
-			
-			//포스트 뷰가 null이거나 타입이 photo가 아닌경우 해당 글의 주인 피드로 리다이렉트 시킨다.
-			if(postView==null || !postView.getContentType().getContentType().equals("photo")) {
-				return "redirect:/feed/"+user.getLoginId();
-			}
 
 		}
 		model.addAttribute("post",postView);

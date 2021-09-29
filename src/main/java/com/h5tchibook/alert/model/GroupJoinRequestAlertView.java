@@ -21,4 +21,6 @@ public class GroupJoinRequestAlertView implements AlertTimeLineView{
 	//추가사항 
 	private String sendUserLoginId;
 	private String sendUserProfileImagePath;
+	private String groupName;
+	private String groupProfileImagePath;
 }

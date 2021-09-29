@@ -315,12 +315,19 @@ public class CheckBO {
 		boolean loginCheck=loginCheck(user);
 		boolean existGroupCheck=existGroupCheck(group);
 		boolean groupOwnerCheck=groupOwner(user.getId(),group.getGroupManagerId());
+		boolean userCheck = compareUserAndGroupMember(user, groupMember);
 		boolean existGroupMemberCheck=existGroupMember(groupMember);
+		
+		boolean authorityCheck=false;
+		
+		if(groupOwnerCheck || userCheck) {
+			authorityCheck=true;
+		}
 		
 		Map<String,Boolean> result=new HashMap<String,Boolean>();
 		result.put("loginCheck", loginCheck);
 		result.put("existGroupCheck",existGroupCheck);
-		result.put("groupOwnerCheck",groupOwnerCheck);
+		result.put("deleteAuthorityCheck",authorityCheck);
 		result.put("existGroupMemberCheck", existGroupMemberCheck);
 		return result;
 	}
@@ -362,6 +369,14 @@ public class CheckBO {
 		result.put("groupOwnerCheck", groupOwnerCheck);
 		result.put("existUser", existUserCheck);
 		return result;
+	}
+	
+	private boolean compareUserAndGroupMember(User user , GroupMember groupMember) {
+		boolean compareUserAndMemberCheck=false;
+		if(user.getId() == groupMember.getGroupMemberId()) {
+			compareUserAndMemberCheck=true;
+		}
+		return compareUserAndMemberCheck;
 	}
 	
 	private boolean existGroupMember(GroupMember groupMember) {

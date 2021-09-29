@@ -29,7 +29,27 @@
  			`commentId`=#{commentId}
  	</delete>
  	
- 	<select id="selectCommentAlertByCommentId" parameterType="int">
+ 	<delete id="deleteCommentAlertByPostId" parameterType="int">
+ 		DELETE FROM
+ 			`commentAlert`
+ 		WHERE
+ 			`postId`=#{postId}
+ 	</delete>
+ 	
+ 	<select id="selectCommentAlertByPostId" parameterType="int" resultType="com.h5tchibook.alert.model.CommentAlert">
+ 		SELECT 
+ 			`id`
+ 			,`alertId`
+ 			,`commentId`
+ 			,`postId`
+ 			,`createdAt`
+ 		FROM
+ 			`commentAlert`
+ 		WHERE
+ 			`postId`=#{postId}
+ 	</select>
+ 	
+ 	<select id="selectCommentAlertByCommentId" parameterType="int" resultType="com.h5tchibook.alert.model.CommentAlert">
  		SELECT 
  			`id`
  			,`alertId`

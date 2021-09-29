@@ -15,7 +15,7 @@
  		)
  		VALUES
  		(
- 			,#{alertId}
+ 			#{alertId}
  			,#{groupId}
  			,#{postId}
  			,#{commentId}
@@ -25,20 +25,41 @@
  	
  	<delete id="deleteGroupCommentAlertByCommentId" parameterType="int">
  		DELETE FROM
- 			`groupCommentAlert
+ 			`groupCommentAlert`
  		WHERE
  			`commentId`=#{commentId}
  	</delete>
  	
+ 	<delete id="deleteGroupComentAlertByPostId" parameterType="int">
+ 		DELETE FROM
+ 			`groupCommentAlert`
+ 		WHERE
+ 			`postId`=#{postId}
+ 	</delete>
+ 	
  	<delete id="deleteGroupCommentAlertByPostIdList" parameterType="java.util.List">
  		DELETE FROM
- 			`groupCommentAlert
+ 			`groupCommentAlert`
  		WHERE
  			`postId` IN
  			<foreach collection="postIdList" item="postId" open="(" close=")" separator=",">
  				${postId}
  			</foreach>
  	</delete>
+ 	
+ 	<select id="selectGroupCommentAlertByPostId" parameterType="int" resultType="com.h5tchibook.alert.model.GroupCommentAlert">
+ 		SELECT
+ 			`id`
+ 			,`alertId`
+ 			,`groupId`
+ 			,`postId`
+ 			,`commentId`
+ 			,`createdAt`
+ 		FROM
+ 			`groupCommentAlert`
+ 		WHERE
+ 			`postId`=#{postId}
+ 	</select>
  	
  	<select id="selectGroupCommentAlertByCommentId" parameterType="int" resultType="com.h5tchibook.alert.model.GroupCommentAlert">
  		SELECT

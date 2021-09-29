@@ -209,6 +209,9 @@ public class AlertTimeLineBO {
 												  .sendUserLoginId(user.getLoginId())
 												  .sendUserProfileImagePath(user.getProfileImagePath())
 												  .postImagePath(post.getContentPath())
+												  .groupId(group.getId())
+												  .groupName(group.getGroupName())
+												  .groupProfileImagePath(group.getGroupProfileImagePath())
 												  .build();
 		return view;
 	}
@@ -224,6 +227,8 @@ public class AlertTimeLineBO {
 																.createdAt(groupJoinRequestAlert.getCreatedAt())
 																.sendUserLoginId(user.getLoginId())
 																.sendUserProfileImagePath(user.getProfileImagePath())
+																.groupName(group.getGroupName())
+																.groupProfileImagePath(group.getGroupProfileImagePath())
 																.build();
 		return view;
 		
@@ -235,7 +240,7 @@ public class AlertTimeLineBO {
 											  .sendUserId(alert.getSendUserId())
 											  .receiveUserId(alert.getReceiveUserId())
 											  .alertType(type)
-											  .groupId(groupCommentAlert.getId())
+											  .groupId(groupCommentAlert.getGroupId())
 											  .postId(post.getId())
 											  .commentId(comment.getId())
 											  .createdAt(groupCommentAlert.getCreatedAt())
@@ -244,6 +249,7 @@ public class AlertTimeLineBO {
 											  .postImagePath(post.getContentPath())
 											  .comment(comment.getComment())
 											  .groupName(group.getGroupName())
+											  .groupProfileImagePath(group.getGroupProfileImagePath())
 											  .build();
 		return view;
 	}

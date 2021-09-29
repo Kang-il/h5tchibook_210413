@@ -1,5 +1,8 @@
 package com.h5tchibook.alert.bo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +37,21 @@ public class LikeAlertBO {
 		if(alert!=null) {
 			likeAlertDAO.deleteLikeAlertByLikeId(likeId);
 			alertBO.deleteAlertById(alert.getAlertId());			
+		}
+	}
+	
+	public void deleteLikeAlertByPostId(int postId) {
+		List<LikeAlert> alertList=likeAlertDAO.selectLikeAlertListByPostId(postId);
+		if(alertList != null) {
+			List<Integer> alertIdList=new ArrayList<Integer>();
+			for(LikeAlert alert:alertList) {
+				alertIdList.add(alert.getAlertId());
+			}
+			
+			if(alertIdList.size()!=0) {
+				alertBO.deleteAlertByIdList(alertIdList);
+				likeAlertDAO.deleteLikeAlertByPostId(postId);	
+			}
 		}
 	}
 	

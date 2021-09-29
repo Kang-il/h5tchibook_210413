@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.h5tchibook.alert.bo.GroupJoinRequestAlertBO;
 import com.h5tchibook.check.bo.CheckBO;
 import com.h5tchibook.group.dao.GroupMemberDAO;
 import com.h5tchibook.group.model.Group;
@@ -26,7 +27,8 @@ public class GroupMemberBO {
 	private GroupMemberDAO groupMemberDAO;
 	@Autowired
 	private CheckBO checkBO;
-	
+	@Autowired
+	private GroupJoinRequestAlertBO groupJoinRequestAlertBO;
 	
 
 	private Logger logger=LoggerFactory.getLogger(this.getClass());
@@ -54,6 +56,7 @@ public class GroupMemberBO {
 		if(validationCheck) {
 			int row=groupMemberDAO.deleteGroupMemberByGroupIdAndGroupMemberId(group.getId(), memberId);
 			if(row!=0) {
+				groupJoinRequestAlertBO.deleteGroupJoinRequestAlertBySendUserIdAndReceiveUserIdAndAlertType(memberId, group.getGroupManagerId());
 				resultCheck=true;
 			}
 		}

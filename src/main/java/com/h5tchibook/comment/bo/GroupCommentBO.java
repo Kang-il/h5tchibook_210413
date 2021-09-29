@@ -218,9 +218,9 @@ public class GroupCommentBO {
 			if(row!=0) {
 				resultCheck=true;
 				//내 아이디와 포스트 아이디가 다를 경우에만 groupCommentAlert가 생성됨.
-				if(user.getId() != groupPost.getGroupMemberId()) {
+				
 					groupCommentAlertBO.deleteGroupCommentAlertByGroupCommentId(groupComment.getId());
-				}
+				
 			}
 		}
 		result.put("result", resultCheck);
@@ -229,7 +229,11 @@ public class GroupCommentBO {
 	}
 	
 	public void deleteCommentByPostId(int postId) {
-		groupCommentDAO.deleteGroupCommentByPostId(postId);
+		List<GroupComment> commentList=groupCommentDAO.selectGroupCommentListByPostId(postId);
+		if(commentList!=null) {
+			groupCommentDAO.deleteGroupCommentByPostId(postId);
+			groupCommentAlertBO.deleteGroupCommentAlertByPostid(postId);			
+		}
 	}
 	
 	public void deleteCommentByPostIdList(List<Integer>postIdList) {

@@ -138,6 +138,16 @@ header{
 	height:35px;
 }
 
+.header-section .alert-post-image{
+	width:50px;
+	height:50px;
+	border-radius: 5px;
+}
+
+.header-section .alert-post{
+	margin-right:10px;
+}
+
 .header-section .nav-alert-btn:hover, .nav-menu-btn:hover{
 	background-color:#b1b1b1;
 }
@@ -164,6 +174,7 @@ header{
 .nav-alert-modal .nav-alert-item{
 	display:flex;
 	align-items:center;
+	justify-content:space-between;
 	font-size:13px;
 	margin-left:15px;
 	margin-top:15px;
@@ -182,9 +193,20 @@ header{
 	height:50px;
 }
 
+.nav-alert-modal .alert-group-profile{
+	border-radius:10px;
+	width:50px;
+	height:50px;
+}
+
 .nav-alert-item .request-accept-btn {
 	background-color:#18abfe;
 	color:white;
+}
+
+.nav-alert-item .alert-friend-btn {
+	color:#18abfe;
+	margin-right:10px;
 }
 
 .nav-alert-item .request-accept-btn , .request-delete-btn{
@@ -4139,9 +4161,81 @@ footer .footer-item{
 	font-weight:700;
 }
 
+.secession-group-modal-section{
+	width:100%; 
+	height:100%;
+	background:rgba(0,0,0,0.5);
+	position:fixed ;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	margin:0 auto;
+	left:0;
+	right:0;
+	z-index:3;
+}
 
+.secession-group-modal-section .secession-group-modal-box{
+	width:430px;
+	border-radius:10px;
+	background-color:white;
+}
 
+.secession-group-modal-box div{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
 
+.secession-group-modal-box button{
+	outline: none;
+	border: none;
+	font-size:16px;
+	padding:15px;
+	width:100%;
+	background-color:rgba(0,0,0,0);
+	cursor: pointer;
+}
+
+.secession-group-modal-box .secession-group-img-box{
+	display: block;
+}
+
+.delete-member-border{
+	width:210px;
+	height:210px;
+	border:1px solid #dbdbdb;
+	border-radius: 100%;
+}
+
+.secession-group-modal-box img{
+	border-radius: 20px;
+	width:200px;
+	height:200px;
+}
+
+.secession-group-img-box .secession-group-img-item{
+	height:250px;
+}
+
+.secession-group-img-box .secession-group-name{
+	font-weight:700;
+	
+}
+
+.secession-group-img-box .secession-group-warning-text{
+	padding:10px;
+	font-weight:700;
+}
+
+.secession-group-btn{
+	background-color: #cc453e;
+	height:45px;
+	width:100%;
+	margin-top:30px;
+	color:white;
+	font-weight:700;
+}
 
 
 

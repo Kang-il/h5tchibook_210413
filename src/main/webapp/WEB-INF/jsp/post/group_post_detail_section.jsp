@@ -6,7 +6,9 @@
 
 <section class="group-post-detail-section">
 	<div class="group-post-photo-box">
-		<img src="${post.contentPath}"/>
+		<c:if test="${post.contentPath ne null }">
+			<img src="${post.contentPath}"/>		
+		</c:if>
 	</div>
 	
 	<div class="group-post-info-box">

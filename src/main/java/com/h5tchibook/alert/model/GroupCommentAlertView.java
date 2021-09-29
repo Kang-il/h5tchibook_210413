@@ -27,4 +27,5 @@ public class GroupCommentAlertView implements AlertTimeLineView{
 		private String postImagePath;
 		private String comment;
 		private String groupName;
+		private String groupProfileImagePath;
 }

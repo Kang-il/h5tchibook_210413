@@ -33,7 +33,7 @@ public class GroupLikeRestController {
 		HttpSession session=request.getSession();
 		
 		User user=(User)session.getAttribute("user");
-		GroupPost post=groupPostBO.getGroupPostById(groupId);
+		GroupPost post=groupPostBO.getGroupPostById(postId);
 		
 		Map<String,Boolean> result=groupLikeBO.setGroupLike(user, groupId, post);
 		

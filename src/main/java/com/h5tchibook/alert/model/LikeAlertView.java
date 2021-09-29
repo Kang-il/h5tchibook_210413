@@ -24,4 +24,5 @@ public class LikeAlertView implements AlertTimeLineView{
 	private String sendUserLoginId;
 	private String sendUserProfileImagePath;
 	private String postImagePath;
+
 }

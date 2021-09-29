@@ -66,13 +66,180 @@
 		</div>
 		
 		<div class="nav-alert-modal d-none">
-			<div class="nav-alert-item">
-				<a href="#"><img src="/static/images/dummy_profile.jpg" class="alert-profile"/></a>
-				<a href="#" class="alert-user-link">h5tchi</a> 
-				<span class="alert-description">님이 친구요청을 보냈습니다.</span>
-				<button class="btn request-accept-btn">수락</button>
-				<button class="btn request-delete-btn">삭제</button>
-			</div>
+			<c:forEach var="alert" items="${alertList}">
+				<div class="nav-alert-item">
+				
+					<c:if test="${alert.alertType eq 'COMMENT'}">
+					
+						<div class="alert-info-box">
+							<a href="/feed/${alert.sendUserLoginId}">
+								<c:choose>
+									<c:when test="${alert.sendUserProfileImagePath eq null }">
+										<img src="/static/images/no_profile_image.png" class="alert-profile"/>
+									</c:when>
+									<c:otherwise>
+										<img src="${alert.sendUserProfileImagePath}" class="alert-profile"/>
+									</c:otherwise>
+								</c:choose>
+							</a>
+							<a href="/feed/${alert.sendUserLoginId}" class="alert-user-link">${alert.sendUserLoginId}</a> 
+							<span class="alert-description">님이 댓글을 남겼습니다.</span>
+						</div>
+						<div class="alert-post">
+							<a href="/post/post_detail_view?postId=${alert.postId}">
+								<c:if test="${alert.postImagePath ne null}">
+									<img src="${alert.postImagePath}" class="alert-post-image"/>
+								</c:if>
+								<c:if test="${alert.postImagePath eq null}">
+									<img src="/static/images/no_post_image.jpg" class="alert-post-image"/>
+								</c:if>
+							</a>
+						</div>
+						
+					</c:if>
+					
+					<c:if test="${alert.alertType eq 'LIKE'}">
+					
+						<div class="alert-info-box">
+							<a href="/feed/${alert.sendUserLoginId}">
+								<c:choose>
+									<c:when test="${alert.sendUserProfileImagePath eq null }">
+										<img src="/static/images/no_profile_image.png" class="alert-profile"/>
+									</c:when>
+									<c:otherwise>
+										<img src="${alert.sendUserProfileImagePath}" class="alert-profile"/>
+									</c:otherwise>
+								</c:choose>
+							</a>
+							<a href="/feed/${alert.sendUserLoginId}" class="alert-user-link">${alert.sendUserLoginId}</a> 
+							<span class="alert-description">님이 좋아요를 눌렀습니다.</span>
+						</div>
+						<div class="alert-post">
+							<a href="/post/post_detail_view?postId=${alert.postId}">
+								<c:if test="${alert.postImagePath ne null}">
+									<img src="${alert.postImagePath}" class="alert-post-image"/>
+								</c:if>
+								<c:if test="${alert.postImagePath eq null}">
+									<img src="/static/images/no_post_image.jpg" class="alert-post-image"/>
+								</c:if>
+							</a>
+						</div>
+						
+					</c:if>
+					
+					<c:if test="${alert.alertType eq 'FRIEND_REQUEST'}">
+					
+						<div class="alert-info-box">
+							<a href="/feed/${alert.sendUserLoginId}">
+								<c:choose>
+									<c:when test="${alert.sendUserProfileImagePath eq null }">
+										<img src="/static/images/no_profile_image.png" class="alert-profile"/>
+									</c:when>
+									<c:otherwise>
+										<img src="${alert.sendUserProfileImagePath}" class="alert-profile"/>
+									</c:otherwise>
+								</c:choose>
+							</a>
+							<a href="/feed/${alert.sendUserLoginId}" class="alert-user-link">${alert.sendUserLoginId}</a>  
+							<span class="alert-description">님이 친구요청을 보냈습니다.</span>
+							<c:set var="friendCheck" value="${false}"/>
+							
+							<c:forEach var="friend" items="${friendList}">
+								<c:if test="${alert.sendUserId eq friend.friendId}">
+									<c:set var="friendCheck" value="${true}"/>
+								</c:if>
+							</c:forEach>
+						</div>
+								
+					</c:if>
+					
+					<c:if test="${alert.alertType eq 'GROUP_JOIN_REQUEST'}">
+						<div class="alert-info-box">
+							<a href="/feed/${alert.sendUserLoginId}">
+								<c:choose>
+									<c:when test="${alert.sendUserProfileImagePath eq null }">
+										<img src="/static/images/no_profile_image.png" class="alert-profile"/>
+									</c:when>
+									<c:otherwise>
+										<img src="${alert.sendUserProfileImagePath}" class="alert-profile"/>
+									</c:otherwise>
+								</c:choose>
+							</a>
+							<a href="/feed/${alert.sendUserLoginId}" class="alert-user-link">${alert.sendUserLoginId}</a>  
+							<span class="alert-description">님이 그룹가입 요청을 보냈습니다.</span>
+						</div>
+							
+						<div class="alert-post">
+							<a href="/group/edit/edit_group_view/${alert.groupName}">
+								<c:if test="${alert.groupProfileImagePath ne null}">
+									<img src="${alert.groupProfileImagePath}" class="alert-post-image"/>
+								</c:if>
+								<c:if test="${alert.groupProfileImagePath eq null}">
+									<img src="/static/images/no_profile_image.png" class="alert-post-image"/>
+								</c:if>
+							</a>
+						</div>
+
+					</c:if>
+					
+					<c:if test="${alert.alertType eq 'GROUP_COMMENT'}"> 
+						
+						<div class="alert-info-box">
+							<a href="/feed/group/${alert.groupName}">
+								<c:choose>
+									<c:when test="${alert.groupProfileImagePath eq null }">
+										<img src="/static/images/no_profile_image.png" class="alert-group-profile"/>
+									</c:when>
+									<c:otherwise>
+										<img src="${alert.groupProfileImagePath}" class="alert-group-profile"/>
+									</c:otherwise>
+								</c:choose>
+							</a>
+							<a href="/feed/${alert.sendUserLoginId}" class="alert-user-link">${alert.sendUserLoginId}</a> 
+							<span class="alert-description">님이 댓글을 남겼습니다.</span>
+						</div>
+						<div class="alert-post">
+							<a href="/group/post/group_post_detail_view?postId=${alert.postId}&groupId=${alert.groupId}">
+								<c:if test="${alert.postImagePath ne null}">
+									<img src="${alert.postImagePath}" class="alert-post-image"/>
+								</c:if>
+								<c:if test="${alert.postImagePath eq null}">
+									<img src="/static/images/no_post_image.jpg" class="alert-post-image"/>
+								</c:if>
+							</a>
+						</div>
+						
+					</c:if>
+					
+					<c:if test="${alert.alertType eq 'GROUP_LIKE'}">
+						<div class="alert-info-box">
+							<a href="/feed/group/${alert.groupName}">
+								<c:choose>
+									<c:when test="${alert.groupProfileImagePath eq null }">
+										<img src="/static/images/no_profile_image.png" class="alert-group-profile"/>
+									</c:when>
+									<c:otherwise>
+										<img src="${alert.groupProfileImagePath}" class="alert-group-profile"/>
+									</c:otherwise>
+								</c:choose>
+							</a>
+							<a href="/feed/${alert.sendUserLoginId}" class="alert-user-link">${alert.sendUserLoginId}</a> 
+							<span class="alert-description">님이 좋아요를 눌렀습니다.</span>
+						</div>
+						<div class="alert-post">
+							<a href="/group/post/group_post_detail_view?postId=${alert.postId}&groupId=${alert.groupId}">
+								<c:if test="${alert.postImagePath ne null}">
+									<img src="${alert.postImagePath}" class="alert-post-image"/>
+								</c:if>
+								<c:if test="${alert.postImagePath eq null}">
+									<img src="/static/images/no_post_image.jpg" class="alert-post-image"/>
+								</c:if>
+							</a>
+						</div>
+					</c:if>
+					
+				</div>
+			</c:forEach>
 		</div>
 		
 		<div class="nav-menu-modal d-none">

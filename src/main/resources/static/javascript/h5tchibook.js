@@ -2279,6 +2279,43 @@ $(document).ready(function(){
 		});
 	});
 	
+	$('.edit-group-join-btn').on('click',function(){
+		const BASIC_GROUP_PROFILE_IMAGE_PATH="/static/images/no_profile_image.png";
+		let groupName=$(this).data('group-name');
+		let groupId=$(this).data('group-id');
+		let userId=$(this).data('group-member-id');
+		let groupProfileImagePath=$(this).data('group-profile-image-path');
+		
+		if(groupProfileImagePath == undefined || groupProfileImagePath == ''){
+			groupProfileImagePath=BASIC_GROUP_PROFILE_IMAGE_PATH;
+		}
+		
+		$('.secession-group-modal-section').removeClass('d-none');
+		$('body').addClass('disabled-scroll');
+		
+		$('.secession-group-profile-img').attr('src',groupProfileImagePath);
+		$('.secession-group-name').text(groupName);
+		$('.secession-group-action-btn').data('group-id',groupId);
+		$('.secession-group-action-btn').data('group-member-id',userId);
+		
+	});
+	
+	$('.cancel-secession-group-modal').on('click',function(){
+		$('.secession-group-modal-section').addClass('d-none');
+		$('body').removeClass('disabled-scroll');
+		
+		$('.secession-group-profile-img').attr('src','');
+		$('.secession-group-name').text('');
+		$('.secession-group-btn').data('group-id','');
+		$('.secession-group-btn').data('user-id','');
+	});
+	
+	$('.secession-group-action-btn').on('click',function(){
+		let groupId = $(this).data('group-id');
+		let groupMemberId = $(this).data('group-member-id');
+		
+		deleteGroupMember(groupId, groupMemberId)
+	});
 	
 });
 

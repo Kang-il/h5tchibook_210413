@@ -23,14 +23,14 @@
  		)
  	</insert>
  	
- 	<delete id="deleteGroupLikeByLikeId" parameterType="int">
+ 	<delete id="deleteGroupLikeAlertByLikeId" parameterType="int">
  		DELETE FROM
  			`groupLikeAlert`
  		WHERE
  			`likeId`=#{likeId}
  	</delete>
  	
- 	<delete id="deleteGroupLikeAlertByLikeIdLis" parameterType="java.util.List">
+ 	<delete id="deleteGroupLikeAlertByLikeIdList" parameterType="java.util.List">
  		DELETE FROM
  			`groupLikeAlert`
  		WHERE
@@ -39,6 +39,27 @@
  				${likeId}
  			</foreach>
  	</delete>
+ 	
+ 	<delete id="deleteGroupLikeAlertByPostId" parameterType="int">
+ 		DELETE FROM
+ 			`groupLikeAlert`
+ 		WHERE
+ 			`postId`=#{postId}
+ 	</delete>
+ 	
+ 	<select id="selectGroupLikeAlertByPostId" parameterType="int" resultType="com.h5tchibook.alert.model.GroupLikeAlert">
+ 		SELECT
+ 			`id`
+ 			,`alertId`
+ 			,`groupId`
+ 			,`postId`
+ 			,`likeId`
+ 			,`createdAt`
+ 		FROM 
+ 			`groupLikeAlert`
+ 		WHERE
+ 			`postId`=#{postId}
+ 	</select>
  	
  	<select id="selectGroupLikeAlertByLikeId" parameterType="int" resultType="com.h5tchibook.alert.model.GroupLikeAlert">
  		SELECT

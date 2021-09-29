@@ -136,8 +136,11 @@ public class GroupPostBO {
 			for(GroupPost groupPost:groupPostList) {
 				groupIdList.add(groupPost.getId());
 			}
-			groupCommentBO.deleteCommentByPostIdList(groupIdList);
-			groupLikeBO.deleteGroupLikeByPostIdList(groupIdList);
+			
+			if(groupIdList.size()!=0) {
+				groupCommentBO.deleteCommentByPostIdList(groupIdList);
+				groupLikeBO.deleteGroupLikeByPostIdList(groupIdList);				
+			}
 		}
 	}
 	
@@ -243,7 +246,7 @@ public class GroupPostBO {
 					 if(groupLikeView.getPostId() != groupPost.getId()) {
 						 continue;
 					 }
-					 
+					 logger.debug("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"+groupLikeView);
 					 //같을경우 likeList에 담아준다.
 					 likeList.add(groupLikeView);
 				 }

@@ -6,7 +6,9 @@
 
 <section class="post-detail-section">
 	<div class="post-photo-box">
-		<img src="${post.contentPath}"/>
+		<c:if test="${post.contentPath ne null }">
+			<img src="${post.contentPath}"/>		
+		</c:if>
 	</div>
 	
 	<div class="post-info-box">

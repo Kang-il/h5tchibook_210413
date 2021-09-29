@@ -47,12 +47,16 @@ public class CommentBO {
 		Comment comment=commentDAO.selectCommentById(id);
 		if(comment!=null) {
 			commentDAO.deleteCommentById(id);
-			
+			commentAlertBO.deleteCommentAlertByCommentId(id);
 		}
 	}
 	
 	public void deleteCommentByPostId(int postId) {
-		commentDAO.deleteCommentByPostId(postId);
+		List<Comment> commentList=commentDAO.selectCommentListByPostId(postId);
+		if(commentList!=null) {
+			commentDAO.deleteCommentByPostId(postId);
+			commentAlertBO.deleteCommentAlertByPostId(postId);			
+		}
 	}
 	
 	public Comment getCommentById(int commentId) {

@@ -29,6 +29,26 @@
  			`likeId`=#{likeId}
  	</delete>
  	
+ 	<delete id="deleteLikeAlertByPostId" parameterType="int">
+ 		DELETE FROM
+ 			`likeAlert`
+ 		WHERE
+ 			`postId`=#{postId}
+ 	</delete>
+ 	
+ 	<select id="selectLikeAlertListByPostId" parameterType="int" resultType="com.h5tchibook.alert.model.LikeAlert">
+ 		SELECT
+ 			`id`
+ 			,`alertId`
+ 			,`postId`
+ 			,`likeId`
+ 			,`createdAt`
+ 		FROM
+ 			`likeAlert`
+ 		WHERE
+ 			`postId`=#{postId}
+ 	</select>
+ 	
  	<select id="selectLikeAlertByLikeId" parameterType="int" resultType="com.h5tchibook.alert.model.LikeAlert">
  		SELECT
  			`id`

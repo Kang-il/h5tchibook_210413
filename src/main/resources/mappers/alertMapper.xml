@@ -13,6 +13,13 @@
  			,`alertType`
  			,`createdAt`
  		)
+ 		VALUES
+ 		(
+ 			#{sendUserId}
+ 			,#{receiveUserId}
+ 			,#{alertType}
+ 			,NOW()
+ 		)
  	</insert>
  	
  	<delete id="deleteAlertById" parameterType="int">
@@ -22,7 +29,7 @@
  			`id`=#{id}
  	</delete>
  	
- 	<delete id="deleteAlertByIdlist" parameterType="java.util.List">
+ 	<delete id="deleteAlertByIdList" parameterType="java.util.List">
  		DELETE FROM
  			`alert`
  		WHERE
@@ -32,7 +39,7 @@
  			</foreach>
  	</delete>
  	
- 	<select id="selectAlertBySendUserIdAndReceiveUserIdAndFriendAlertType" parameterType="map">
+ 	<select id="selectAlertBySendUserIdAndReceiveUserIdAndAlertType" parameterType="map" resultType="com.h5tchibook.alert.model.Alert">
  		SELECT
  			`id`
  			,`sendUserId`
@@ -60,5 +67,9 @@
  			`alert`
  		WHERE
  			`receiveUserId`=#{receiveUserId}
+ 		ORDER BY
+ 			`id`
+ 		DESC
+ 		LIMIT 50
  	</select>
  </mapper>

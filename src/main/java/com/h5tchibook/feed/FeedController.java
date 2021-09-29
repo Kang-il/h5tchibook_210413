@@ -115,7 +115,7 @@ public class FeedController {
 					//사진 목록 가져오기
 					List<Post> photoList=userPostBO.getPostListOnlyPhotoByUserId(feedOwner.getId(),9,disclosureStatus);
 					//피드주인의 친구 목록 가져오기
-					List<FriendView> friendList=friendBO.selectFriendListByUserId(feedOwner.getId(), 9);
+					List<FriendView> friendList=friendBO.selectFriendListViewByUserId(feedOwner.getId(), 9);
 					
 					
 					//친구리스트
@@ -129,7 +129,7 @@ public class FeedController {
 					
 				}else if(category.equals("friend")) { //친구 목록 피드
 					
-					List<FriendView> friendList=friendBO.selectFriendListByUserId(feedOwner.getId(), null);
+					List<FriendView> friendList=friendBO.selectFriendListViewByUserId(feedOwner.getId(), null);
 					model.addAttribute("friendList",friendList);
 					model.addAttribute("userView","user/user_feed_friend_section");
 				}else if(category.equals("photo")) {

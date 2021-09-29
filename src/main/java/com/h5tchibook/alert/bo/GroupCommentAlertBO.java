@@ -37,16 +37,35 @@ public class GroupCommentAlertBO {
 		}
 	}
 	
+	public void deleteGroupCommentAlertByPostid(int postId) {
+		
+		List<GroupCommentAlert> alertList=groupCommentAlertDAO.selectGroupCommentAlertByPostId(postId);
+		if(alertList!=null) {
+			List<Integer> alertIdList=new ArrayList<Integer>();
+			for(GroupCommentAlert alert : alertList) {
+				alertIdList.add(alert.getAlertId());
+			}
+			if(alertIdList.size()!=0) {
+				alertBO.deleteAlertByIdList(alertIdList);
+				groupCommentAlertDAO.deleteGroupComentAlertByPostId(postId);	
+			}
+			
+		}
+		
+	}
+	
 	public void deleteGroupCommentAlertByPostIdList(List<Integer> postIdList) {
+		
 		List<GroupCommentAlert> groupCommentAlertList=groupCommentAlertDAO.selectGroupCommentAlertListByPostIdList(postIdList);
 		if(groupCommentAlertList!=null) {
 			List<Integer> alertIdlist=new ArrayList<Integer>();
 			for(GroupCommentAlert alert : groupCommentAlertList) {
 				alertIdlist.add(alert.getAlertId());
 			}
-			
-			alertBO.deleteAlertByIdList(alertIdlist);
-			groupCommentAlertDAO.deleteGroupCommentAlertByPostIdList(postIdList);
+			if(alertIdlist.size()!=0) {
+				alertBO.deleteAlertByIdList(alertIdlist);
+				groupCommentAlertDAO.deleteGroupCommentAlertByPostIdList(postIdList);				
+			}
 		}
 	}
 	

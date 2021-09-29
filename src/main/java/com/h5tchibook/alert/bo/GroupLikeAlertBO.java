@@ -49,6 +49,20 @@ public class GroupLikeAlertBO {
 		}
 	}
 	
+	public void deleteGroupLikeAlertByPostId(int postId) {
+		List<GroupLikeAlert> alertList=groupLikeAlertDAO.selectGroupLikeAlertByPostId(postId);
+		if(alertList!=null) {
+			List<Integer> alertIdList=new ArrayList<Integer>();
+			for(GroupLikeAlert alert : alertList) {
+				alertIdList.add(alert.getAlertId());
+			}
+			if(alertIdList.size()!=0) {
+				alertBO.deleteAlertByIdList(alertIdList);
+				groupLikeAlertDAO.deleteGroupLikeAlertByPostId(postId);				
+			}
+		}
+	}
+	
 	public GroupLikeAlert getGroupLikeAlertByAlertId(int alertId) {
 		return groupLikeAlertDAO.selectGroupLikeAlertByAlertId(alertId);
 	}

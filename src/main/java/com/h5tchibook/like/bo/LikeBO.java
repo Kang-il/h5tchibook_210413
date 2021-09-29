@@ -28,7 +28,11 @@ public class LikeBO {
 	private LikeAlertBO likeAlertBO;
 	
 	public void deleteLikeByPostId(int postId) {
-		likeDAO.deleteLikeByPostId(postId);
+		List<Like> likeList=likeDAO.selectLikeListByPostId(postId);
+		if(likeList!=null) {
+			likeDAO.deleteLikeByPostId(postId);
+			likeAlertBO.deleteLikeAlertByPostId(postId);		
+		}
 	}
 	
 	public Map<String,Boolean> setLike(User user,Post post){

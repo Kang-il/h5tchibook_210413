@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.h5tchibook.alert.bo.AlertBO;
 import com.h5tchibook.alert.bo.FriendRequestAlertBO;
 import com.h5tchibook.alert.model.Alert;
 import com.h5tchibook.alert.model.AlertType;
@@ -23,6 +24,8 @@ public class FriendBO {
 	private UserBO userBO;
 	@Autowired
 	private FriendRequestAlertBO friendRequestAlertBO;
+	@Autowired
+	private AlertBO alertBO;
 	
 	public void createFriend(int userId, int friendId) {
 		
@@ -51,6 +54,14 @@ public class FriendBO {
 		//양방향 관계이므로 둘다
 		friendDAO.deleteFriendByUserIdAndFriendId(userId, friendId);
 		friendDAO.deleteFriendByUserIdAndFriendId(friendId, userId);
+		
+		Alert alert=alertBO.getAlertBySendUserIdAndReceiveUserIdAndAlertType(userId, friendId, AlertType.FRIEND_REQUEST);
+		
+		if(alert==null) {
+			alert=alertBO.getAlertBySendUserIdAndReceiveUserIdAndAlertType(friendId, userId, AlertType.FRIEND_REQUEST);
+		}
+		
+		friendRequestAlertBO.deleteFriendRequestAlert(alert.getSendUserId(), alert.getReceiveUserId());
 	}
 	
 	public void deleteFriendRequest(int userId, int friendId) {
@@ -68,7 +79,21 @@ public class FriendBO {
 		
 	}
 	
-	public List<FriendView> selectFriendListByUserId(int userId , Integer limit){
+	public List<Friend> selectFriendListByUserId(int userId){
+		List<Friend> friendList= friendDAO.selectFriendListByUserId(userId);
+		for(int i=0;friendList.size()>i;i++) {
+			Friend friend=friendList.get(i);
+			Friend friendCheck=friendDAO.selectFriendByUserIdAndFriendId(friend.getFriendId(), userId);
+			
+			if(friendCheck==null) {
+				friendList.remove(i);
+			}
+		}
+		
+		return friendList;
+	}
+	
+	public List<FriendView> selectFriendListViewByUserId(int userId , Integer limit){
 		List<Friend> friendList=friendDAO.selectFriendListByUserId(userId);
 		List<FriendView> friendViewList=new ArrayList<FriendView>();
 			//서로 쌍의 데이터가 존재해야 둘은 친구사이다.

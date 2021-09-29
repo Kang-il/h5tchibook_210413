@@ -30,6 +30,8 @@
  			`id`
  			,`alertId`
  			,`createdAt`
+ 		FROM
+ 			`friendRequestAlert`
  		WHERE
  			`alertId`=${alertId}
  	</select>

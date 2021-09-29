@@ -41,15 +41,6 @@ public class GroupPostController {
 			
 			Group group=groupBO.getGroupById(groupId);
 			
-			if(post==null) {
-				return "redirect:/feed/group/"+group.getGroupName();
-			}
-			
-			//contentType이 photo가 아니면 해당 그룹 피드로 리다이렉트
-			if(!post.getContentType().getContentType().equals("photo")) {
-				return "redirect:/feed/group/"+group.getGroupName();
-			}
-			
 			model.addAttribute("group",group);
 			model.addAttribute("post",post);
 		}

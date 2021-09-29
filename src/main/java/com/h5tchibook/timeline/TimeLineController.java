@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.h5tchibook.alert.bo.AlertTimeLineBO;
 import com.h5tchibook.alert.model.AlertTimeLineView;
+import com.h5tchibook.friend.bo.FriendBO;
+import com.h5tchibook.friend.model.Friend;
 import com.h5tchibook.group.bo.GroupBO;
 import com.h5tchibook.group.model.Group;
 import com.h5tchibook.post.bo.GroupPostBO;
@@ -36,7 +38,8 @@ public class TimeLineController {
 	private GroupPostBO groupPostBO;
 	@Autowired
 	private AlertTimeLineBO alertTimeLineBO;
-	
+	@Autowired
+	private FriendBO friendBO;
 
 	
 	@RequestMapping("/user_timeline_view")
@@ -51,7 +54,10 @@ public class TimeLineController {
 			List<PostView> postList = userPostBO.getPostListByUserIdAndTimeLineList(user.getId());
 			List<Group> groupList=groupBO.getGroupListByMemberId(user.getId());
 			List<AlertTimeLineView> alertList=alertTimeLineBO.getAlertTimelineViewByUserId(user.getId());
+			List<Friend> friendList=friendBO.selectFriendListByUserId(user.getId());
 			
+			model.addAttribute("friendList",friendList);
+			model.addAttribute("alertList",alertList);
 			model.addAttribute("postList",postList);
 			model.addAttribute("groupList",groupList);
 			model.addAttribute("currentTime",date.getTime());
