@@ -64,7 +64,7 @@ function createComment(postId,comment){
 			}
 		}
 		,error:function(e){
-			
+			alert(e);
 		}
 	});
 }
@@ -2316,6 +2316,115 @@ $(document).ready(function(){
 		
 		deleteGroupMember(groupId, groupMemberId)
 	});
+	
+	$('.post-like-btn').on('click',function(){
+		let postId=$(this).data('post-id');
+
+		$('.like-list-modal-section').removeClass('d-none');
+		$('body').addClass('disabled-scroll');
+		
+		$.ajax({
+			type:'GET'
+			,url:'/like/get_like_list'
+			,data:{'postId':postId}
+			,success:function(data){
+				if(data.loginCheck===true){
+					if(data.result===true){
+						let likeList=data.likeList;
+						if(data.likeList!=null){
+							$('.like-list-item-box').empty();
+							likeList.forEach(like=>{
+								let profileImagePath= like.userProfileImagePath == null ? '/static/images/no_profile_image.png' : like.userProfileImagePath; 
+								
+								let html='<div class="like-item">'
+											+'<div class="item-img-border">'
+													+'<a href="/feed/'+like.userLoginId+'">'
+													+'<img src="'+profileImagePath+'"/>'
+													+'</a>'
+												+'</div>'
+											+'<a href="/feed/'+like.userLoginId+'" class="like-user-login-id">'
+												+like.userLoginId
+											+'</a>'
+										+'</div>';
+								$('.like-list-item-box').append(html);	
+							});
+						}
+					}else{
+						alert('좋아요 목록 불러오기 실패 관리자에게 문의하세요');
+					}
+				}else{
+					location.href="/user/sign_in_view";
+				}
+			}
+			,error:function(e){
+				alert(e);
+			}
+		});
+	});
+	
+	
+	$('.like-list-modal-section').on('click',function(e){
+		if(!$('.like-list-modal-box').has(e.target).length){
+			$('.like-list-modal-section').addClass('d-none');
+			$('body').removeClass('disabled-scroll');
+		}
+	});
+	
+	$('.group-post-like-btn').on('click',function(){
+		let postId=$(this).data('post-id');
+
+		$('.group-like-list-modal-section').removeClass('d-none');
+		$('body').addClass('disabled-scroll');
+		
+		$.ajax({
+			type:'GET'
+			,url:'/group/like/get_group_like_list'
+			,data:{'postId':postId}
+			,success:function(data){
+				if(data.loginCheck===true){
+					
+					if(data.result===true){
+						$('.group-like-list-item-box').empty();
+						let likeList = data.likeList;
+						
+						if(likeList!=null){
+							likeList.forEach(like=>{
+								let profileImagePath= like.userProfileImagePath == null ? '/static/images/no_profile_image.png' : like.userProfileImagePath; 
+								let html='<div class="group-like-item">'
+											+'<div class="item-img-border">'
+													+'<a href="/feed/'+like.userLoginId+'">'
+													+'<img src="'+profileImagePath+'"/>'
+													+'</a>'
+												+'</div>'
+											+'<a href="/feed/'+like.userLoginId+'" class="group-like-user-login-id">'
+												+like.userLoginId
+											+'</a>'
+										+'</div>';
+										
+								$('.group-like-list-item-box').append(html);
+							});
+						}
+						
+					}else{
+						alert('좋아요 목록 불러오기 실패 관리자에게 문의하세요');
+					}
+				}else{
+					loction.href="/user/sign_in_view";
+				}
+			}
+			,error:function(e){
+				alert(e);
+			}
+		});
+	});
+	
+	$('.group-like-list-modal-section').on('click',function(e){
+		if(!$('.group-like-list-modal-box').has(e.target).length){
+			$('.group-like-list-modal-section').addClass('d-none');
+			$('body').removeClass('disabled-scroll');
+		}
+	});
+	
 	
 });
 

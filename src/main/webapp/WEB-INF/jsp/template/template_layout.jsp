@@ -17,6 +17,8 @@
 
 
 <body>
+	<jsp:include page="../include/group_like_list_modal.jsp"/>
+	<jsp:include page="../include/like_list_modal.jsp"/>
 	<jsp:include page="../include/secession_group_modal.jsp"/>
 	<jsp:include page="../include/delete_group_modal.jsp"/>
 	<jsp:include page="../include/delete_group_post_modal.jsp"/>

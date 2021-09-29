@@ -52,7 +52,7 @@
 		
 		<div class="post-like-count-box">
 			<c:if test="${fn:length(post.likeList) ne 0}">
-				<button class="post-like-btn">
+				<button class="post-like-btn" data-post-id="${post.id}">
 					<span class="material-icons">thumb_up</span>
 					${post.likeList[0].userLoginId}
 					<c:if test="${fn:length(post.likeList)>1}">

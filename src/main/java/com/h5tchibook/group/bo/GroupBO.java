@@ -1,6 +1,6 @@
 package com.h5tchibook.group.bo;
 
-import java.io.IOException;
+import java.io.IOException;	
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -10,9 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.h5tchibook.alert.bo.GroupCommentAlertBO;
+
 import com.h5tchibook.alert.bo.GroupJoinRequestAlertBO;
-import com.h5tchibook.alert.bo.GroupLikeAlertBO;
 import com.h5tchibook.check.bo.CheckBO;
 import com.h5tchibook.common.FileManagerService;
 import com.h5tchibook.group.dao.GroupDAO;
@@ -32,11 +31,7 @@ public class GroupBO {
 	private FileManagerService fileManagerService;
 	@Autowired
 	private GroupJoinRequestAlertBO groupJoinRequestAlertBO;
-	@Autowired
-	private GroupCommentAlertBO groupCommentAlertBO;
-	@Autowired
-	private GroupLikeAlertBO groupLikeAlertBO;
-	
+
 	
 	public Map<String,Boolean> createGroup(User user,Group group) {
 		Group groupCheck=groupDAO.selectGroupByGroupName(group.getGroupName());
@@ -81,7 +76,7 @@ public class GroupBO {
 		
 		if(group.getGroupProfileImagePath()!=null) {
 			try {				
-				fileManagerService.deleteFile(group.getGroupProfileImagePath());
+				fileManagerService.deleteFile(group.getGroupCoverImagePath());
 			}catch(IOException e) {
 				e.printStackTrace();
 			}

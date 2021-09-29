@@ -77,7 +77,7 @@
 				
 				<div>
 					<c:if test="${fn:length(post.likeList) ne 0 }">
-						<button class="group-post-like-btn">
+						<button class="group-post-like-btn" data-post-id="${post.id}">
 							<span class="material-icons">thumb_up</span>
 							<c:set var="likeSize" value="${fn:length(post.likeList)}"/>
 							

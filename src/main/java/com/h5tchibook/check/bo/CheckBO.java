@@ -1,6 +1,6 @@
 package com.h5tchibook.check.bo;
 
-import java.util.HashMap;	
+import java.util.HashMap;		
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -228,16 +228,11 @@ public class CheckBO {
 		boolean loginCheck=loginCheck(user);
 		boolean existGroupCheck=existGroupCheck(group);
 		boolean groupOwnerCheck=false;
-		boolean groupJoinCheck=false;
-		
-		
-			
+
 		if(existGroupCheck) {
 			groupOwnerCheck=groupOwner(user.getId(),group.getGroupManagerId());
 		}
-			
-		
-		
+
 		String userView=null;
 		if(category==null){
 			userView="group/group_feed_section";

@@ -1,10 +1,9 @@
 package com.h5tchibook.post.bo;
 
-import java.io.IOException;
+import java.io.IOException;	
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.h5tchibook.alert.bo.GroupCommentAlertBO;
 import com.h5tchibook.comment.bo.GroupCommentBO;
 import com.h5tchibook.comment.model.GroupCommentView;
 import com.h5tchibook.common.FileManagerService;

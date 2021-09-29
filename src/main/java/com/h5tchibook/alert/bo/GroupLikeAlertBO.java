@@ -1,6 +1,6 @@
 package com.h5tchibook.alert.bo;
 
-import java.util.ArrayList;
+import java.util.ArrayList;	
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.h5tchibook.alert.dao.GroupLikeAlertDAO;
 import com.h5tchibook.alert.model.Alert;
 import com.h5tchibook.alert.model.GroupLikeAlert;
-import com.h5tchibook.alert.model.LikeAlert;
 
 @Service
 public class GroupLikeAlertBO {

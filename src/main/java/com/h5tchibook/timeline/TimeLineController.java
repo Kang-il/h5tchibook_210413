@@ -1,6 +1,6 @@
 package com.h5tchibook.timeline;
 
-import java.util.Date;
+import java.util.Date;	
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +19,6 @@ import com.h5tchibook.group.bo.GroupBO;
 import com.h5tchibook.group.model.Group;
 import com.h5tchibook.post.bo.GroupPostBO;
 import com.h5tchibook.post.bo.UserPostBO;
-import com.h5tchibook.post.model.GroupPost;
 import com.h5tchibook.post.model.GroupPostView;
 import com.h5tchibook.post.model.PostView;
 import com.h5tchibook.user.model.User;

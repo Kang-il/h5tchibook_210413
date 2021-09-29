@@ -1,7 +1,7 @@
 package com.h5tchibook.like.bo;
 
 
-import java.util.ArrayList;
+import java.util.ArrayList;	
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -11,7 +11,6 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.h5tchibook.alert.bo.GroupCommentAlertBO;
 import com.h5tchibook.alert.bo.GroupLikeAlertBO;
 import com.h5tchibook.alert.model.Alert;
 import com.h5tchibook.alert.model.AlertType;
@@ -30,8 +29,6 @@ public class GroupLikeBO {
 	private UserBO userBO;
 	@Autowired
 	private GroupLikeAlertBO groupLikeAlertBO;
-	@Autowired
-	private GroupCommentAlertBO groupCommentAlertBO;
 	
 	public Map<String,Boolean> setGroupLike(User user , int groupId, GroupPost post){
 		Map<String,Boolean> result=new HashMap<String,Boolean>();
