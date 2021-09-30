@@ -72,9 +72,10 @@ public class GroupBO {
 	}
 	
 	public void editGroupCoverImage(int groupId,MultipartFile file) {
+		
 		Group group=groupDAO.selectGroupById(groupId);
 		
-		if(group.getGroupProfileImagePath()!=null) {
+		if(group.getGroupCoverImagePath()!=null) {
 			try {				
 				fileManagerService.deleteFile(group.getGroupCoverImagePath());
 			}catch(IOException e) {

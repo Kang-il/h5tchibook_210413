@@ -99,18 +99,37 @@ public class AlertTimeLineBO {
 						Comment comment = commentBO.getCommentById(commentAlert.getCommentId());
 						Post post=userPostBO.getPostById(commentAlert.getPostId());
 						
+						if(comment==null || post==null || sendUser==null) {
+							//코멘트와 포스트 둘 중 하나라도 없으면 유효하지 않은 알람이므로 바로 지워준다.
+							alertBO.deleteAlertById(commentAlert.getAlertId());
+							commentAlertBO.deleteCommentAlertByCommentId(commentAlert.getCommentId());
+							continue;
+						}
+						
+						
 						CommentAlertView view = setCommentAlertView(alert, type, commentAlert, sendUser, comment, post);
 						
 						alertTimeLineViewList.add(view);
+					}else {
+						//commentAlert가 없으면 alert가 유효한 데이터가 아니므로 alert삭제
+						alertBO.deleteAlertById(alert.getId());
+						continue;
 					}
 				}else if(type == AlertType.FRIEND_REQUEST) {
 					FriendRequestAlert friendRequestAlert=friendRequestAlertBO.getFriendRequestAlertByAlertId(alert.getId());
 					
 					if(friendRequestAlert!=null) {
-	
+						if(sendUser==null) {
+							friendRequestAlertBO.deleteFriendRequestAlert(alert.getSendUserId(), alert.getReceiveUserId());
+							alertBO.deleteAlertById(alert.getId());
+							continue;
+						}
 						FriendRequestAlertView view = setFriendRequestAlert(alert, type, friendRequestAlert, sendUser);
 						
 						alertTimeLineViewList.add(view);
+					}else {
+						alertBO.deleteAlertById(alert.getId());
+						continue;
 					}
 				}else if(type == AlertType.GROUP_COMMENT) {
 					GroupCommentAlert groupCommentAlert=groupCommentAlertBO.getGroupCommentAlertByAlertId(alert.getId());
@@ -121,9 +140,18 @@ public class AlertTimeLineBO {
 						GroupComment comment=groupCommentBO.getGroupCommentById(groupCommentAlert.getCommentId());
 						Group group=groupBO.getGroupById(groupCommentAlert.getGroupId());
 						
+						if(sendUser==null || post==null || group==null) {
+							groupCommentAlertBO.deleteGroupCommentAlertByGroupCommentId(groupCommentAlert.getCommentId());
+							alertBO.deleteAlertById(groupCommentAlert.getAlertId());
+							continue;
+						}
+						
 						GroupCommentAlertView view=setGroupCommentAlertView(alert,type,groupCommentAlert,sendUser,group,post,comment);
 						
 						alertTimeLineViewList.add(view);
+					}else {
+						alertBO.deleteAlertById(alert.getId());
+						continue;
 					}
 				}else if(type == AlertType.GROUP_JOIN_REQUEST) {
 					GroupJoinRequestAlert groupJoinRequestAlert=groupJoinRequestAlertBO.getGroupJoinRequestAlertByAlertId(alert.getId());
@@ -132,10 +160,19 @@ public class AlertTimeLineBO {
 						
 						Group group=groupBO.getGroupById(groupJoinRequestAlert.getGroupId());
 						
+						if(sendUser==null || group==null) {
+							groupJoinRequestAlertBO.deleteGroupJoinRequestAlertBySendUserIdAndReceiveUserIdAndAlertType(alert.getSendUserId(), alert.getReceiveUserId());
+							alertBO.deleteAlertById(groupJoinRequestAlert.getAlertId());
+							continue;
+						}
+						
 						GroupJoinRequestAlertView view=setGroupJoinReqeustAlertView(alert, type, groupJoinRequestAlert, sendUser, group);
 						
 						
 						alertTimeLineViewList.add(view);
+					}else {
+						alertBO.deleteAlertById(alert.getId());
+						continue;
 					}
 				}else if(type == AlertType.GROUP_LIKE) {
 					GroupLikeAlert groupLikeAlert=groupLikeAlertBO.getGroupLikeAlertByAlertId(alert.getId());
@@ -144,19 +181,37 @@ public class AlertTimeLineBO {
 						Group group=groupBO.getGroupById(groupLikeAlert.getGroupId());
 						GroupPost post=groupPostBO.getGroupPostById(groupLikeAlert.getPostId());
 						
+						if(sendUser==null || group==null || post==null) {
+							groupLikeAlertBO.deleteGroupLikeAlertByLikeId(groupLikeAlert.getLikeId());
+							alertBO.deleteAlertById(groupLikeAlert.getAlertId());
+							continue;
+						}
+						
 						GroupLikeAlertView view=setGroupLikeAlertView(alert,type,groupLikeAlert,sendUser,group,post);
 						
 						alertTimeLineViewList.add(view);
 						
+					}else {
+						alertBO.deleteAlertById(alert.getId());
+						continue;
 					}
 				}else if(type == AlertType.LIKE) {
 					LikeAlert likeAlert=likeAlertBO.getLikeAlertByAlertId(alert.getId());
 					
 					if(likeAlert!=null) {
 						Post post=userPostBO.getPostById(likeAlert.getPostId());
+						
+						if(sendUser==null || post==null) {
+							likeAlertBO.deleteLikeAlertByLikeId(likeAlert.getId());
+							alertBO.deleteAlertById(likeAlert.getAlertId());
+							continue;
+						}
 						LikeAlertView view=setLikeAlertView(alert, type, likeAlert, sendUser, post);
 						
 						alertTimeLineViewList.add(view);
+					}else {
+						alertBO.deleteAlertById(alert.getId());
+						continue;
 					}
 					
 				}

@@ -1,23 +1,31 @@
 package com.h5tchibook.user;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.h5tchibook.alert.bo.AlertTimeLineBO;
+import com.h5tchibook.alert.model.AlertTimeLineView;
 import com.h5tchibook.user.model.User;
+
 
 
 
 @RequestMapping("/profile")
 @Controller
 public class ProfileController {
-
+	
+	@Autowired
+	private AlertTimeLineBO alertTimeLineBO;
+	
 	@RequestMapping("/check_password_view/{feedOwnerLoginId}")
 	public String checkPasswordView(Model model
 								   ,HttpServletRequest request
@@ -28,6 +36,8 @@ public class ProfileController {
 		Date date=new Date();
 		if(user!=null) {
 			if(user.getLoginId().equals(feedOwnerLoginId)) {//본인피드인 경우에만 접근 가능하도록 하기
+				List<AlertTimeLineView> alertList=alertTimeLineBO.getAlertTimelineViewByUserId(user.getId());
+				model.addAttribute("alertList",alertList);
 				model.addAttribute("userView","user/user_check_password_section");
 				model.addAttribute("currentTime",date.getTime());
 			}else {//본인이 아닌경우 본인의 피드로 리다이렉트 시킬것
@@ -59,6 +69,8 @@ public class ProfileController {
 			}
 			
 			if(user.getLoginId().equals(userLoginId)) {//본인피드인 경우에만 접근 가능하도록 하기
+				List<AlertTimeLineView> alertList=alertTimeLineBO.getAlertTimelineViewByUserId(user.getId());
+				model.addAttribute("alertList",alertList);
 				model.addAttribute("userView","user/user_edit_info_section");
 				model.addAttribute("currentTime",date.getTime());
 				

@@ -23,7 +23,7 @@
 		<div>
 		<hr class="mb-3 mt-4">
 			<label for="editLoginId" class="input-title">아이디</label>
-			<input type="text" id="editLoginId" class="form-control" value="${user.loginId}">
+			<input type="text" id="editLoginId" class="form-control" value="${user.loginId}" data-user-login-id="${user.loginId}">
 		</div>
 		
 		<div class="blank-login-id text-danger d-none">아이디를 입력해 주세요.</div> 
@@ -53,7 +53,7 @@
 			</div>
 		</div>
 		
-		<button type="button" class="edit-user-info-btn btn">수정하기</button>
+		<button type="button" class="edit-user-info-btn btn" disabled="disabled">수정하기</button>
 	</div>
 	
 </section>

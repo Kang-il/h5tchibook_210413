@@ -1281,6 +1281,18 @@ $(document).ready(function(){
 		}
 	});
 	
+	$('#editLoginId , #editPassword').on('input',function(){
+		let loginId=$('#editLoginId').data('user-login-id');
+		let newLoginId=$('#editLoginId').val();
+
+		if(loginId == newLoginId ){
+			$('.edit-user-info-btn').attr('disabled',true);
+		}else if(loginId != newLoginId){
+			$('.edit-user-info-btn').attr('disabled',false);
+		}
+		
+	});
+	
 	$('.edit-user-info-btn').on('click',function(){
 		let userLoginId= $('#editLoginId').val();;
 		let password= $('#editPassword').val();;
