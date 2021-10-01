@@ -12,7 +12,9 @@ import org.springframework.web.multipart.MultipartFile;
 @Component
 public class FileManagerService {
 	//이미지 저장경로
-	public final static String FILE_UPLOAD_PATH="D:\\1\\06_Spring_Project\\project\\workSpace\\h5tchibook\\images/";
+	//public final static String FILE_UPLOAD_PATH="D:\\1\\06_Spring_Project\\project\\workSpace\\h5tchibook\\images/";
+
+	public final static String FILE_UPLOAD_PATH="/home/ec2-user/upload_images/";
 	
 	public String saveFile(String userLoginId,MultipartFile file) throws IOException{
 		// 파일 업로드
@@ -38,11 +40,11 @@ public class FileManagerService {
 		Files.write(path, bytes);
 		
 		//imageURL 만들기 및 반환
-		return "/images/"+directoryName+file.getOriginalFilename();
+		return "/upload_images/"+directoryName+file.getOriginalFilename();
 	}
 	
 	public void deleteFile(String imagePath) throws IOException {
-		Path path=Paths.get(FILE_UPLOAD_PATH+imagePath.replace("/images/",""));
+		Path path=Paths.get(FILE_UPLOAD_PATH+imagePath.replace("/upload_images/",""));
 		//파일이 있을경우 제거
 		if(Files.exists(path)) {
 			//제거
